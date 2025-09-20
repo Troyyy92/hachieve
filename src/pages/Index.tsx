@@ -1,7 +1,7 @@
 import { useData } from "@/contexts/DataContext";
 import { GoalWizard } from "@/components/GoalWizard";
 import { Dashboard } from "@/components/Dashboard";
-import { CalendarView } from "@/components/CalendarView";
+import { AdvancedCalendarView } from "@/components/AdvancedCalendarView";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Index = () => {
@@ -33,7 +33,7 @@ const Index = () => {
             <Dashboard />
           </TabsContent>
           <TabsContent value="calendar">
-            <CalendarView />
+            <AdvancedCalendarView />
           </TabsContent>
         </Tabs>
       </div>
