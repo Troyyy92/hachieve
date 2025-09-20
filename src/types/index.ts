@@ -5,6 +5,7 @@ export interface Domain {
   title: string;
   icon: LucideIcon;
   description?: string;
+  isPriority?: boolean;
 }
 
 export interface Task {
@@ -15,6 +16,7 @@ export interface Task {
   description?: string;
   startDate?: string;
   endDate?: string;
+  isPriority?: boolean;
 }
 
 export type ColumnId = "todo" | "inprogress" | "done";

@@ -3,7 +3,9 @@ import { CSS } from "@dnd-kit/utilities";
 import { Card, CardContent } from "@/components/ui/card";
 import { Task } from "@/types";
 import { Button } from "./ui/button";
-import { Pencil, Trash2, FileText, Calendar } from "lucide-react";
+import { Pencil, Trash2, FileText, Calendar, Star } from "lucide-react";
+import { useData } from "@/contexts/DataContext";
+import { cn } from "@/lib/utils";
 
 interface KanbanTaskCardProps {
   task: Task;
@@ -12,6 +14,7 @@ interface KanbanTaskCardProps {
 }
 
 export const KanbanTaskCard = ({ task, onDelete, onEdit }: KanbanTaskCardProps) => {
+  const { updateTask } = useData();
   const {
     setNodeRef,
     attributes,
@@ -32,6 +35,10 @@ export const KanbanTaskCard = ({ task, onDelete, onEdit }: KanbanTaskCardProps) 
     transform: CSS.Transform.toString(transform),
   };
 
+  const handleTogglePriority = () => {
+    updateTask(task.id, { isPriority: !task.isPriority });
+  };
+
   if (isDragging) {
     return (
       <div
@@ -44,7 +51,10 @@ export const KanbanTaskCard = ({ task, onDelete, onEdit }: KanbanTaskCardProps) 
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="relative group">
-      <Card className="aspect-square flex flex-col justify-between p-3 text-center bg-card hover:shadow-md transition-shadow cursor-grab active:cursor-grabbing">
+      <Card className={cn(
+        "aspect-square flex flex-col justify-between p-3 text-center bg-card hover:shadow-md transition-shadow cursor-grab active:cursor-grabbing",
+        task.isPriority && "bg-cyan-50 border-cyan-200"
+      )}>
         <CardContent className="p-0 flex-grow flex items-center justify-center">
           <p className="text-sm font-medium whitespace-pre-wrap">{task.content}</p>
         </CardContent>
@@ -58,6 +68,9 @@ export const KanbanTaskCard = ({ task, onDelete, onEdit }: KanbanTaskCardProps) 
         </div>
       </Card>
       <div className="absolute top-1 right-1 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={handleTogglePriority}>
+          <Star className={cn("h-4 w-4", task.isPriority ? "text-yellow-500 fill-yellow-400" : "text-muted-foreground")} />
+        </Button>
         <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => onEdit(task)}>
           <Pencil className="h-4 w-4" />
         </Button>

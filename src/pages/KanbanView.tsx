@@ -286,7 +286,10 @@ const KanbanView = () => {
               <KanbanColumn
                 key={col.id}
                 column={col}
-                tasks={domainTasks.filter((task) => task.columnId === col.id)}
+                tasks={domainTasks
+                  .filter((task) => task.columnId === col.id)
+                  .sort((a, b) => (b.isPriority ? 1 : 0) - (a.isPriority ? 1 : 0))
+                }
                 onDeleteTask={setTaskToDelete}
                 onEditTask={handleOpenEditDialog}
               />

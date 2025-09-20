@@ -44,6 +44,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
       description: data.description,
       startDate: data.startDate,
       endDate: data.endDate,
+      isPriority: false,
     };
     setTasks((prev) => [...prev, newTask]);
   };
@@ -79,6 +80,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
       title: title,
       icon: iconPool[index % iconPool.length],
       description: "Ajoutez une description pour ce domaine afin de clarifier son périmètre et ses objectifs.",
+      isPriority: false,
     }));
     setDomains(newDomains);
   };

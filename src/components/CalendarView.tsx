@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 import { isWithinInterval, startOfDay, endOfDay, parseISO, format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { Badge } from './ui/badge';
+import { Star } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export const CalendarView = () => {
   const { tasks, domains } = useData();
@@ -17,11 +19,13 @@ export const CalendarView = () => {
 
   const tasksForSelectedDay = useMemo(() => {
     if (!selectedDate) return [];
-    return tasksWithDates.filter(task => {
-      const start = startOfDay(parseISO(task.startDate!));
-      const end = task.endDate ? endOfDay(parseISO(task.endDate)) : startOfDay(start);
-      return isWithinInterval(startOfDay(selectedDate), { start, end });
-    });
+    return tasksWithDates
+      .filter(task => {
+        const start = startOfDay(parseISO(task.startDate!));
+        const end = task.endDate ? endOfDay(parseISO(task.endDate)) : startOfDay(start);
+        return isWithinInterval(startOfDay(selectedDate), { start, end });
+      })
+      .sort((a, b) => (b.isPriority ? 1 : 0) - (a.isPriority ? 1 : 0));
   }, [tasksWithDates, selectedDate]);
 
   const modifiers = {
@@ -62,9 +66,12 @@ export const CalendarView = () => {
             tasksForSelectedDay.map(task => {
               const domain = getDomainForTask(task.domainId);
               return (
-                <Card key={task.id}>
+                <Card key={task.id} className={cn(task.isPriority && "bg-cyan-50 border-cyan-200")}>
                   <CardHeader>
-                    <CardTitle className="text-lg">{task.content}</CardTitle>
+                    <div className="flex justify-between items-start">
+                      <CardTitle className="text-lg">{task.content}</CardTitle>
+                      {task.isPriority && <Star className="h-5 w-5 text-yellow-500 fill-yellow-400 flex-shrink-0" />}
+                    </div>
                     {domain && (
                       <CardDescription>
                         Domaine : 
