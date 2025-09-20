@@ -23,6 +23,9 @@ const Index = () => {
     })
   );
 
+  const totalProgress = domainsWithProgress.reduce((sum, domain) => sum + domain.progress, 0);
+  const overallProgress = domainsWithProgress.length > 0 ? Math.round(totalProgress / domainsWithProgress.length) : 0;
+
   const firstHalf = domainsWithProgress.slice(0, 4);
   const secondHalf = domainsWithProgress.slice(4);
 
@@ -43,7 +46,7 @@ const Index = () => {
           {firstHalf.map((domain) => (
             <DomainCard key={domain.id} domain={domain} />
           ))}
-          <GoalCard title={mainGoal} />
+          <GoalCard goal={mainGoal} progress={overallProgress} />
           {secondHalf.map((domain) => (
             <DomainCard key={domain.id} domain={domain} />
           ))}

@@ -15,11 +15,12 @@ import { v4 as uuidv4 } from "uuid";
 interface DataContextType {
   domains: Domain[];
   tasks: Task[];
-  mainGoal: string;
+  mainGoal: { title: string; description: string };
   addTask: (content: string, domainId: string) => void;
   updateTask: (id: string, newContent: string) => void;
   deleteTask: (id: string) => void;
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+  updateMainGoal: (title: string, description: string) => void;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -48,7 +49,10 @@ const initialTasks: Task[] = [
 export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [domains] = useState<Domain[]>(initialDomains);
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
-  const mainGoal = "Devenir un expert reconnu";
+  const [mainGoal, setMainGoal] = useState({
+    title: "Devenir un expert reconnu",
+    description: "Atteindre un niveau d'expertise dans mon domaine en développant mes compétences techniques, mon leadership et mon réseau professionnel. Cet objectif global est la somme de mes efforts dans les 8 domaines clés."
+  });
 
   const addTask = (content: string, domainId: string) => {
     const newTask: Task = {
@@ -72,8 +76,12 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     setTasks((prev) => prev.filter((task) => task.id !== id));
   };
 
+  const updateMainGoal = (title: string, description: string) => {
+    setMainGoal({ title, description });
+  };
+
   return (
-    <DataContext.Provider value={{ domains, tasks, mainGoal, addTask, updateTask, deleteTask, setTasks }}>
+    <DataContext.Provider value={{ domains, tasks, mainGoal, addTask, updateTask, deleteTask, setTasks, updateMainGoal }}>
       {children}
     </DataContext.Provider>
   );
