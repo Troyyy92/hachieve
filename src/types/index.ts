@@ -6,3 +6,16 @@ export interface Domain {
   icon: LucideIcon;
   progress: number;
 }
+
+export interface Task {
+  id: string;
+  columnId: ColumnId;
+  content: string;
+}
+
+export type ColumnId = "todo" | "inprogress" | "done";
+
+export interface Column {
+  id: ColumnId;
+  title: string;
+}

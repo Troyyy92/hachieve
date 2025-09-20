@@ -1,0 +1,34 @@
+import { SortableContext, useSortable } from "@dnd-kit/sortable";
+import { useMemo } from "react";
+import { Column, Task } from "@/types";
+import { KanbanTaskCard } from "./KanbanTaskCard";
+
+interface KanbanColumnProps {
+  column: Column;
+  tasks: Task[];
+}
+
+export const KanbanColumn = ({ column, tasks }: KanbanColumnProps) => {
+  const tasksIds = useMemo(() => tasks.map((task) => task.id), [tasks]);
+
+  const { setNodeRef } = useSortable({
+    id: column.id,
+    data: {
+      type: "Column",
+      column,
+    },
+  });
+
+  return (
+    <div ref={setNodeRef} className="bg-muted/50 rounded-lg p-4 flex flex-col gap-4">
+      <h2 className="font-semibold">{column.title}</h2>
+      <div className="flex flex-col gap-4">
+        <SortableContext items={tasksIds}>
+          {tasks.map((task) => (
+            <KanbanTaskCard key={task.id} task={task} />
+          ))}
+        </SortableContext>
+      </div>
+    </div>
+  );
+};
