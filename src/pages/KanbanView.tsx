@@ -160,33 +160,41 @@ const KanbanView = () => {
 
     if (activeId === overId) return;
 
-    setTasks((currentTasks) => {
-      const activeTask = currentTasks.find((t) => t.id === activeId);
-      const overTask = currentTasks.find((t) => t.id === overId);
+    const activeTask = tasks.find((t) => t.id === activeId);
+    if (!activeTask) return;
 
-      if (!activeTask) return currentTasks;
+    const overIsColumn = over.data.current?.type === "Column";
+    const overIsTask = over.data.current?.type === "Task";
+    
+    let newColumnId: ColumnId | undefined;
 
-      const activeIndex = currentTasks.findIndex((t) => t.id === activeId);
-
+    if (overIsColumn) {
+      newColumnId = over.id as ColumnId;
+    } else if (overIsTask) {
+      const overTask = tasks.find((t) => t.id === overId);
       if (overTask) {
-        const overIndex = currentTasks.findIndex((t) => t.id === overId);
-        if (activeTask.columnId !== overTask.columnId) {
-          const newTasks = [...currentTasks];
-          newTasks[activeIndex] = { ...activeTask, columnId: overTask.columnId };
-          return arrayMove(newTasks, activeIndex, overIndex);
-        }
+        newColumnId = overTask.columnId;
+      }
+    }
+
+    if (newColumnId && activeTask.columnId !== newColumnId) {
+      updateTask(active.id as string, { columnId: newColumnId });
+    }
+
+    setTasks((currentTasks) => {
+      const activeIndex = currentTasks.findIndex((t) => t.id === activeId);
+      const overIndex = currentTasks.findIndex((t) => t.id === overId);
+
+      if (overIsTask) {
         return arrayMove(currentTasks, activeIndex, overIndex);
       }
-
-      const isOverAColumn = over.data.current?.type === "Column";
-      if (isOverAColumn) {
-        if (activeTask.columnId !== overId) {
-          const newTasks = [...currentTasks];
-          newTasks[activeIndex] = { ...activeTask, columnId: overId as ColumnId };
-          return newTasks;
+      if (overIsColumn) {
+        const newTasks = [...currentTasks];
+        if (newColumnId) {
+          newTasks[activeIndex] = { ...activeTask, columnId: newColumnId };
         }
+        return newTasks;
       }
-
       return currentTasks;
     });
   };
