@@ -4,6 +4,7 @@ export interface Domain {
   id: string;
   title: string;
   icon: LucideIcon;
+  description?: string;
 }
 
 export interface Task {
@@ -11,6 +12,9 @@ export interface Task {
   domainId: string;
   columnId: ColumnId;
   content: string;
+  description?: string;
+  startDate?: string;
+  endDate?: string;
 }
 
 export type ColumnId = "todo" | "inprogress" | "done";

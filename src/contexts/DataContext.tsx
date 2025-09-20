@@ -18,11 +18,12 @@ interface DataContextType {
   tasks: Task[];
   mainGoal: { title: string; description: string } | null;
   addTask: (content: string, domainId: string) => void;
-  updateTask: (id: string, newContent: string) => void;
+  updateTask: (id: string, updates: Partial<Omit<Task, 'id'>>) => void;
   deleteTask: (id: string) => void;
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
   updateMainGoal: (title: string, description: string) => void;
   setupProject: (goal: { title: string; description: string }, domainTitles: string[]) => void;
+  updateDomain: (id: string, updates: Partial<Omit<Domain, 'id'>>) => void;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -44,10 +45,10 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     setTasks((prev) => [...prev, newTask]);
   };
 
-  const updateTask = (id: string, newContent: string) => {
+  const updateTask = (id: string, updates: Partial<Omit<Task, 'id'>>) => {
     setTasks((prev) =>
       prev.map((task) =>
-        task.id === id ? { ...task, content: newContent } : task
+        task.id === id ? { ...task, ...updates } : task
       )
     );
   };
@@ -60,18 +61,27 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     setMainGoal({ title, description });
   };
 
+  const updateDomain = (id: string, updates: Partial<Omit<Domain, 'id'>>) => {
+    setDomains((prev) =>
+      prev.map((domain) =>
+        domain.id === id ? { ...domain, ...updates } : domain
+      )
+    );
+  };
+
   const setupProject = (goal: { title: string; description: string }, domainTitles: string[]) => {
     setMainGoal(goal);
     const newDomains: Domain[] = domainTitles.map((title, index) => ({
       id: title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '') + `-${uuidv4()}`,
       title: title,
       icon: iconPool[index % iconPool.length],
+      description: "Ajoutez une description pour ce domaine afin de clarifier son périmètre et ses objectifs.",
     }));
     setDomains(newDomains);
   };
 
   return (
-    <DataContext.Provider value={{ domains, tasks, mainGoal, addTask, updateTask, deleteTask, setTasks, updateMainGoal, setupProject }}>
+    <DataContext.Provider value={{ domains, tasks, mainGoal, addTask, updateTask, deleteTask, setTasks, updateMainGoal, setupProject, updateDomain }}>
       {children}
     </DataContext.Provider>
   );

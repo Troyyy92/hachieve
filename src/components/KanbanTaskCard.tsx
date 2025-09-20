@@ -3,7 +3,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { Card, CardContent } from "@/components/ui/card";
 import { Task } from "@/types";
 import { Button } from "./ui/button";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, FileText, Calendar } from "lucide-react";
 
 interface KanbanTaskCardProps {
   task: Task;
@@ -44,10 +44,18 @@ export const KanbanTaskCard = ({ task, onDelete, onEdit }: KanbanTaskCardProps) 
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="relative group">
-      <Card className="aspect-square flex items-center justify-center p-3 text-center bg-card hover:shadow-md transition-shadow cursor-grab active:cursor-grabbing">
-        <CardContent className="p-0">
+      <Card className="aspect-square flex flex-col justify-between p-3 text-center bg-card hover:shadow-md transition-shadow cursor-grab active:cursor-grabbing">
+        <CardContent className="p-0 flex-grow flex items-center justify-center">
           <p className="text-sm font-medium whitespace-pre-wrap">{task.content}</p>
         </CardContent>
+        <div className="flex items-center justify-start gap-2 h-5">
+          {task.description && (
+            <FileText className="h-4 w-4 text-muted-foreground" />
+          )}
+          {(task.startDate || task.endDate) && (
+            <Calendar className="h-4 w-4 text-muted-foreground" />
+          )}
+        </div>
       </Card>
       <div className="absolute top-1 right-1 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
         <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => onEdit(task)}>

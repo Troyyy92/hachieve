@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { ChevronRight, Plus } from "lucide-react";
+import { ChevronRight, Plus, Pencil, Calendar as CalendarIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import {
   DndContext,
@@ -36,6 +36,11 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
 
 const initialColumns: Column[] = [
   { id: "todo", title: "À faire" },
@@ -45,7 +50,7 @@ const initialColumns: Column[] = [
 
 const KanbanView = () => {
   const { domainId } = useParams();
-  const { domains, tasks, setTasks, addTask, updateTask, deleteTask } = useData();
+  const { domains, tasks, setTasks, addTask, updateTask, deleteTask, updateDomain } = useData();
   const domain = domains.find(d => d.id === domainId);
 
   const [columns] = useState<Column[]>(initialColumns);
@@ -58,7 +63,10 @@ const KanbanView = () => {
   
   const [taskToDelete, setTaskToDelete] = useState<string | null>(null);
   const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
-  const [editedContent, setEditedContent] = useState("");
+  const [editedTaskData, setEditedTaskData] = useState({ content: "", description: "", startDate: undefined, endDate: undefined });
+
+  const [isEditingDomainDesc, setIsEditingDomainDesc] = useState(false);
+  const [editedDomainDesc, setEditedDomainDesc] = useState(domain?.description || "");
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -83,16 +91,27 @@ const KanbanView = () => {
 
   const handleOpenEditDialog = (task: Task) => {
     setTaskToEdit(task);
-    setEditedContent(task.content);
+    setEditedTaskData({
+      content: task.content,
+      description: task.description || "",
+      startDate: task.startDate,
+      endDate: task.endDate,
+    });
   };
 
   const handleUpdateTask = () => {
     if (taskToEdit) {
-      updateTask(taskToEdit.id, editedContent);
+      updateTask(taskToEdit.id, editedTaskData);
       setTaskToEdit(null);
-      setEditedContent("");
     }
   };
+
+  const handleUpdateDomainDesc = () => {
+    if (domain) {
+        updateDomain(domain.id, { description: editedDomainDesc });
+        setIsEditingDomainDesc(false);
+    }
+  }
 
   const onDragStart = (event: DragStartEvent) => {
     if (event.active.data.current?.type === "Task") {
@@ -143,7 +162,7 @@ const KanbanView = () => {
 
   return (
     <div className="p-4 md:p-8">
-      <div className="flex items-center text-sm text-muted-foreground mb-8">
+      <div className="flex items-center text-sm text-muted-foreground mb-4">
         <Link to="/" className="hover:text-primary">
           Vue d'ensemble
         </Link>
@@ -151,9 +170,39 @@ const KanbanView = () => {
         <span className="font-medium text-primary capitalize">{domain?.title}</span>
       </div>
 
-      <h1 className="text-3xl font-bold mb-2 capitalize">
+      <h1 className="text-3xl font-bold mb-4 capitalize">
         Tableau Kanban : {domain?.title}
       </h1>
+
+      <div className="mb-8 p-4 border rounded-lg bg-secondary/50">
+        <div className="flex justify-between items-center mb-2">
+            <h2 className="text-xl font-semibold">Description du domaine</h2>
+            {!isEditingDomainDesc && (
+                <Button variant="ghost" size="icon" onClick={() => { setIsEditingDomainDesc(true); setEditedDomainDesc(domain?.description || ""); }}>
+                    <Pencil className="w-4 h-4" />
+                </Button>
+            )}
+        </div>
+        {isEditingDomainDesc ? (
+            <div>
+                <Textarea
+                    value={editedDomainDesc}
+                    onChange={(e) => setEditedDomainDesc(e.target.value)}
+                    className="min-h-[100px] mb-2"
+                    placeholder="Ajoutez une description pour ce domaine..."
+                />
+                <div className="flex justify-end gap-2">
+                    <Button variant="ghost" onClick={() => setIsEditingDomainDesc(false)}>Annuler</Button>
+                    <Button onClick={handleUpdateDomainDesc}>Enregistrer</Button>
+                </div>
+            </div>
+        ) : (
+            <p className="text-muted-foreground whitespace-pre-wrap">
+                {domain?.description || "Aucune description pour ce domaine."}
+            </p>
+        )}
+      </div>
+
       <div className="mb-6">
         <div className="flex w-full max-w-sm items-center space-x-2">
           <Input
@@ -193,9 +242,58 @@ const KanbanView = () => {
       </DndContext>
 
       <Dialog open={!!taskToEdit} onOpenChange={() => setTaskToEdit(null)}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-[425px]">
           <DialogHeader><DialogTitle>Modifier la tâche</DialogTitle></DialogHeader>
-          <Textarea value={editedContent} onChange={(e) => setEditedContent(e.target.value)} className="min-h-[100px]" />
+          <div className="py-4 space-y-4">
+            <div>
+              <Label htmlFor="task-content">Contenu</Label>
+              <Textarea id="task-content" value={editedTaskData.content} onChange={(e) => setEditedTaskData(d => ({...d, content: e.target.value}))} className="min-h-[100px]" />
+            </div>
+            <div>
+              <Label htmlFor="task-description">Description (facultatif)</Label>
+              <Textarea id="task-description" value={editedTaskData.description} onChange={(e) => setEditedTaskData(d => ({...d, description: e.target.value}))} className="min-h-[100px]" placeholder="Ajoutez plus de détails..." />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Date de début</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" className="w-full justify-start text-left font-normal">
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {editedTaskData.startDate ? format(new Date(editedTaskData.startDate), "PPP", { locale: fr }) : <span>Choisir une date</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={editedTaskData.startDate ? new Date(editedTaskData.startDate) : undefined}
+                      onSelect={(date) => setEditedTaskData(d => ({...d, startDate: date?.toISOString()}))}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <div>
+                <Label>Date de fin</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" className="w-full justify-start text-left font-normal">
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {editedTaskData.endDate ? format(new Date(editedTaskData.endDate), "PPP", { locale: fr }) : <span>Choisir une date</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={editedTaskData.endDate ? new Date(editedTaskData.endDate) : undefined}
+                      onSelect={(date) => setEditedTaskData(d => ({...d, endDate: date?.toISOString()}))}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+            </div>
+          </div>
           <DialogFooter>
             <DialogClose asChild><Button type="button" variant="secondary">Annuler</Button></DialogClose>
             <Button type="button" onClick={handleUpdateTask}>Enregistrer</Button>
