@@ -238,7 +238,7 @@ const KanbanView = () => {
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <Label>Date de début</Label>
+                            <Label>Date de début (facultatif)</Label>
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <Button variant="outline" className="w-full justify-start text-left font-normal">
@@ -252,7 +252,7 @@ const KanbanView = () => {
                             </Popover>
                         </div>
                         <div>
-                            <Label>Date de fin</Label>
+                            <Label>Date de fin (facultatif)</Label>
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <Button variant="outline" className="w-full justify-start text-left font-normal">
@@ -312,7 +312,7 @@ const KanbanView = () => {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label>Date de début</Label>
+                <Label>Date de début (facultatif)</Label>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" className="w-full justify-start text-left font-normal">
@@ -331,7 +331,7 @@ const KanbanView = () => {
                 </Popover>
               </div>
               <div>
-                <Label>Date de fin</Label>
+                <Label>Date de fin (facultatif)</Label>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" className="w-full justify-start text-left font-normal">
