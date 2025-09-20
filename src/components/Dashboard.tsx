@@ -35,7 +35,16 @@ export const Dashboard = () => {
 
   return (
     <>
-      <main className="grid grid-cols-3 gap-4 md:gap-6 mt-12">
+      {/* Mobile Layout (under 414px) */}
+      <main className="xs:hidden flex flex-col gap-4 mt-12">
+        <GoalCard goal={mainGoal} progress={overallProgress} />
+        {domainsWithProgress.map((domain) => (
+          <DomainCard key={domain.id} domain={domain} />
+        ))}
+      </main>
+
+      {/* Desktop Layout (414px and up) */}
+      <main className="hidden xs:grid grid-cols-3 gap-4 md:gap-6 mt-12">
         {firstHalf.map((domain) => (
           <DomainCard key={domain.id} domain={domain} />
         ))}

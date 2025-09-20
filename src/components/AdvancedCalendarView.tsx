@@ -6,6 +6,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useData } from '@/contexts/DataContext';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { useBreakpoint } from '@/hooks/use-breakpoint';
 
 const locales = {
   'fr': fr,
@@ -36,6 +37,7 @@ const eventStyleGetter = (event: any) => {
 export const AdvancedCalendarView = () => {
   const { tasks, domains } = useData();
   const navigate = useNavigate();
+  const isMobile = useBreakpoint(414);
 
   const events = useMemo(() => {
     return tasks
@@ -73,7 +75,7 @@ export const AdvancedCalendarView = () => {
         events={events}
         startAccessor="start"
         endAccessor="end"
-        defaultView={Views.WEEK}
+        defaultView={isMobile ? Views.DAY : Views.WEEK}
         views={[Views.MONTH, Views.WEEK, Views.DAY]}
         culture='fr'
         messages={{
