@@ -86,4 +86,19 @@
   .card {
     @apply transition-all duration-300;
   }
+  
+  .day-with-task {
+    position: relative;
+  }
+  .day-with-task::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: hsl(var(--primary));
+  }
 }
