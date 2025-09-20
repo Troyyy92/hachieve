@@ -1,12 +1,12 @@
 import { useData } from "@/contexts/DataContext";
-import { Welcome } from "@/components/Welcome";
+import { GoalWizard } from "@/components/GoalWizard";
 import { Dashboard } from "@/components/Dashboard";
 
 const Index = () => {
   const { mainGoal } = useData();
 
   if (!mainGoal) {
-    return <Welcome />;
+    return <GoalWizard />;
   }
 
   return <Dashboard />;
