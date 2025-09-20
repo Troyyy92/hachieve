@@ -55,7 +55,7 @@ const initialNewTaskData = {
   description: "",
   startDate: undefined as Date | undefined,
   endDate: undefined as Date | undefined,
-  isAllDay: true,
+  isAllDay: false,
 };
 
 const KanbanView = () => {
@@ -115,7 +115,7 @@ const KanbanView = () => {
       description: task.description || "",
       startDate: task.startDate ? new Date(task.startDate) : undefined,
       endDate: task.endDate ? new Date(task.endDate) : undefined,
-      isAllDay: task.isAllDay ?? true,
+      isAllDay: task.isAllDay ?? false,
     });
   };
 

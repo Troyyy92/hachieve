@@ -45,7 +45,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
       startDate: data.startDate,
       endDate: data.endDate,
       isPriority: false,
-      isAllDay: data.isAllDay ?? true,
+      isAllDay: data.isAllDay ?? false,
     };
     setTasks((prev) => [...prev, newTask]);
   };
