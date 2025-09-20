@@ -6,9 +6,11 @@ import { KanbanTaskCard } from "./KanbanTaskCard";
 interface KanbanColumnProps {
   column: Column;
   tasks: Task[];
+  onDeleteTask: (id: string) => void;
+  onEditTask: (task: Task) => void;
 }
 
-export const KanbanColumn = ({ column, tasks }: KanbanColumnProps) => {
+export const KanbanColumn = ({ column, tasks, onDeleteTask, onEditTask }: KanbanColumnProps) => {
   const tasksIds = useMemo(() => tasks.map((task) => task.id), [tasks]);
 
   const { setNodeRef } = useSortable({
@@ -25,7 +27,7 @@ export const KanbanColumn = ({ column, tasks }: KanbanColumnProps) => {
       <div className="flex flex-col gap-4">
         <SortableContext items={tasksIds}>
           {tasks.map((task) => (
-            <KanbanTaskCard key={task.id} task={task} />
+            <KanbanTaskCard key={task.id} task={task} onDelete={onDeleteTask} onEdit={onEditTask} />
           ))}
         </SortableContext>
       </div>

@@ -1,33 +1,30 @@
 import { DomainCard } from "@/components/DomainCard";
 import { GoalCard } from "@/components/GoalCard";
 import { MadeWithDyad } from "@/components/made-with-dyad";
+import { useData } from "@/contexts/DataContext";
 import { Domain } from "@/types";
-import {
-  Briefcase,
-  HeartPulse,
-  Lightbulb,
-  LineChart,
-  Network,
-  Scale,
-  ShieldCheck,
-  Users,
-} from "lucide-react";
-
-const domains: Domain[] = [
-  { id: "leadership", title: "Leadership", icon: Users, progress: 45 },
-  { id: "competences", title: "Compétences", icon: Lightbulb, progress: 70 },
-  { id: "reseau", title: "Réseau", icon: Network, progress: 30 },
-  { id: "sante", title: "Santé", icon: HeartPulse, progress: 85 },
-  { id: "finances", title: "Finances", icon: LineChart, progress: 60 },
-  { id: "equilibre", title: "Équilibre Pro/Perso", icon: Scale, progress: 50 },
-  { id: "formation", title: "Formation", icon: Briefcase, progress: 20 },
-  { id: "confiance", title: "Confiance", icon: ShieldCheck, progress: 75 },
-];
 
 const Index = () => {
-  const mainGoal = "Devenir un expert reconnu";
-  const firstHalf = domains.slice(0, 4);
-  const secondHalf = domains.slice(4);
+  const { domains, tasks, mainGoal } = useData();
+
+  const calculateProgress = (domainId: string) => {
+    const domainTasks = tasks.filter((task) => task.domainId === domainId);
+    if (domainTasks.length === 0) return 0;
+    const completedTasks = domainTasks.filter(
+      (task) => task.columnId === "done"
+    ).length;
+    return Math.round((completedTasks / domainTasks.length) * 100);
+  };
+
+  const domainsWithProgress: (Domain & { progress: number })[] = domains.map(
+    (domain) => ({
+      ...domain,
+      progress: calculateProgress(domain.id),
+    })
+  );
+
+  const firstHalf = domainsWithProgress.slice(0, 4);
+  const secondHalf = domainsWithProgress.slice(4);
 
   return (
     <div className="min-h-screen bg-background text-foreground p-4 md:p-8">

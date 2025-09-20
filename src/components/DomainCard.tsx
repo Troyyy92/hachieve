@@ -4,7 +4,7 @@ import { Progress } from "@/components/ui/progress";
 import { Domain } from "@/types";
 
 interface DomainCardProps {
-  domain: Domain;
+  domain: Domain & { progress: number };
 }
 
 export const DomainCard = ({ domain }: DomainCardProps) => {

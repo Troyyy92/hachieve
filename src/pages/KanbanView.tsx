@@ -11,13 +11,31 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
-import { v4 as uuidv4 } from "uuid";
-
 import { Column, ColumnId, Task } from "@/types";
 import { KanbanColumn } from "@/components/KanbanColumn";
 import { KanbanTaskCard } from "@/components/KanbanTaskCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useData } from "@/contexts/DataContext";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 
 const initialColumns: Column[] = [
   { id: "todo", title: "À faire" },
@@ -25,21 +43,22 @@ const initialColumns: Column[] = [
   { id: "done", title: "Terminé" },
 ];
 
-const initialTasks: Task[] = [
-  { id: "1", columnId: "todo", content: "Définir la vision du produit" },
-  { id: "2", columnId: "todo", content: "Contacter 5 mentors potentiels" },
-  { id: "3", columnId: "inprogress", content: "Lire un livre sur le leadership" },
-  { id: "4", columnId: "done", content: "Terminer le module de formation en ligne" },
-];
-
 const KanbanView = () => {
-  const { domainName } = useParams();
+  const { domainId } = useParams();
+  const { domains, tasks, setTasks, addTask, updateTask, deleteTask } = useData();
+  const domain = domains.find(d => d.id === domainId);
+
   const [columns] = useState<Column[]>(initialColumns);
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
 
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+  const domainTasks = useMemo(() => tasks.filter(task => task.domainId === domainId), [tasks, domainId]);
+
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [newTaskContent, setNewTaskContent] = useState("");
+  
+  const [taskToDelete, setTaskToDelete] = useState<string | null>(null);
+  const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
+  const [editedContent, setEditedContent] = useState("");
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -50,14 +69,29 @@ const KanbanView = () => {
   );
 
   const handleAddTask = () => {
-    if (!newTaskContent.trim()) return;
-    const newTask: Task = {
-      id: uuidv4(),
-      columnId: "todo",
-      content: newTaskContent.trim(),
-    };
-    setTasks([...tasks, newTask]);
+    if (!newTaskContent.trim() || !domainId) return;
+    addTask(newTaskContent.trim(), domainId);
     setNewTaskContent("");
+  };
+
+  const handleConfirmDelete = () => {
+    if (taskToDelete) {
+      deleteTask(taskToDelete);
+      setTaskToDelete(null);
+    }
+  };
+
+  const handleOpenEditDialog = (task: Task) => {
+    setTaskToEdit(task);
+    setEditedContent(task.content);
+  };
+
+  const handleUpdateTask = () => {
+    if (taskToEdit) {
+      updateTask(taskToEdit.id, editedContent);
+      setTaskToEdit(null);
+      setEditedContent("");
+    }
   };
 
   const onDragStart = (event: DragStartEvent) => {
@@ -84,7 +118,6 @@ const KanbanView = () => {
 
       const activeIndex = currentTasks.findIndex((t) => t.id === activeId);
 
-      // Cas 1: Déposer une tâche sur une autre tâche
       if (overTask) {
         const overIndex = currentTasks.findIndex((t) => t.id === overId);
         if (activeTask.columnId !== overTask.columnId) {
@@ -95,7 +128,6 @@ const KanbanView = () => {
         return arrayMove(currentTasks, activeIndex, overIndex);
       }
 
-      // Cas 2: Déposer une tâche sur une colonne
       const isOverAColumn = over.data.current?.type === "Column";
       if (isOverAColumn) {
         if (activeTask.columnId !== overId) {
@@ -116,11 +148,11 @@ const KanbanView = () => {
           Vue d'ensemble
         </Link>
         <ChevronRight className="w-4 h-4 mx-1" />
-        <span className="font-medium text-primary capitalize">{domainName}</span>
+        <span className="font-medium text-primary capitalize">{domain?.title}</span>
       </div>
 
       <h1 className="text-3xl font-bold mb-2 capitalize">
-        Tableau Kanban : {domainName}
+        Tableau Kanban : {domain?.title}
       </h1>
       <div className="mb-6">
         <div className="flex w-full max-w-sm items-center space-x-2">
@@ -148,15 +180,41 @@ const KanbanView = () => {
               <KanbanColumn
                 key={col.id}
                 column={col}
-                tasks={tasks.filter((task) => task.columnId === col.id)}
+                tasks={domainTasks.filter((task) => task.columnId === col.id)}
+                onDeleteTask={setTaskToDelete}
+                onEditTask={handleOpenEditDialog}
               />
             ))}
           </SortableContext>
         </div>
         <DragOverlay>
-          {activeTask && <KanbanTaskCard task={activeTask} />}
+          {activeTask && <KanbanTaskCard task={activeTask} onDelete={() => {}} onEdit={() => {}} />}
         </DragOverlay>
       </DndContext>
+
+      <Dialog open={!!taskToEdit} onOpenChange={() => setTaskToEdit(null)}>
+        <DialogContent>
+          <DialogHeader><DialogTitle>Modifier la tâche</DialogTitle></DialogHeader>
+          <Textarea value={editedContent} onChange={(e) => setEditedContent(e.target.value)} className="min-h-[100px]" />
+          <DialogFooter>
+            <DialogClose asChild><Button type="button" variant="secondary">Annuler</Button></DialogClose>
+            <Button type="button" onClick={handleUpdateTask}>Enregistrer</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <AlertDialog open={!!taskToDelete} onOpenChange={() => setTaskToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
+            <AlertDialogDescription>Cette action est irréversible. La tâche sera supprimée définitivement.</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmDelete}>Supprimer</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

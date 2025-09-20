@@ -4,11 +4,11 @@ export interface Domain {
   id: string;
   title: string;
   icon: LucideIcon;
-  progress: number;
 }
 
 export interface Task {
   id: string;
+  domainId: string;
   columnId: ColumnId;
   content: string;
 }
