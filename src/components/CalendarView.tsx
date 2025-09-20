@@ -131,7 +131,10 @@ export const CalendarView = () => {
                 const domain = getDomainForTask(task.domainId);
                 return (
                   <div key={task.id} className="relative group">
-                    <Card className={cn(task.isPriority && "bg-cyan-50 border-cyan-200")}>
+                    <Card className={cn(
+                      task.isPriority && "bg-cyan-50 border-cyan-200",
+                      task.columnId === 'done' && "bg-secondary"
+                    )}>
                       <CardHeader>
                         <CardTitle className={cn(
                           "text-lg pr-24",
