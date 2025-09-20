@@ -72,7 +72,7 @@ const KanbanView = () => {
 
   const [taskToDelete, setTaskToDelete] = useState<string | null>(null);
   const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
-  const [editedTaskData, setEditedTaskData] = useState({ content: "", description: "", startDate: undefined, endDate: undefined });
+  const [editedTaskData, setEditedTaskData] = useState({ content: "", description: "", startDate: undefined as string | undefined, endDate: undefined as string | undefined });
 
   const [isEditingDomainDesc, setIsEditingDomainDesc] = useState(false);
   const [editedDomainDesc, setEditedDomainDesc] = useState(domain?.description || "");
@@ -247,7 +247,17 @@ const KanbanView = () => {
                                     </Button>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-auto p-0">
-                                    <Calendar mode="single" selected={newTaskData.startDate ? new Date(newTaskData.startDate) : undefined} onSelect={(date) => setNewTaskData(d => ({...d, startDate: date?.toISOString()}))} initialFocus />
+                                    <Calendar 
+                                        mode="single" 
+                                        selected={newTaskData.startDate ? new Date(newTaskData.startDate) : undefined} 
+                                        onSelect={(date) => setNewTaskData(d => ({
+                                            ...d, 
+                                            startDate: date?.toISOString(),
+                                            endDate: (d.endDate && date && new Date(d.endDate) < date) ? undefined : d.endDate
+                                        }))} 
+                                        disabled={newTaskData.endDate ? { after: new Date(newTaskData.endDate) } : undefined}
+                                        initialFocus 
+                                    />
                                 </PopoverContent>
                             </Popover>
                         </div>
@@ -261,7 +271,13 @@ const KanbanView = () => {
                                     </Button>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-auto p-0">
-                                    <Calendar mode="single" selected={newTaskData.endDate ? new Date(newTaskData.endDate) : undefined} onSelect={(date) => setNewTaskData(d => ({...d, endDate: date?.toISOString()}))} initialFocus />
+                                    <Calendar 
+                                        mode="single" 
+                                        selected={newTaskData.endDate ? new Date(newTaskData.endDate) : undefined} 
+                                        onSelect={(date) => setNewTaskData(d => ({...d, endDate: date?.toISOString()}))} 
+                                        disabled={newTaskData.startDate ? { before: new Date(newTaskData.startDate) } : undefined}
+                                        initialFocus 
+                                    />
                                 </PopoverContent>
                             </Popover>
                         </div>
@@ -327,7 +343,12 @@ const KanbanView = () => {
                     <Calendar
                       mode="single"
                       selected={editedTaskData.startDate ? new Date(editedTaskData.startDate) : undefined}
-                      onSelect={(date) => setEditedTaskData(d => ({...d, startDate: date?.toISOString()}))}
+                      onSelect={(date) => setEditedTaskData(d => ({
+                          ...d, 
+                          startDate: date?.toISOString(),
+                          endDate: (d.endDate && date && new Date(d.endDate) < date) ? undefined : d.endDate
+                      }))}
+                      disabled={editedTaskData.endDate ? { after: new Date(editedTaskData.endDate) } : undefined}
                       initialFocus
                     />
                   </PopoverContent>
@@ -347,6 +368,7 @@ const KanbanView = () => {
                       mode="single"
                       selected={editedTaskData.endDate ? new Date(editedTaskData.endDate) : undefined}
                       onSelect={(date) => setEditedTaskData(d => ({...d, endDate: date?.toISOString()}))}
+                      disabled={editedTaskData.startDate ? { before: new Date(editedTaskData.startDate) } : undefined}
                       initialFocus
                     />
                   </PopoverContent>

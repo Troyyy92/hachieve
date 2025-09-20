@@ -192,7 +192,12 @@ export const CalendarView = () => {
                     <Calendar
                       mode="single"
                       selected={editedTaskData.startDate ? new Date(editedTaskData.startDate) : undefined}
-                      onSelect={(date) => setEditedTaskData(d => ({...d, startDate: date?.toISOString()}))}
+                      onSelect={(date) => setEditedTaskData(d => ({
+                          ...d, 
+                          startDate: date?.toISOString(),
+                          endDate: (d.endDate && date && new Date(d.endDate) < date) ? undefined : d.endDate
+                      }))}
+                      disabled={editedTaskData.endDate ? { after: new Date(editedTaskData.endDate) } : undefined}
                       initialFocus
                     />
                   </PopoverContent>
@@ -212,6 +217,7 @@ export const CalendarView = () => {
                       mode="single"
                       selected={editedTaskData.endDate ? new Date(editedTaskData.endDate) : undefined}
                       onSelect={(date) => setEditedTaskData(d => ({...d, endDate: date?.toISOString()}))}
+                      disabled={editedTaskData.startDate ? { before: new Date(editedTaskData.startDate) } : undefined}
                       initialFocus
                     />
                   </PopoverContent>
