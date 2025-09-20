@@ -15,7 +15,7 @@ import { v4 as uuidv4 } from "uuid";
 interface DataContextType {
   domains: Domain[];
   tasks: Task[];
-  mainGoal: { title: string; description: string };
+  mainGoal: { title: string; description: string } | null;
   addTask: (content: string, domainId: string) => void;
   updateTask: (id: string, newContent: string) => void;
   deleteTask: (id: string) => void;
@@ -49,10 +49,7 @@ const initialTasks: Task[] = [
 export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [domains] = useState<Domain[]>(initialDomains);
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
-  const [mainGoal, setMainGoal] = useState({
-    title: "Devenir un expert reconnu",
-    description: "Atteindre un niveau d'expertise dans mon domaine en développant mes compétences techniques, mon leadership et mon réseau professionnel. Cet objectif global est la somme de mes efforts dans les 8 domaines clés."
-  });
+  const [mainGoal, setMainGoal] = useState<{ title: string; description: string } | null>(null);
 
   const addTask = (content: string, domainId: string) => {
     const newTask: Task = {
