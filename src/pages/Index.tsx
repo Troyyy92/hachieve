@@ -3,9 +3,16 @@ import { GoalWizard } from "@/components/GoalWizard";
 import { Dashboard } from "@/components/Dashboard";
 import { AdvancedCalendarView } from "@/components/AdvancedCalendarView";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { LogOut } from "lucide-react";
 
 const Index = () => {
   const { mainGoal } = useData();
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+  };
 
   if (!mainGoal) {
     return <GoalWizard />;
@@ -14,13 +21,34 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
-        <header className="text-center">
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-            Hachieve
-          </h1>
-          <p className="text-muted-foreground mt-4 text-lg">
-            8 paths to achievement
-          </p>
+        <header className="flex justify-between items-center">
+          <div className="flex-1" />
+          <div className="text-center">
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
+              Hachieve
+            </h1>
+            <p className="text-muted-foreground mt-4 text-lg">
+              8 paths to achievement
+            </p>
+          </div>
+          <div className="flex-1 flex justify-end">
+            <Button 
+              variant="outline" 
+              onClick={handleLogout}
+              className="hidden sm:flex"
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              Déconnexion
+            </Button>
+            <Button 
+              variant="outline" 
+              size="icon"
+              onClick={handleLogout}
+              className="sm:hidden"
+            >
+              <LogOut className="h-4 w-4" />
+            </Button>
+          </div>
         </header>
 
         <Tabs defaultValue="dashboard" className="mt-8">

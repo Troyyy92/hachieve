@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { ChevronRight, Plus, Pencil, Calendar as CalendarIcon } from "lucide-react";
+import { ChevronRight, Plus, Pencil, Calendar as CalendarIcon, LogOut } from "lucide-react";
 import { useMemo, useState } from "react";
 import {
   DndContext,
@@ -43,6 +43,7 @@ import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import { supabase } from "@/integrations/supabase/client";
 
 const initialColumns: Column[] = [
   { id: "todo", title: "À faire" },
@@ -87,6 +88,10 @@ const KanbanView = () => {
       },
     })
   );
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+  };
 
   const handleAddTask = () => {
     if (!newTaskData.content.trim() || !domainId) return;
@@ -205,12 +210,32 @@ const KanbanView = () => {
 
   return (
     <div className="p-4 md:p-8">
-      <div className="flex items-center text-sm text-muted-foreground mb-4">
-        <Link to="/" className="hover:text-primary">
-          Vue d'ensemble
-        </Link>
-        <ChevronRight className="w-4 h-4 mx-1" />
-        <span className="font-medium text-primary capitalize">{domain?.title}</span>
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex items-center text-sm text-muted-foreground">
+          <Link to="/" className="hover:text-primary">
+            Vue d'ensemble
+          </Link>
+          <ChevronRight className="w-4 h-4 mx-1" />
+          <span className="font-medium text-primary capitalize">{domain?.title}</span>
+        </div>
+        <div>
+          <Button 
+            variant="outline" 
+            onClick={handleLogout}
+            className="hidden sm:flex"
+          >
+            <LogOut className="h-4 w-4 mr-2" />
+            Déconnexion
+          </Button>
+          <Button 
+            variant="outline" 
+            size="icon"
+            onClick={handleLogout}
+            className="sm:hidden"
+          >
+            <LogOut className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
 
       <h1 className="text-3xl font-bold mb-4 capitalize">
