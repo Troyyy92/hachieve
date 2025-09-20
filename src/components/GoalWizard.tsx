@@ -4,6 +4,7 @@ import { Step1Goal } from "./wizard/Step1Goal";
 import { Step2Discovery } from "./wizard/Step2Discovery";
 import { Step3Domains } from "./wizard/Step3Domains";
 import { Step4Customization } from "./wizard/Step4Customization";
+import { Step5Validation } from "./wizard/Step5Validation";
 import { useData } from "@/contexts/DataContext";
 
 const TOTAL_STEPS = 5;
@@ -45,7 +46,7 @@ const domainTemplates = {
 type GoalCategory = keyof typeof questionsByCategory;
 
 export const GoalWizard = () => {
-  const { updateMainGoal } = useData();
+  const { setupProject } = useData();
   const [currentStep, setCurrentStep] = useState(1);
   const [goal, setGoal] = useState({ title: "", description: "" });
   const [goalCategory, setGoalCategory] = useState<GoalCategory>('general');
@@ -91,6 +92,14 @@ export const GoalWizard = () => {
     setCustomDomains(domains);
     nextStep();
   };
+
+  const handleFinalSubmit = () => {
+    const description = Object.entries(discoveryAnswers)
+      .map(([question, answer]) => `Q: ${question}\nA: ${answer || 'N/A'}`)
+      .join('\n\n');
+    
+    setupProject({ title: goal.title, description }, customDomains);
+  };
   
   const renderStep = () => {
     switch (currentStep) {
@@ -122,6 +131,15 @@ export const GoalWizard = () => {
             domains={customDomains}
             setDomains={setCustomDomains}
             onNext={nextStep}
+            onBack={prevStep}
+          />
+        );
+      case 5:
+        return (
+          <Step5Validation
+            goal={goal.title}
+            domains={customDomains}
+            onSubmit={handleFinalSubmit}
             onBack={prevStep}
           />
         );

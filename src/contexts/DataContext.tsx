@@ -9,6 +9,7 @@ import {
   Scale,
   ShieldCheck,
   Users,
+  LucideIcon,
 } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
 
@@ -21,23 +22,15 @@ interface DataContextType {
   deleteTask: (id: string) => void;
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
   updateMainGoal: (title: string, description: string) => void;
+  setupProject: (goal: { title: string; description: string }, domainTitles: string[]) => void;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
-const initialDomains: Domain[] = [
-  { id: "leadership", title: "Leadership", icon: Users },
-  { id: "competences", title: "Compétences", icon: Lightbulb },
-  { id: "reseau", title: "Réseau", icon: Network },
-  { id: "sante", title: "Santé", icon: HeartPulse },
-  { id: "finances", title: "Finances", icon: LineChart },
-  { id: "equilibre", title: "Équilibre Pro/Perso", icon: Scale },
-  { id: "formation", title: "Formation", icon: Briefcase },
-  { id: "confiance", title: "Confiance", icon: ShieldCheck },
-];
+const iconPool: LucideIcon[] = [Users, Lightbulb, Network, HeartPulse, LineChart, Scale, Briefcase, ShieldCheck];
 
 export const DataProvider = ({ children }: { children: ReactNode }) => {
-  const [domains] = useState<Domain[]>(initialDomains);
+  const [domains, setDomains] = useState<Domain[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [mainGoal, setMainGoal] = useState<{ title: string; description: string } | null>(null);
 
@@ -67,8 +60,18 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     setMainGoal({ title, description });
   };
 
+  const setupProject = (goal: { title: string; description: string }, domainTitles: string[]) => {
+    setMainGoal(goal);
+    const newDomains: Domain[] = domainTitles.map((title, index) => ({
+      id: title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '') + `-${uuidv4()}`,
+      title: title,
+      icon: iconPool[index % iconPool.length],
+    }));
+    setDomains(newDomains);
+  };
+
   return (
-    <DataContext.Provider value={{ domains, tasks, mainGoal, addTask, updateTask, deleteTask, setTasks, updateMainGoal }}>
+    <DataContext.Provider value={{ domains, tasks, mainGoal, addTask, updateTask, deleteTask, setTasks, updateMainGoal, setupProject }}>
       {children}
     </DataContext.Provider>
   );
