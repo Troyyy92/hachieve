@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import {
   DndContext,
   DragEndEvent,
-  DragOverEvent,
   DragOverlay,
   DragStartEvent,
   PointerSensor,
@@ -71,55 +70,43 @@ const KanbanView = () => {
     setActiveTask(null);
     const { active, over } = event;
     if (!over) return;
-    if (active.id === over.id) return;
 
-    const isActiveATask = active.data.current?.type === "Task";
-    if (!isActiveATask) return;
+    const activeId = active.id;
+    const overId = over.id;
 
-    setTasks((tasks) => {
-      const activeIndex = tasks.findIndex((t) => t.id === active.id);
-      const overIndex = tasks.findIndex((t) => t.id === over.id);
+    if (activeId === overId) return;
 
-      if (tasks[activeIndex].columnId != tasks[overIndex].columnId) {
-        tasks[activeIndex].columnId = tasks[overIndex].columnId;
-        return arrayMove(tasks, activeIndex, overIndex - 1);
+    setTasks((currentTasks) => {
+      const activeTask = currentTasks.find((t) => t.id === activeId);
+      const overTask = currentTasks.find((t) => t.id === overId);
+
+      if (!activeTask) return currentTasks;
+
+      const activeIndex = currentTasks.findIndex((t) => t.id === activeId);
+
+      // Cas 1: Déposer une tâche sur une autre tâche
+      if (overTask) {
+        const overIndex = currentTasks.findIndex((t) => t.id === overId);
+        if (activeTask.columnId !== overTask.columnId) {
+          const newTasks = [...currentTasks];
+          newTasks[activeIndex] = { ...activeTask, columnId: overTask.columnId };
+          return arrayMove(newTasks, activeIndex, overIndex);
+        }
+        return arrayMove(currentTasks, activeIndex, overIndex);
       }
 
-      return arrayMove(tasks, activeIndex, overIndex);
-    });
-  };
-
-  const onDragOver = (event: DragOverEvent) => {
-    const { active, over } = event;
-    if (!over) return;
-    if (active.id === over.id) return;
-
-    const isActiveATask = active.data.current?.type === "Task";
-    const isOverATask = over.data.current?.type === "Task";
-
-    if (!isActiveATask) return;
-
-    if (isActiveATask && isOverATask) {
-      setTasks((tasks) => {
-        const activeIndex = tasks.findIndex((t) => t.id === active.id);
-        const overIndex = tasks.findIndex((t) => t.id === over.id);
-
-        if (tasks[activeIndex].columnId != tasks[overIndex].columnId) {
-          tasks[activeIndex].columnId = tasks[overIndex].columnId;
-          return arrayMove(tasks, activeIndex, overIndex);
+      // Cas 2: Déposer une tâche sur une colonne
+      const isOverAColumn = over.data.current?.type === "Column";
+      if (isOverAColumn) {
+        if (activeTask.columnId !== overId) {
+          const newTasks = [...currentTasks];
+          newTasks[activeIndex] = { ...activeTask, columnId: overId as ColumnId };
+          return newTasks;
         }
-        return tasks;
-      });
-    }
+      }
 
-    const isOverAColumn = over.data.current?.type === "Column";
-    if (isActiveATask && isOverAColumn) {
-      setTasks((tasks) => {
-        const activeIndex = tasks.findIndex((t) => t.id === active.id);
-        tasks[activeIndex].columnId = over.id as ColumnId;
-        return arrayMove(tasks, activeIndex, activeIndex);
-      });
-    }
+      return currentTasks;
+    });
   };
 
   return (
@@ -154,7 +141,6 @@ const KanbanView = () => {
         sensors={sensors}
         onDragStart={onDragStart}
         onDragEnd={onDragEnd}
-        onDragOver={onDragOver}
       >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <SortableContext items={columnsId}>
