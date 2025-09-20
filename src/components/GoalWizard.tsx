@@ -2,6 +2,7 @@ import { useState } from "react";
 import { WizardSteps } from "./wizard/WizardSteps";
 import { Step1Goal } from "./wizard/Step1Goal";
 import { Step2Discovery } from "./wizard/Step2Discovery";
+import { Step3Domains } from "./wizard/Step3Domains";
 import { useData } from "@/contexts/DataContext";
 
 const TOTAL_STEPS = 5;
@@ -33,6 +34,13 @@ const questionsByCategory = {
   ],
 };
 
+const domainTemplates = {
+  career: ["Compétences techniques", "Leadership", "Réseau professionnel", "Formation continue", "Visibilité interne", "Gestion de projet", "Communication", "Performance mesurable"],
+  sport: ["Technique de base", "Endurance", "Force/vitesse", "Nutrition", "Récupération", "Mental", "Équipement", "Planification d'entraînement"],
+  business: ["Produit/Service", "Marché/clients", "Financement", "Équipe", "Marketing", "Légal/admin", "Technologie", "Réseau/partenaires"],
+  general: ["Développement personnel", "Santé & Bien-être", "Relations sociales", "Finances personnelles", "Environnement", "Contribution", "Loisirs & Passions", "Apprentissage continu"],
+};
+
 type GoalCategory = keyof typeof questionsByCategory;
 
 export const GoalWizard = () => {
@@ -41,6 +49,7 @@ export const GoalWizard = () => {
   const [goal, setGoal] = useState({ title: "", description: "" });
   const [goalCategory, setGoalCategory] = useState<GoalCategory>('general');
   const [discoveryAnswers, setDiscoveryAnswers] = useState<{ [key: string]: string }>({});
+  const [suggestedDomains, setSuggestedDomains] = useState<string[]>([]);
 
   const nextStep = () => {
     if (currentStep < TOTAL_STEPS) {
@@ -67,12 +76,17 @@ export const GoalWizard = () => {
     setGoalCategory(category);
     const initialAnswers = questionsByCategory[category].reduce((acc, q) => ({ ...acc, [q]: '' }), {});
     setDiscoveryAnswers(initialAnswers);
-    console.log("Analyse de l'objectif :", goal.title, "Catégorie détectée:", category);
     nextStep();
   };
 
   const handleAnswerChange = (question: string, answer: string) => {
     setDiscoveryAnswers(prev => ({ ...prev, [question]: answer }));
+  };
+
+  const handleDiscoverySubmit = () => {
+    const domains = domainTemplates[goalCategory];
+    setSuggestedDomains(domains);
+    nextStep();
   };
   
   const renderStep = () => {
@@ -85,6 +99,15 @@ export const GoalWizard = () => {
             questions={questionsByCategory[goalCategory]}
             answers={discoveryAnswers}
             onAnswerChange={handleAnswerChange}
+            onNext={handleDiscoverySubmit}
+            onBack={prevStep}
+          />
+        );
+      case 3:
+        return (
+          <Step3Domains
+            goal={goal.title}
+            domains={suggestedDomains}
             onNext={nextStep}
             onBack={prevStep}
           />
