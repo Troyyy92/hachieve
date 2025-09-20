@@ -16,11 +16,10 @@ const Index = () => {
       <div className="max-w-5xl mx-auto">
         <header className="text-center">
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-            Mon Plan de Développement
+            Hachieve
           </h1>
           <p className="text-muted-foreground mt-4 text-lg">
-            Votre tableau de bord pour atteindre vos objectifs avec la méthode
-            Harada.
+            8 paths to achievement
           </p>
         </header>
 
