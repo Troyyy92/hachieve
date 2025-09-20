@@ -129,10 +129,7 @@ export const CalendarView = () => {
                   <div key={task.id} className="relative group">
                     <Card className={cn(task.isPriority && "bg-cyan-50 border-cyan-200")}>
                       <CardHeader>
-                        <div className="flex justify-between items-start">
-                          <CardTitle className="text-lg pr-24">{task.content}</CardTitle>
-                          {task.isPriority && <Star className="h-5 w-5 text-yellow-500 fill-yellow-400 flex-shrink-0" />}
-                        </div>
+                        <CardTitle className="text-lg pr-24">{task.content}</CardTitle>
                         {domain && (
                           <CardDescription>
                             Domaine : 

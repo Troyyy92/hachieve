@@ -1,4 +1,4 @@
-import { useSortable } from "@dnd-kit/sortable";
+import { useSortable } from "@d-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Card, CardContent } from "@/components/ui/card";
 import { Task } from "@/types";
