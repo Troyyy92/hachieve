@@ -2,13 +2,16 @@ import { useData } from "@/contexts/DataContext";
 import { GoalWizard } from "@/components/GoalWizard";
 import { Dashboard } from "@/components/Dashboard";
 import { AdvancedCalendarView } from "@/components/AdvancedCalendarView";
+import { MobileCalendarView } from "@/components/MobileCalendarView";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { LogOut } from "lucide-react";
+import { useBreakpoint } from "@/hooks/use-breakpoint";
 
 const Index = () => {
   const { mainGoal } = useData();
+  const isMobile = useBreakpoint(414);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -60,7 +63,7 @@ const Index = () => {
             <Dashboard />
           </TabsContent>
           <TabsContent value="calendar">
-            <AdvancedCalendarView />
+            {isMobile ? <MobileCalendarView /> : <AdvancedCalendarView />}
           </TabsContent>
         </Tabs>
       </div>
