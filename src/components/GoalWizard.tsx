@@ -3,6 +3,7 @@ import { WizardSteps } from "./wizard/WizardSteps";
 import { Step1Goal } from "./wizard/Step1Goal";
 import { Step2Discovery } from "./wizard/Step2Discovery";
 import { Step3Domains } from "./wizard/Step3Domains";
+import { Step4Customization } from "./wizard/Step4Customization";
 import { useData } from "@/contexts/DataContext";
 
 const TOTAL_STEPS = 5;
@@ -50,6 +51,7 @@ export const GoalWizard = () => {
   const [goalCategory, setGoalCategory] = useState<GoalCategory>('general');
   const [discoveryAnswers, setDiscoveryAnswers] = useState<{ [key: string]: string }>({});
   const [suggestedDomains, setSuggestedDomains] = useState<string[]>([]);
+  const [customDomains, setCustomDomains] = useState<string[]>([]);
 
   const nextStep = () => {
     if (currentStep < TOTAL_STEPS) {
@@ -86,6 +88,7 @@ export const GoalWizard = () => {
   const handleDiscoverySubmit = () => {
     const domains = domainTemplates[goalCategory];
     setSuggestedDomains(domains);
+    setCustomDomains(domains);
     nextStep();
   };
   
@@ -108,6 +111,16 @@ export const GoalWizard = () => {
           <Step3Domains
             goal={goal.title}
             domains={suggestedDomains}
+            onNext={nextStep}
+            onBack={prevStep}
+          />
+        );
+      case 4:
+        return (
+          <Step4Customization
+            goal={goal.title}
+            domains={customDomains}
+            setDomains={setCustomDomains}
             onNext={nextStep}
             onBack={prevStep}
           />
