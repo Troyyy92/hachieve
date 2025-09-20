@@ -41,6 +41,8 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 
 const initialColumns: Column[] = [
   { id: "todo", title: "À faire" },
@@ -51,8 +53,9 @@ const initialColumns: Column[] = [
 const initialNewTaskData = {
   content: "",
   description: "",
-  startDate: undefined,
-  endDate: undefined,
+  startDate: undefined as Date | undefined,
+  endDate: undefined as Date | undefined,
+  isAllDay: true,
 };
 
 const KanbanView = () => {
@@ -68,11 +71,11 @@ const KanbanView = () => {
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [newTaskData, setNewTaskData] = useState<{content: string; description: string; startDate?: string; endDate?: string;}>(initialNewTaskData);
+  const [newTaskData, setNewTaskData] = useState(initialNewTaskData);
 
   const [taskToDelete, setTaskToDelete] = useState<string | null>(null);
   const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
-  const [editedTaskData, setEditedTaskData] = useState({ content: "", description: "", startDate: undefined as string | undefined, endDate: undefined as string | undefined });
+  const [editedTaskData, setEditedTaskData] = useState({ ...initialNewTaskData });
 
   const [isEditingDomainDesc, setIsEditingDomainDesc] = useState(false);
   const [editedDomainDesc, setEditedDomainDesc] = useState(domain?.description || "");
@@ -90,8 +93,9 @@ const KanbanView = () => {
     addTask(domainId, {
         content: newTaskData.content.trim(),
         description: newTaskData.description.trim() || undefined,
-        startDate: newTaskData.startDate,
-        endDate: newTaskData.endDate,
+        startDate: newTaskData.startDate?.toISOString(),
+        endDate: newTaskData.endDate?.toISOString(),
+        isAllDay: newTaskData.isAllDay,
     });
     setNewTaskData(initialNewTaskData);
     setIsAddDialogOpen(false);
@@ -109,14 +113,21 @@ const KanbanView = () => {
     setEditedTaskData({
       content: task.content,
       description: task.description || "",
-      startDate: task.startDate,
-      endDate: task.endDate,
+      startDate: task.startDate ? new Date(task.startDate) : undefined,
+      endDate: task.endDate ? new Date(task.endDate) : undefined,
+      isAllDay: task.isAllDay ?? true,
     });
   };
 
   const handleUpdateTask = () => {
     if (taskToEdit) {
-      updateTask(taskToEdit.id, editedTaskData);
+      updateTask(taskToEdit.id, {
+        content: editedTaskData.content,
+        description: editedTaskData.description,
+        startDate: editedTaskData.startDate?.toISOString(),
+        endDate: editedTaskData.endDate?.toISOString(),
+        isAllDay: editedTaskData.isAllDay,
+      });
       setTaskToEdit(null);
     }
   };
@@ -172,6 +183,23 @@ const KanbanView = () => {
       }
 
       return currentTasks;
+    });
+  };
+
+  const handleTimeChange = (
+    field: 'startDate' | 'endDate',
+    time: string,
+    setData: React.Dispatch<React.SetStateAction<typeof newTaskData>>
+  ) => {
+    setData(d => {
+      const currentDate = d[field];
+      if (currentDate) {
+        const newDate = new Date(currentDate);
+        const [hours, minutes] = time.split(':').map(Number);
+        newDate.setHours(hours, minutes);
+        return { ...d, [field]: newDate };
+      }
+      return d;
     });
   };
 
@@ -236,50 +264,56 @@ const KanbanView = () => {
                         <Label htmlFor="new-task-description">Description (facultatif)</Label>
                         <Textarea id="new-task-description" value={newTaskData.description} onChange={(e) => setNewTaskData(d => ({...d, description: e.target.value}))} className="min-h-[100px]" placeholder="Ajoutez plus de détails..." />
                     </div>
+                    <div className="flex items-center space-x-2">
+                        <Checkbox id="new-isAllDay" checked={newTaskData.isAllDay} onCheckedChange={(checked) => setNewTaskData(d => ({...d, isAllDay: !!checked}))} />
+                        <Label htmlFor="new-isAllDay">Toute la journée</Label>
+                    </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <Label>Date de début (facultatif)</Label>
+                            <Label>Date de début</Label>
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <Button variant="outline" className="w-full justify-start text-left font-normal">
                                         <CalendarIcon className="mr-2 h-4 w-4" />
-                                        {newTaskData.startDate ? format(new Date(newTaskData.startDate), "PPP", { locale: fr }) : <span>Choisir une date</span>}
+                                        {newTaskData.startDate ? format(newTaskData.startDate, "PPP", { locale: fr }) : <span>Choisir une date</span>}
                                     </Button>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-auto p-0">
                                     <Calendar 
                                         mode="single" 
-                                        selected={newTaskData.startDate ? new Date(newTaskData.startDate) : undefined} 
-                                        onSelect={(date) => setNewTaskData(d => ({
-                                            ...d, 
-                                            startDate: date?.toISOString(),
-                                            endDate: (d.endDate && date && new Date(d.endDate) < date) ? undefined : d.endDate
-                                        }))} 
-                                        disabled={newTaskData.endDate ? { after: new Date(newTaskData.endDate) } : undefined}
+                                        selected={newTaskData.startDate} 
+                                        onSelect={(date) => setNewTaskData(d => ({...d, startDate: date ?? undefined, endDate: (d.endDate && date && d.endDate < date) ? undefined : d.endDate}))} 
+                                        disabled={newTaskData.endDate ? { after: newTaskData.endDate } : undefined}
                                         initialFocus 
                                     />
                                 </PopoverContent>
                             </Popover>
+                            {!newTaskData.isAllDay && newTaskData.startDate && (
+                                <Input type="time" className="mt-2" value={format(newTaskData.startDate, 'HH:mm')} onChange={(e) => handleTimeChange('startDate', e.target.value, setNewTaskData)} />
+                            )}
                         </div>
                         <div>
-                            <Label>Date de fin (facultatif)</Label>
+                            <Label>Date de fin</Label>
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <Button variant="outline" className="w-full justify-start text-left font-normal">
                                         <CalendarIcon className="mr-2 h-4 w-4" />
-                                        {newTaskData.endDate ? format(new Date(newTaskData.endDate), "PPP", { locale: fr }) : <span>Choisir une date</span>}
+                                        {newTaskData.endDate ? format(newTaskData.endDate, "PPP", { locale: fr }) : <span>Choisir une date</span>}
                                     </Button>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-auto p-0">
                                     <Calendar 
                                         mode="single" 
-                                        selected={newTaskData.endDate ? new Date(newTaskData.endDate) : undefined} 
-                                        onSelect={(date) => setNewTaskData(d => ({...d, endDate: date?.toISOString()}))} 
-                                        disabled={newTaskData.startDate ? { before: new Date(newTaskData.startDate) } : undefined}
+                                        selected={newTaskData.endDate} 
+                                        onSelect={(date) => setNewTaskData(d => ({...d, endDate: date ?? undefined}))} 
+                                        disabled={newTaskData.startDate ? { before: newTaskData.startDate } : undefined}
                                         initialFocus 
                                     />
                                 </PopoverContent>
                             </Popover>
+                            {!newTaskData.isAllDay && newTaskData.endDate && (
+                                <Input type="time" className="mt-2" value={format(newTaskData.endDate, 'HH:mm')} onChange={(e) => handleTimeChange('endDate', e.target.value, setNewTaskData)} />
+                            )}
                         </div>
                     </div>
                 </div>
@@ -329,50 +363,56 @@ const KanbanView = () => {
               <Label htmlFor="task-description">Description (facultatif)</Label>
               <Textarea id="task-description" value={editedTaskData.description} onChange={(e) => setEditedTaskData(d => ({...d, description: e.target.value}))} className="min-h-[100px]" placeholder="Ajoutez plus de détails..." />
             </div>
+            <div className="flex items-center space-x-2">
+                <Checkbox id="edit-isAllDay" checked={editedTaskData.isAllDay} onCheckedChange={(checked) => setEditedTaskData(d => ({...d, isAllDay: !!checked}))} />
+                <Label htmlFor="edit-isAllDay">Toute la journée</Label>
+            </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label>Date de début (facultatif)</Label>
+                <Label>Date de début</Label>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" className="w-full justify-start text-left font-normal">
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {editedTaskData.startDate ? format(new Date(editedTaskData.startDate), "PPP", { locale: fr }) : <span>Choisir une date</span>}
+                      {editedTaskData.startDate ? format(editedTaskData.startDate, "PPP", { locale: fr }) : <span>Choisir une date</span>}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
                     <Calendar
                       mode="single"
-                      selected={editedTaskData.startDate ? new Date(editedTaskData.startDate) : undefined}
-                      onSelect={(date) => setEditedTaskData(d => ({
-                          ...d, 
-                          startDate: date?.toISOString(),
-                          endDate: (d.endDate && date && new Date(d.endDate) < date) ? undefined : d.endDate
-                      }))}
-                      disabled={editedTaskData.endDate ? { after: new Date(editedTaskData.endDate) } : undefined}
+                      selected={editedTaskData.startDate}
+                      onSelect={(date) => setEditedTaskData(d => ({...d, startDate: date ?? undefined, endDate: (d.endDate && date && d.endDate < date) ? undefined : d.endDate}))}
+                      disabled={editedTaskData.endDate ? { after: editedTaskData.endDate } : undefined}
                       initialFocus
                     />
                   </PopoverContent>
                 </Popover>
+                {!editedTaskData.isAllDay && editedTaskData.startDate && (
+                    <Input type="time" className="mt-2" value={format(editedTaskData.startDate, 'HH:mm')} onChange={(e) => handleTimeChange('startDate', e.target.value, setEditedTaskData)} />
+                )}
               </div>
               <div>
-                <Label>Date de fin (facultatif)</Label>
+                <Label>Date de fin</Label>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" className="w-full justify-start text-left font-normal">
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {editedTaskData.endDate ? format(new Date(editedTaskData.endDate), "PPP", { locale: fr }) : <span>Choisir une date</span>}
+                      {editedTaskData.endDate ? format(editedTaskData.endDate, "PPP", { locale: fr }) : <span>Choisir une date</span>}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
                     <Calendar
                       mode="single"
-                      selected={editedTaskData.endDate ? new Date(editedTaskData.endDate) : undefined}
-                      onSelect={(date) => setEditedTaskData(d => ({...d, endDate: date?.toISOString()}))}
-                      disabled={editedTaskData.startDate ? { before: new Date(editedTaskData.startDate) } : undefined}
+                      selected={editedTaskData.endDate}
+                      onSelect={(date) => setEditedTaskData(d => ({...d, endDate: date ?? undefined}))}
+                      disabled={editedTaskData.startDate ? { before: editedTaskData.startDate } : undefined}
                       initialFocus
                     />
                   </PopoverContent>
                 </Popover>
+                {!editedTaskData.isAllDay && editedTaskData.endDate && (
+                    <Input type="time" className="mt-2" value={format(editedTaskData.endDate, 'HH:mm')} onChange={(e) => handleTimeChange('endDate', e.target.value, setEditedTaskData)} />
+                )}
               </div>
             </div>
           </div>

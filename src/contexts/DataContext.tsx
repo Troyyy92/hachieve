@@ -17,7 +17,7 @@ interface DataContextType {
   domains: Domain[];
   tasks: Task[];
   mainGoal: { title: string; description: string } | null;
-  addTask: (domainId: string, data: { content: string; description?: string; startDate?: string; endDate?: string; }) => void;
+  addTask: (domainId: string, data: { content: string; description?: string; startDate?: string; endDate?: string; isAllDay?: boolean; }) => void;
   updateTask: (id: string, updates: Partial<Omit<Task, 'id'>>) => void;
   deleteTask: (id: string) => void;
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
@@ -35,7 +35,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [mainGoal, setMainGoal] = useState<{ title: string; description: string } | null>(null);
 
-  const addTask = (domainId: string, data: { content: string; description?: string; startDate?: string; endDate?: string; }) => {
+  const addTask = (domainId: string, data: { content: string; description?: string; startDate?: string; endDate?: string; isAllDay?: boolean; }) => {
     const newTask: Task = {
       id: uuidv4(),
       domainId,
@@ -45,6 +45,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
       startDate: data.startDate,
       endDate: data.endDate,
       isPriority: false,
+      isAllDay: data.isAllDay ?? true,
     };
     setTasks((prev) => [...prev, newTask]);
   };

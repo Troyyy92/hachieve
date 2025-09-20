@@ -17,6 +17,7 @@ export interface Task {
   startDate?: string;
   endDate?: string;
   isPriority?: boolean;
+  isAllDay?: boolean;
 }
 
 export type ColumnId = "todo" | "inprogress" | "done";

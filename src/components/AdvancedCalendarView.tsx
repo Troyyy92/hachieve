@@ -53,7 +53,7 @@ export const AdvancedCalendarView = () => {
           ),
           start: new Date(task.startDate!),
           end: new Date(task.endDate || task.startDate!),
-          allDay: !task.endDate || task.startDate === task.endDate,
+          allDay: task.isAllDay ?? true,
           isDone: isDone,
         };
       });
