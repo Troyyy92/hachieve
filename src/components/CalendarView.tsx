@@ -43,6 +43,10 @@ export const CalendarView = () => {
     return tasks.filter(task => task.startDate);
   }, [tasks]);
 
+  const activeTasksWithDates = useMemo(() => {
+    return tasksWithDates.filter(task => task.columnId !== 'done');
+  }, [tasksWithDates]);
+
   const tasksForSelectedDay = useMemo(() => {
     if (!selectedDate) return [];
     return tasksWithDates
@@ -56,7 +60,7 @@ export const CalendarView = () => {
 
   const modifiers = {
     hasTask: (date: Date) => {
-      return tasksWithDates.some(task => {
+      return activeTasksWithDates.some(task => {
         const start = startOfDay(parseISO(task.startDate!));
         const end = task.endDate ? endOfDay(parseISO(task.endDate)) : startOfDay(start);
         return isWithinInterval(date, { start, end });
@@ -129,7 +133,12 @@ export const CalendarView = () => {
                   <div key={task.id} className="relative group">
                     <Card className={cn(task.isPriority && "bg-cyan-50 border-cyan-200")}>
                       <CardHeader>
-                        <CardTitle className="text-lg pr-24">{task.content}</CardTitle>
+                        <CardTitle className={cn(
+                          "text-lg pr-24",
+                          task.columnId === 'done' && "line-through text-muted-foreground"
+                        )}>
+                          {task.content}
+                        </CardTitle>
                         {domain && (
                           <CardDescription>
                             Domaine : 

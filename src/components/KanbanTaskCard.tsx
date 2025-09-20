@@ -56,7 +56,12 @@ export const KanbanTaskCard = ({ task, onDelete, onEdit }: KanbanTaskCardProps) 
         task.isPriority && "bg-cyan-50 border-cyan-200"
       )}>
         <CardContent className="p-0 flex-grow flex items-center justify-center">
-          <p className="text-sm font-medium whitespace-pre-wrap">{task.content}</p>
+          <p className={cn(
+            "text-sm font-medium whitespace-pre-wrap",
+            task.columnId === 'done' && "line-through text-muted-foreground"
+          )}>
+            {task.content}
+          </p>
         </CardContent>
         <div className="flex items-center justify-start gap-2 h-5">
           {task.description && (
