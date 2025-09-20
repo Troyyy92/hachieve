@@ -36,19 +36,9 @@ const initialDomains: Domain[] = [
   { id: "confiance", title: "Confiance", icon: ShieldCheck },
 ];
 
-const initialTasks: Task[] = [
-  { id: "1", domainId: "leadership", columnId: "todo", content: "Définir la vision du produit" },
-  { id: "2", domainId: "leadership", columnId: "todo", content: "Contacter 5 mentors potentiels" },
-  { id: "3", domainId: "leadership", columnId: "inprogress", content: "Lire un livre sur le leadership" },
-  { id: "4", domainId: "leadership", columnId: "done", content: "Terminer le module de formation en ligne" },
-  { id: "5", domainId: "competences", columnId: "done", content: "Finir le cours sur React" },
-  { id: "6", domainId: "competences", columnId: "done", content: "Apprendre les bases de Python" },
-  { id: "7", domainId: "sante", columnId: "todo", content: "Faire 3 séances de sport cette semaine" },
-];
-
 export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [domains] = useState<Domain[]>(initialDomains);
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [mainGoal, setMainGoal] = useState<{ title: string; description: string } | null>(null);
 
   const addTask = (content: string, domainId: string) => {
