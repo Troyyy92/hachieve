@@ -142,7 +142,7 @@ const KanbanView = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 md:p-8">
+    <div className="p-4 md:p-8">
       <div className="flex items-center text-sm text-muted-foreground mb-8">
         <Link to="/" className="hover:text-primary">
           Vue d'ensemble
