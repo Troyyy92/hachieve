@@ -288,8 +288,14 @@ const KanbanView = () => {
                                     />
                                 </PopoverContent>
                             </Popover>
-                            {!newTaskData.isAllDay && newTaskData.startDate && (
-                                <Input type="time" className="mt-2" value={format(newTaskData.startDate, 'HH:mm')} onChange={(e) => handleTimeChange('startDate', e.target.value, setNewTaskData)} />
+                            {!newTaskData.isAllDay && (
+                                <Input 
+                                    type="time" 
+                                    className="mt-2" 
+                                    value={newTaskData.startDate ? format(newTaskData.startDate, 'HH:mm') : ''} 
+                                    onChange={(e) => handleTimeChange('startDate', e.target.value, setNewTaskData)}
+                                    disabled={!newTaskData.startDate}
+                                />
                             )}
                         </div>
                         <div>
@@ -311,8 +317,14 @@ const KanbanView = () => {
                                     />
                                 </PopoverContent>
                             </Popover>
-                            {!newTaskData.isAllDay && newTaskData.endDate && (
-                                <Input type="time" className="mt-2" value={format(newTaskData.endDate, 'HH:mm')} onChange={(e) => handleTimeChange('endDate', e.target.value, setNewTaskData)} />
+                            {!newTaskData.isAllDay && (
+                                <Input 
+                                    type="time" 
+                                    className="mt-2" 
+                                    value={newTaskData.endDate ? format(newTaskData.endDate, 'HH:mm') : ''} 
+                                    onChange={(e) => handleTimeChange('endDate', e.target.value, setNewTaskData)}
+                                    disabled={!newTaskData.endDate}
+                                />
                             )}
                         </div>
                     </div>
@@ -387,8 +399,14 @@ const KanbanView = () => {
                     />
                   </PopoverContent>
                 </Popover>
-                {!editedTaskData.isAllDay && editedTaskData.startDate && (
-                    <Input type="time" className="mt-2" value={format(editedTaskData.startDate, 'HH:mm')} onChange={(e) => handleTimeChange('startDate', e.target.value, setEditedTaskData)} />
+                {!editedTaskData.isAllDay && (
+                    <Input 
+                        type="time" 
+                        className="mt-2" 
+                        value={editedTaskData.startDate ? format(editedTaskData.startDate, 'HH:mm') : ''} 
+                        onChange={(e) => handleTimeChange('startDate', e.target.value, setEditedTaskData)}
+                        disabled={!editedTaskData.startDate}
+                    />
                 )}
               </div>
               <div>
@@ -410,8 +428,14 @@ const KanbanView = () => {
                     />
                   </PopoverContent>
                 </Popover>
-                {!editedTaskData.isAllDay && editedTaskData.endDate && (
-                    <Input type="time" className="mt-2" value={format(editedTaskData.endDate, 'HH:mm')} onChange={(e) => handleTimeChange('endDate', e.target.value, setEditedTaskData)} />
+                {!editedTaskData.isAllDay && (
+                    <Input 
+                        type="time" 
+                        className="mt-2" 
+                        value={editedTaskData.endDate ? format(editedTaskData.endDate, 'HH:mm') : ''} 
+                        onChange={(e) => handleTimeChange('endDate', e.target.value, setEditedTaskData)}
+                        disabled={!editedTaskData.endDate}
+                    />
                 )}
               </div>
             </div>
