@@ -37,14 +37,14 @@ export const KanbanTaskCard = ({ task, onDelete, onEdit }: KanbanTaskCardProps) 
       <div
         ref={setNodeRef}
         style={style}
-        className="aspect-square bg-primary/10 rounded-xl border-2 border-primary"
+        className="aspect-square bg-card rounded-xl border-2 border-primary opacity-50"
       />
     );
   }
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="relative group">
-      <Card className="aspect-square flex items-center justify-center p-3 text-center bg-yellow-100 dark:bg-yellow-900/30 border-yellow-200 dark:border-yellow-900/50 hover:shadow-lg transition-shadow cursor-grab active:cursor-grabbing transform hover:-rotate-1">
+      <Card className="aspect-square flex items-center justify-center p-3 text-center bg-card hover:shadow-md transition-shadow cursor-grab active:cursor-grabbing">
         <CardContent className="p-0">
           <p className="text-sm font-medium whitespace-pre-wrap">{task.content}</p>
         </CardContent>

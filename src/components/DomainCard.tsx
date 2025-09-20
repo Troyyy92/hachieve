@@ -10,10 +10,10 @@ interface DomainCardProps {
 export const DomainCard = ({ domain }: DomainCardProps) => {
   return (
     <Link to={`/domain/${domain.id}`}>
-      <Card className="hover:shadow-lg transition-shadow duration-300 aspect-square flex flex-col">
+      <Card className="hover:shadow-xl hover:-translate-y-1 aspect-square flex flex-col bg-card">
         <CardHeader className="flex-shrink-0">
           <CardTitle className="flex items-center text-lg">
-            <domain.icon className="w-5 h-5 mr-2" />
+            <domain.icon className="w-5 h-5 mr-2 text-muted-foreground" />
             {domain.title}
           </CardTitle>
         </CardHeader>

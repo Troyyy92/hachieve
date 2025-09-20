@@ -22,8 +22,8 @@ export const KanbanColumn = ({ column, tasks, onDeleteTask, onEditTask }: Kanban
   });
 
   return (
-    <div ref={setNodeRef} className="bg-muted/50 rounded-lg p-4 flex flex-col gap-4">
-      <h2 className="font-semibold">{column.title} ({tasks.length})</h2>
+    <div ref={setNodeRef} className="bg-secondary rounded-lg p-4 flex flex-col gap-4">
+      <h2 className="font-semibold px-1">{column.title} <span className="text-muted-foreground font-normal">({tasks.length})</span></h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-grow">
         <SortableContext items={tasksIds}>
           {tasks.map((task) => (

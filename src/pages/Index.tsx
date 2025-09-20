@@ -31,12 +31,12 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground p-4 md:p-8">
-      <div className="max-w-4xl mx-auto">
-        <header className="text-center mb-8">
-          <h1 className="text-4xl font-bold tracking-tight">
+      <div className="max-w-5xl mx-auto">
+        <header className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
             Mon Plan de Développement
           </h1>
-          <p className="text-muted-foreground mt-2">
+          <p className="text-muted-foreground mt-4 text-lg">
             Votre tableau de bord pour atteindre vos objectifs avec la méthode
             Harada.
           </p>
