@@ -15,7 +15,6 @@ import { Column, ColumnId, Task } from "@/types";
 import { KanbanColumn } from "@/components/KanbanColumn";
 import { KanbanTaskCard } from "@/components/KanbanTaskCard";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useData } from "@/contexts/DataContext";
 import {
   AlertDialog,
@@ -34,6 +33,7 @@ import {
   DialogTitle,
   DialogFooter,
   DialogClose,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -48,6 +48,13 @@ const initialColumns: Column[] = [
   { id: "done", title: "Terminé" },
 ];
 
+const initialNewTaskData = {
+  content: "",
+  description: "",
+  startDate: undefined,
+  endDate: undefined,
+};
+
 const KanbanView = () => {
   const { domainId } = useParams();
   const { domains, tasks, setTasks, addTask, updateTask, deleteTask, updateDomain } = useData();
@@ -59,8 +66,10 @@ const KanbanView = () => {
   const domainTasks = useMemo(() => tasks.filter(task => task.domainId === domainId), [tasks, domainId]);
 
   const [activeTask, setActiveTask] = useState<Task | null>(null);
-  const [newTaskContent, setNewTaskContent] = useState("");
   
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [newTaskData, setNewTaskData] = useState<{content: string; description: string; startDate?: string; endDate?: string;}>(initialNewTaskData);
+
   const [taskToDelete, setTaskToDelete] = useState<string | null>(null);
   const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
   const [editedTaskData, setEditedTaskData] = useState({ content: "", description: "", startDate: undefined, endDate: undefined });
@@ -77,9 +86,15 @@ const KanbanView = () => {
   );
 
   const handleAddTask = () => {
-    if (!newTaskContent.trim() || !domainId) return;
-    addTask(newTaskContent.trim(), domainId);
-    setNewTaskContent("");
+    if (!newTaskData.content.trim() || !domainId) return;
+    addTask(domainId, {
+        content: newTaskData.content.trim(),
+        description: newTaskData.description.trim() || undefined,
+        startDate: newTaskData.startDate,
+        endDate: newTaskData.endDate,
+    });
+    setNewTaskData(initialNewTaskData);
+    setIsAddDialogOpen(false);
   };
 
   const handleConfirmDelete = () => {
@@ -204,18 +219,60 @@ const KanbanView = () => {
       </div>
 
       <div className="mb-6">
-        <div className="flex w-full max-w-sm items-center space-x-2">
-          <Input
-            type="text"
-            placeholder="Nouvelle tâche..."
-            value={newTaskContent}
-            onChange={(e) => setNewTaskContent(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleAddTask()}
-          />
-          <Button type="submit" onClick={handleAddTask}>
-            <Plus className="w-4 h-4 mr-2" /> Ajouter
-          </Button>
-        </div>
+        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+            <DialogTrigger asChild>
+                <Button>
+                    <Plus className="w-4 h-4 mr-2" /> Ajouter une tâche
+                </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader><DialogTitle>Nouvelle tâche</DialogTitle></DialogHeader>
+                <div className="py-4 space-y-4">
+                    <div>
+                        <Label htmlFor="new-task-content">Contenu</Label>
+                        <Textarea id="new-task-content" value={newTaskData.content} onChange={(e) => setNewTaskData(d => ({...d, content: e.target.value}))} className="min-h-[100px]" placeholder="Contenu principal de la tâche..." />
+                    </div>
+                    <div>
+                        <Label htmlFor="new-task-description">Description (facultatif)</Label>
+                        <Textarea id="new-task-description" value={newTaskData.description} onChange={(e) => setNewTaskData(d => ({...d, description: e.target.value}))} className="min-h-[100px]" placeholder="Ajoutez plus de détails..." />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <Label>Date de début</Label>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button variant="outline" className="w-full justify-start text-left font-normal">
+                                        <CalendarIcon className="mr-2 h-4 w-4" />
+                                        {newTaskData.startDate ? format(new Date(newTaskData.startDate), "PPP", { locale: fr }) : <span>Choisir une date</span>}
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0">
+                                    <Calendar mode="single" selected={newTaskData.startDate ? new Date(newTaskData.startDate) : undefined} onSelect={(date) => setNewTaskData(d => ({...d, startDate: date?.toISOString()}))} initialFocus />
+                                </PopoverContent>
+                            </Popover>
+                        </div>
+                        <div>
+                            <Label>Date de fin</Label>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button variant="outline" className="w-full justify-start text-left font-normal">
+                                        <CalendarIcon className="mr-2 h-4 w-4" />
+                                        {newTaskData.endDate ? format(new Date(newTaskData.endDate), "PPP", { locale: fr }) : <span>Choisir une date</span>}
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0">
+                                    <Calendar mode="single" selected={newTaskData.endDate ? new Date(newTaskData.endDate) : undefined} onSelect={(date) => setNewTaskData(d => ({...d, endDate: date?.toISOString()}))} initialFocus />
+                                </PopoverContent>
+                            </Popover>
+                        </div>
+                    </div>
+                </div>
+                <DialogFooter>
+                    <DialogClose asChild><Button type="button" variant="secondary">Annuler</Button></DialogClose>
+                    <Button type="button" onClick={handleAddTask} disabled={!newTaskData.content.trim()}>Enregistrer</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
       </div>
 
       <DndContext

@@ -17,7 +17,7 @@ interface DataContextType {
   domains: Domain[];
   tasks: Task[];
   mainGoal: { title: string; description: string } | null;
-  addTask: (content: string, domainId: string) => void;
+  addTask: (domainId: string, data: { content: string; description?: string; startDate?: string; endDate?: string; }) => void;
   updateTask: (id: string, updates: Partial<Omit<Task, 'id'>>) => void;
   deleteTask: (id: string) => void;
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
@@ -35,12 +35,15 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [mainGoal, setMainGoal] = useState<{ title: string; description: string } | null>(null);
 
-  const addTask = (content: string, domainId: string) => {
+  const addTask = (domainId: string, data: { content: string; description?: string; startDate?: string; endDate?: string; }) => {
     const newTask: Task = {
       id: uuidv4(),
       domainId,
       columnId: "todo",
-      content,
+      content: data.content,
+      description: data.description,
+      startDate: data.startDate,
+      endDate: data.endDate,
     };
     setTasks((prev) => [...prev, newTask]);
   };
