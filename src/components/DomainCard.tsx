@@ -24,7 +24,7 @@ export const DomainCard = ({ domain }: DomainCardProps) => {
     <div className="relative group">
       <Link to={`/domain/${domain.id}`}>
         <Card className={cn(
-          "hover:shadow-xl hover:-translate-y-1 aspect-square flex flex-col bg-card",
+          "hover:shadow-xl hover:-translate-y-1 flex flex-col bg-card min-h-56",
           domain.isPriority && "bg-cyan-50 border-cyan-200"
         )}>
           <CardHeader className="flex-shrink-0">
