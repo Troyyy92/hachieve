@@ -31,7 +31,9 @@ export const DomainCard = ({ domain }: DomainCardProps) => {
     updateDomain(domain.id, { isPriority: !domain.isPriority });
   };
 
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     deleteDomain(domain.id);
   };
 
@@ -91,7 +93,7 @@ export const DomainCard = ({ domain }: DomainCardProps) => {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Annuler</AlertDialogCancel>
+              <AlertDialogCancel onClick={(e) => e.stopPropagation()}>Annuler</AlertDialogCancel>
               <AlertDialogAction onClick={handleDeleteConfirm}>Supprimer</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
