@@ -114,7 +114,8 @@
   }
 
   .calendar-container .rbc-header {
-    @apply text-center p-2 border-b border-border text-sm font-medium text-muted-foreground;
+    @apply text-center p-2 border-b text-sm font-medium text-muted-foreground;
+    border-color: #bbbbbb;
   }
 
   .calendar-container .rbc-month-view,
@@ -123,14 +124,14 @@
   }
 
   .calendar-container .rbc-day-bg {
-    @apply border-l border-border;
+    border-left-color: #bbbbbb;
   }
   .calendar-container .rbc-day-bg:first-child {
     @apply border-l-0;
   }
 
   .calendar-container .rbc-month-row {
-    @apply border-b border-border;
+    border-bottom-color: #bbbbbb;
   }
   
   .calendar-container .rbc-month-row:last-child {
@@ -142,7 +143,7 @@
   }
 
   .calendar-container .rbc-today {
-    @apply bg-primary/10;
+    background-color: #ffd86252;
   }
 
   .calendar-container .rbc-event {

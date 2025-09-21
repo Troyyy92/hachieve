@@ -142,7 +142,7 @@ export const AdvancedCalendarView = () => {
 
   return (
     <>
-      <div className="mt-8 h-[70vh] bg-card backdrop-blur-sm p-4 rounded-lg calendar-container">
+      <div className="mt-8 h-[70vh] bg-[#fbf7ea4a] backdrop-blur-sm p-4 rounded-lg calendar-container">
         <Calendar
           localizer={localizer}
           events={events}
