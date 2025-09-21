@@ -8,7 +8,7 @@ import { AuthError } from '@supabase/supabase-js';
 
 const Login = () => {
   const { session } = useAuth();
-  const [mode, setMode] = useState<'signIn' | 'signUp'>('signIn');
+  const [mode, setMode] = useState<'signIn' | 'signUp' | 'forgotPassword'>('signIn');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -27,9 +27,15 @@ const Login = () => {
     if (mode === 'signIn') {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       authError = error;
-    } else {
+    } else if (mode === 'signUp') {
       const { error } = await supabase.auth.signUp({ email, password });
       authError = error;
+    } else if (mode === 'forgotPassword') {
+      const { error } = await supabase.auth.resetPasswordForEmail(email);
+      authError = error;
+      if (!error) {
+        setSuccessMessage("Si un compte existe pour cet e-mail, un lien de réinitialisation a été envoyé.");
+      }
     }
 
     if (authError) {
@@ -43,6 +49,13 @@ const Login = () => {
   if (session) {
     return <Navigate to="/" replace />;
   }
+
+  const getButtonText = () => {
+    if (loading) return <Loader2 className="w-6 h-6 animate-spin" />;
+    if (mode === 'signIn') return 'Se connecter';
+    if (mode === 'signUp') return "S'inscrire";
+    return "Envoyer le lien de réinitialisation";
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-5 bg-gradient-to-br from-[#FFDDC1] to-[#FFD4B2]">
@@ -79,49 +92,67 @@ const Login = () => {
             />
           </div>
 
-          <div className="relative w-full">
-            <input
-              type={passwordVisible ? 'text' : 'password'}
-              placeholder="Mot de passe"
-              required
-              autoComplete="current-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-5 py-4 text-base border-none rounded-2xl bg-[#FFF4E6] shadow-sm transition-all duration-300 ease-in-out outline-none focus:bg-white focus:shadow-lg focus:shadow-[#4a5fe8]/15 placeholder:text-[#8B7355] placeholder:font-normal"
-            />
-            <button type="button" className="absolute right-5 top-1/2 -translate-y-1/2 p-1" onClick={() => setPasswordVisible(!passwordVisible)}>
-              {passwordVisible ? (
-                <EyeOff className="w-6 h-6 text-[#8B7355]" />
-              ) : (
-                <Eye className="w-6 h-6 text-[#8B7355]" />
-              )}
-            </button>
-          </div>
+          {mode !== 'forgotPassword' && (
+            <div className="relative w-full">
+              <input
+                type={passwordVisible ? 'text' : 'password'}
+                placeholder="Mot de passe"
+                required
+                autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-5 py-4 text-base border-none rounded-2xl bg-[#FFF4E6] shadow-sm transition-all duration-300 ease-in-out outline-none focus:bg-white focus:shadow-lg focus:shadow-[#4a5fe8]/15 placeholder:text-[#8B7355] placeholder:font-normal"
+              />
+              <button type="button" className="absolute right-5 top-1/2 -translate-y-1/2 p-1" onClick={() => setPasswordVisible(!passwordVisible)}>
+                {passwordVisible ? (
+                  <EyeOff className="w-6 h-6 text-[#8B7355]" />
+                ) : (
+                  <Eye className="w-6 h-6 text-[#8B7355]" />
+                )}
+              </button>
+            </div>
+          )}
 
           <button
             type="submit"
             disabled={loading}
             className="w-full py-4 mt-2.5 text-lg font-semibold text-white bg-gradient-to-br from-[#FFB366] to-[#FFA34D] rounded-full cursor-pointer transition-all duration-300 ease-in-out shadow-[0_4px_15px_rgba(255,163,77,0.3)] hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(255,163,77,0.4)] active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
           >
-            {loading ? (
-              <Loader2 className="w-6 h-6 animate-spin" />
-            ) : (
-              mode === 'signIn' ? 'Se connecter' : "S'inscrire"
-            )}
+            {getButtonText()}
           </button>
         </form>
 
         <div className="mt-9 flex flex-col gap-4">
           <button
             onClick={() => {
-              setMode(mode === 'signIn' ? 'signUp' : 'signIn');
               setError(null);
               setSuccessMessage(null);
+              if (mode === 'forgotPassword') {
+                setMode('signIn');
+              } else {
+                setMode(mode === 'signIn' ? 'signUp' : 'signIn');
+              }
             }}
             className="text-[#4A5FE8] text-base transition-opacity duration-300 hover:opacity-70 hover:underline"
           >
-            {mode === 'signIn' ? "Vous n'avez pas de compte ? Inscrivez-vous" : "Vous avez déjà un compte ? Connectez-vous"}
+            {mode === 'signIn'
+              ? "Vous n'avez pas de compte ? Inscrivez-vous"
+              : mode === 'signUp'
+              ? "Vous avez déjà un compte ? Connectez-vous"
+              : "Retour à la connexion"}
           </button>
+          {mode === 'signIn' && (
+            <button
+              onClick={() => {
+                setMode('forgotPassword');
+                setError(null);
+                setSuccessMessage(null);
+              }}
+              className="text-[#4A5FE8] text-base transition-opacity duration-300 hover:opacity-70 hover:underline"
+            >
+              Mot de passe oublié ?
+            </button>
+          )}
         </div>
       </div>
     </div>
