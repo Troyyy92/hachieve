@@ -2,8 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ToolbarProps } from 'react-big-calendar';
+import { useTranslation } from "react-i18next";
 
 export const CustomToolbar = (toolbar: ToolbarProps) => {
+  const { t } = useTranslation();
+
   const goToBack = () => {
     toolbar.onNavigate('PREV');
   };
@@ -26,7 +29,7 @@ export const CustomToolbar = (toolbar: ToolbarProps) => {
         <Button variant="outline" size="icon" onClick={goToBack}>
           <ChevronLeft className="h-4 w-4" />
         </Button>
-        <Button variant="outline" onClick={goToCurrent}>Aujourd'hui</Button>
+        <Button variant="outline" onClick={goToCurrent}>{t('common.today')}</Button>
         <Button variant="outline" size="icon" onClick={goToNext}>
           <ChevronRight className="h-4 w-4" />
         </Button>
@@ -36,9 +39,9 @@ export const CustomToolbar = (toolbar: ToolbarProps) => {
       </h2>
       <Tabs value={toolbar.view} onValueChange={handleViewChange} className="w-full sm:w-auto">
         <TabsList className="grid w-full grid-cols-3 sm:w-auto">
-          <TabsTrigger value="month">Mois</TabsTrigger>
-          <TabsTrigger value="week">Semaine</TabsTrigger>
-          <TabsTrigger value="day">Jour</TabsTrigger>
+          <TabsTrigger value="month">{t('calendar.month')}</TabsTrigger>
+          <TabsTrigger value="week">{t('calendar.week')}</TabsTrigger>
+          <TabsTrigger value="day">{t('calendar.day')}</TabsTrigger>
         </TabsList>
       </Tabs>
     </div>
