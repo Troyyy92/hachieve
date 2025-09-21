@@ -3,15 +3,18 @@ import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
 import { useData } from '@/contexts/DataContext';
 import { format, isSameDay } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { fr, enUS } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
 import { Badge } from './ui/badge';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 export const MobileCalendarView = () => {
   const { tasks, domains } = useData();
   const [date, setDate] = useState<Date | undefined>(new Date());
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
+  const dateLocale = i18n.language.startsWith('en') ? enUS : fr;
 
   const daysWithTasks = useMemo(() => {
     const dates = new Set<string>();
@@ -50,7 +53,7 @@ export const MobileCalendarView = () => {
             selected={date}
             onSelect={setDate}
             className="p-0"
-            locale={fr}
+            locale={dateLocale}
             modifiers={{
               withTask: daysWithTasks,
             }}
@@ -63,7 +66,7 @@ export const MobileCalendarView = () => {
 
       <div className="mt-6">
         <h2 className="text-lg font-semibold mb-4">
-          Tâches du {date ? format(date, 'PPP', { locale: fr }) : 'jour sélectionné'}
+          {t('calendar.tasksForDay', { date: date ? format(date, 'PPP', { locale: dateLocale }) : t('calendar.selectedDay') })}
         </h2>
         {selectedDayTasks.length > 0 ? (
           <div className="space-y-3">
@@ -83,7 +86,7 @@ export const MobileCalendarView = () => {
                   <CardContent className="p-3 flex items-start gap-3">
                     <div className="text-xs text-muted-foreground pt-1 w-12 text-center">
                       {task.isAllDay ? (
-                        <span>Journée</span>
+                        <span>{t('common.allDay')}</span>
                       ) : (
                         task.startDate && <span>{format(new Date(task.startDate), 'HH:mm')}</span>
                       )}
@@ -102,7 +105,7 @@ export const MobileCalendarView = () => {
         ) : (
           <Card className="mt-4">
             <CardContent className="p-6">
-              <p className="text-muted-foreground text-center">Aucune tâche planifiée pour ce jour.</p>
+              <p className="text-muted-foreground text-center">{t('calendar.noTasksForDay')}</p>
             </CardContent>
           </Card>
         )}

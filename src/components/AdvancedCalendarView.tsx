@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Calendar, dateFnsLocalizer, Views, ToolbarProps } from 'react-big-calendar';
 import { format, parse, startOfWeek, getDay } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { fr, enUS } from 'date-fns/locale';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useData } from '@/contexts/DataContext';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
@@ -34,6 +34,7 @@ import { Checkbox } from './ui/checkbox';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Calendar as CalendarIcon, Trash2 } from 'lucide-react';
 import { Calendar as CalendarPicker } from './ui/calendar';
+import { useTranslation } from 'react-i18next';
 
 const localizer = dateFnsLocalizer({
   format,
@@ -42,6 +43,7 @@ const localizer = dateFnsLocalizer({
   getDay,
   locales: {
     fr,
+    'en-US': enUS,
   },
 });
 
@@ -56,6 +58,9 @@ const initialTaskData = {
 export const AdvancedCalendarView = () => {
   const { tasks, domains, updateTask, deleteTask } = useData();
   const isMobile = useBreakpoint(414);
+  const { t, i18n } = useTranslation();
+  const dateLocale = i18n.language.startsWith('en') ? enUS : fr;
+  const culture = i18n.language.startsWith('en') ? 'en-US' : 'fr';
 
   const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
   const [editedTaskData, setEditedTaskData] = useState(initialTaskData);
@@ -131,6 +136,21 @@ export const AdvancedCalendarView = () => {
     });
   };
 
+  const messages = useMemo(() => ({
+    next: t('calendar.next'),
+    previous: t('calendar.previous'),
+    today: t('common.today'),
+    month: t('calendar.month'),
+    week: t('calendar.week'),
+    day: t('calendar.day'),
+    agenda: t('calendar.agenda'),
+    date: t('calendar.date'),
+    time: t('calendar.time'),
+    event: t('calendar.event'),
+    noEventsInRange: t('calendar.noEventsInRange'),
+    showMore: (total: number) => t('calendar.showMore', { count: total }),
+  }), [t]);
+
   const components = useMemo(() => ({
     toolbar: (props: ToolbarProps) => <CustomToolbar {...props} />,
     event: (props: { event: any }) => <CustomEvent event={props.event} />,
@@ -150,21 +170,8 @@ export const AdvancedCalendarView = () => {
           endAccessor="end"
           defaultView={isMobile ? Views.DAY : Views.WEEK}
           views={[Views.MONTH, Views.WEEK, Views.DAY]}
-          culture='fr'
-          messages={{
-            next: "Suivant",
-            previous: "Précédent",
-            today: "Aujourd'hui",
-            month: "Mois",
-            week: "Semaine",
-            day: "Jour",
-            agenda: "Agenda",
-            date: "Date",
-            time: "Heure",
-            event: "Événement",
-            noEventsInRange: "Aucun événement dans cette période.",
-            showMore: total => `+ ${total} de plus`
-          }}
+          culture={culture}
+          messages={messages}
           onSelectEvent={handleSelectEvent}
           components={components}
           formats={formats}
@@ -174,29 +181,29 @@ export const AdvancedCalendarView = () => {
       <Dialog open={!!taskToEdit} onOpenChange={() => setTaskToEdit(null)}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Modifier la tâche</DialogTitle>
+            <DialogTitle>{t('kanban.editTask')}</DialogTitle>
           </DialogHeader>
           <div className="py-4 space-y-4">
             <div>
-              <Label htmlFor="task-content">Contenu</Label>
+              <Label htmlFor="task-content">{t('taskForm.content')}</Label>
               <Textarea id="task-content" value={editedTaskData.content} onChange={(e) => setEditedTaskData(d => ({...d, content: e.target.value}))} className="min-h-[100px]" />
             </div>
             <div>
-              <Label htmlFor="task-description">Description (facultatif)</Label>
-              <Textarea id="task-description" value={editedTaskData.description} onChange={(e) => setEditedTaskData(d => ({...d, description: e.target.value}))} className="min-h-[100px]" placeholder="Ajoutez plus de détails..." />
+              <Label htmlFor="task-description">{t('taskForm.description')} ({t('common.optional')})</Label>
+              <Textarea id="task-description" value={editedTaskData.description} onChange={(e) => setEditedTaskData(d => ({...d, description: e.target.value}))} className="min-h-[100px]" placeholder={t('taskForm.descriptionPlaceholder')} />
             </div>
             <div className="flex items-center space-x-2">
                 <Checkbox id="edit-isAllDay" checked={editedTaskData.isAllDay} onCheckedChange={(checked) => setEditedTaskData(d => ({...d, isAllDay: !!checked}))} />
-                <Label htmlFor="edit-isAllDay">Toute la journée</Label>
+                <Label htmlFor="edit-isAllDay">{t('common.allDay')}</Label>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label>Date de début (facultatif)</Label>
+                <Label>{t('taskForm.startDate')} ({t('common.optional')})</Label>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" className="w-full justify-start text-left font-normal">
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {editedTaskData.startDate ? format(editedTaskData.startDate, "PPP", { locale: fr }) : <span>Choisir une date</span>}
+                      {editedTaskData.startDate ? format(editedTaskData.startDate, "PPP", { locale: dateLocale }) : <span>{t('taskForm.chooseDate')}</span>}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
@@ -206,6 +213,7 @@ export const AdvancedCalendarView = () => {
                       onSelect={(date) => setEditedTaskData(d => ({...d, startDate: date ?? undefined, endDate: (d.endDate && date && d.endDate < date) ? undefined : d.endDate}))}
                       disabled={editedTaskData.endDate ? { after: editedTaskData.endDate } : undefined}
                       initialFocus
+                      locale={dateLocale}
                     />
                   </PopoverContent>
                 </Popover>
@@ -220,12 +228,12 @@ export const AdvancedCalendarView = () => {
                 )}
               </div>
               <div>
-                <Label>Date de fin (facultatif)</Label>
+                <Label>{t('taskForm.endDate')} ({t('common.optional')})</Label>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" className="w-full justify-start text-left font-normal">
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {editedTaskData.endDate ? format(editedTaskData.endDate, "PPP", { locale: fr }) : <span>Choisir une date</span>}
+                      {editedTaskData.endDate ? format(editedTaskData.endDate, "PPP", { locale: dateLocale }) : <span>{t('taskForm.chooseDate')}</span>}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
@@ -235,6 +243,7 @@ export const AdvancedCalendarView = () => {
                       onSelect={(date) => setEditedTaskData(d => ({...d, endDate: date ?? undefined}))}
                       disabled={editedTaskData.startDate ? { before: editedTaskData.startDate } : undefined}
                       initialFocus
+                      locale={dateLocale}
                     />
                   </PopoverContent>
                 </Popover>
@@ -253,11 +262,11 @@ export const AdvancedCalendarView = () => {
           <DialogFooter className="justify-between">
             <Button type="button" variant="destructive" onClick={() => setTaskToDelete(taskToEdit?.id || null)}>
               <Trash2 className="h-4 w-4 mr-2" />
-              Supprimer
+              {t('common.delete')}
             </Button>
             <div className="flex gap-2">
-              <DialogClose asChild><Button type="button" variant="secondary">Annuler</Button></DialogClose>
-              <Button type="button" onClick={handleUpdateTask}>Enregistrer</Button>
+              <DialogClose asChild><Button type="button" variant="secondary">{t('common.cancel')}</Button></DialogClose>
+              <Button type="button" onClick={handleUpdateTask}>{t('common.save')}</Button>
             </div>
           </DialogFooter>
         </DialogContent>
@@ -266,12 +275,12 @@ export const AdvancedCalendarView = () => {
       <AlertDialog open={!!taskToDelete} onOpenChange={() => setTaskToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
-            <AlertDialogDescription>Cette action est irréversible. La tâche sera supprimée définitivement.</AlertDialogDescription>
+            <AlertDialogTitle>{t('common.areYouSure')}</AlertDialogTitle>
+            <AlertDialogDescription>{t('common.irreversibleAction')} {t('kanban.deleteTaskConfirmation')}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Annuler</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirmDelete}>Supprimer</AlertDialogAction>
+            <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmDelete}>{t('common.delete')}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

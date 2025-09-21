@@ -69,7 +69,17 @@
     "month": "Month",
     "week": "Week",
     "day": "Day",
-    "noTasksForDay": "No tasks scheduled for this day."
+    "agenda": "Agenda",
+    "date": "Date",
+    "time": "Time",
+    "event": "Event",
+    "noEventsInRange": "There are no events in this range.",
+    "showMore": "+{{count}} more",
+    "previous": "Previous",
+    "next": "Next",
+    "noTasksForDay": "No tasks scheduled for this day.",
+    "tasksForDay": "Tasks for {{date}}",
+    "selectedDay": "selected day"
   },
   "wizard": {
     "step1_title": "What is your main goal?",

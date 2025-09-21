@@ -69,7 +69,17 @@
     "month": "Mois",
     "week": "Semaine",
     "day": "Jour",
-    "noTasksForDay": "Aucune tâche planifiée pour ce jour."
+    "agenda": "Agenda",
+    "date": "Date",
+    "time": "Heure",
+    "event": "Événement",
+    "noEventsInRange": "Aucun événement dans cette période.",
+    "showMore": "+ {{count}} de plus",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "noTasksForDay": "Aucune tâche planifiée pour ce jour.",
+    "tasksForDay": "Tâches du {{date}}",
+    "selectedDay": "jour sélectionné"
   },
   "wizard": {
     "step1_title": "Quel est votre objectif principal ?",
