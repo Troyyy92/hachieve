@@ -15,8 +15,9 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Label } from "./ui/label";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useData } from "@/contexts/DataContext";
+import Confetti from "react-confetti";
 
 interface GoalCardProps {
   goal: {
@@ -31,6 +32,15 @@ export const GoalCard = ({ goal, progress }: GoalCardProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editedTitle, setEditedTitle] = useState(goal.title);
   const [editedDescription, setEditedDescription] = useState(goal.description);
+  const [showConfetti, setShowConfetti] = useState(false);
+
+  useEffect(() => {
+    if (progress === 100) {
+      setShowConfetti(true);
+      const timer = setTimeout(() => setShowConfetti(false), 5000); // Confettis pendant 5 secondes
+      return () => clearTimeout(timer);
+    }
+  }, [progress]);
 
   const handleOpenChange = (open: boolean) => {
     if (open) {
@@ -46,56 +56,59 @@ export const GoalCard = ({ goal, progress }: GoalCardProps) => {
   };
 
   return (
-    <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        <Card className="bg-[#ffcb6c] text-[#2f2f2fcc] flex flex-col items-center justify-center min-h-56 p-4 cursor-pointer border-none transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1">
-          <CardContent className="flex flex-col items-center justify-center text-center p-0 w-full">
-            <Target className="w-10 h-10 mb-4" />
-            <h3 className="text-sm font-bold">Objectif Principal</h3>
-            <p className="text-lg font-semibold text-[#2f2f2fcc]/80 px-2">{goal.title}</p>
-            <div className="w-full px-4 mt-4">
-              <div className="text-right text-sm text-[#2f2f2fcc]/80 mb-1">
-                {progress}%
+    <>
+      {showConfetti && <Confetti recycle={false} numberOfPieces={200} />}
+      <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
+        <DialogTrigger asChild>
+          <Card className="bg-[#ffcb6c] text-[#2f2f2fcc] flex flex-col items-center justify-center min-h-56 p-4 cursor-pointer border-none transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1">
+            <CardContent className="flex flex-col items-center justify-center text-center p-0 w-full">
+              <Target className="w-10 h-10 mb-4" />
+              <h3 className="text-sm font-bold">Objectif Principal</h3>
+              <p className="text-lg font-semibold text-[#2f2f2fcc]/80 px-2">{goal.title}</p>
+              <div className="w-full px-4 mt-4">
+                <div className="text-right text-sm text-[#2f2f2fcc]/80 mb-1">
+                  {progress}%
+                </div>
+                <Progress value={progress} className="[&>*]:bg-[#2f2f2fcc]" />
               </div>
-              <Progress value={progress} className="[&>*]:bg-[#2f2f2fcc]" />
+            </CardContent>
+          </Card>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Objectif Principal</DialogTitle>
+            <DialogDescription>
+              Consultez et modifiez votre objectif principal.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4 space-y-4">
+            <div>
+              <Label htmlFor="title" className="font-semibold">Titre</Label>
+              <Input
+                id="title"
+                value={editedTitle}
+                onChange={(e) => setEditedTitle(e.target.value)}
+                className="mt-1"
+              />
             </div>
-          </CardContent>
-        </Card>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Objectif Principal</DialogTitle>
-          <DialogDescription>
-            Consultez et modifiez votre objectif principal.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="py-4 space-y-4">
-          <div>
-            <Label htmlFor="title" className="font-semibold">Titre</Label>
-            <Input
-              id="title"
-              value={editedTitle}
-              onChange={(e) => setEditedTitle(e.target.value)}
-              className="mt-1"
-            />
+            <div>
+              <Label htmlFor="description" className="font-semibold">Description</Label>
+              <Textarea
+                id="description"
+                value={editedDescription}
+                onChange={(e) => setEditedDescription(e.target.value)}
+                className="mt-1 min-h-[120px]"
+              />
+            </div>
           </div>
-          <div>
-            <Label htmlFor="description" className="font-semibold">Description</Label>
-            <Textarea
-              id="description"
-              value={editedDescription}
-              onChange={(e) => setEditedDescription(e.target.value)}
-              className="mt-1 min-h-[120px]"
-            />
-          </div>
-        </div>
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button type="button" variant="secondary">Annuler</Button>
-          </DialogClose>
-          <Button type="button" onClick={handleSave}>Enregistrer</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button type="button" variant="secondary">Annuler</Button>
+            </DialogClose>
+            <Button type="button" onClick={handleSave}>Enregistrer</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
