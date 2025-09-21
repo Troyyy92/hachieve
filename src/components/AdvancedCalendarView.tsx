@@ -57,8 +57,12 @@ export const AdvancedCalendarView = () => {
     event: (props: { event: any }) => <CustomEvent event={props.event} />,
   }), []);
 
+  const formats = useMemo(() => ({
+    eventTimeRangeFormat: () => null,
+  }), []);
+
   return (
-    <div className="mt-8 h-[70vh] bg-card/80 backdrop-blur-sm p-4 rounded-lg calendar-container">
+    <div className="mt-8 h-[70vh] bg-card backdrop-blur-sm p-4 rounded-lg calendar-container">
       <Calendar
         localizer={localizer}
         events={events}
@@ -83,6 +87,7 @@ export const AdvancedCalendarView = () => {
         }}
         onSelectEvent={handleSelectEvent}
         components={components}
+        formats={formats}
       />
     </div>
   );
