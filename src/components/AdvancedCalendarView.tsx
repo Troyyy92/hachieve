@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Calendar, dateFnsLocalizer, Views, ToolbarProps } from 'react-big-calendar';
-import { format } from 'date-fns';
+import { format, parse, startOfWeek, getDay } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useData } from '@/contexts/DataContext';
@@ -34,14 +34,15 @@ import { Checkbox } from './ui/checkbox';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Calendar as CalendarIcon, Trash2 } from 'lucide-react';
 import { Calendar as CalendarPicker } from './ui/calendar';
-import { dateFnsLocalizer } from 'react-big-calendar';
 
 const localizer = dateFnsLocalizer({
   format,
-  parse: (str, formatStr, locale) => (locale as any).parse(str, formatStr, new Date()),
-  startOfWeek: (date) => dateFnsLocalizer({ locales: { fr } }).startOfWeek(date, { weekStartsOn: 1 }),
-  getDay: (date) => date.getDay(),
-  locales: { fr },
+  parse,
+  startOfWeek,
+  getDay,
+  locales: {
+    fr,
+  },
 });
 
 const initialTaskData = {
