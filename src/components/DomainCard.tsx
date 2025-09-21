@@ -17,6 +17,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useState } from "react";
 
 interface DomainCardProps {
   domain: Domain & { progress: number; taskCount: number };
@@ -24,6 +25,7 @@ interface DomainCardProps {
 
 export const DomainCard = ({ domain }: DomainCardProps) => {
   const { updateDomain, deleteDomain } = useData();
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
 
   const handleTogglePriority = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -31,10 +33,17 @@ export const DomainCard = ({ domain }: DomainCardProps) => {
     updateDomain(domain.id, { isPriority: !domain.isPriority });
   };
 
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsAlertOpen(true);
+  };
+
   const handleDeleteConfirm = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     deleteDomain(domain.id);
+    setIsAlertOpen(false);
   };
 
   return (
@@ -68,13 +77,13 @@ export const DomainCard = ({ domain }: DomainCardProps) => {
         >
           <Star className={cn("h-5 w-5", domain.isPriority ? "text-yellow-500 fill-yellow-400" : "text-muted-foreground")} />
         </Button>
-        <AlertDialog>
+        <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
           <AlertDialogTrigger asChild>
             <Button
               variant="ghost"
               size="icon"
               className="h-8 w-8 text-destructive hover:text-destructive"
-              onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+              onClick={handleDeleteClick}
               aria-label="Delete domain"
             >
               <Trash2 className="h-5 w-5" />
@@ -84,7 +93,7 @@ export const DomainCard = ({ domain }: DomainCardProps) => {
             <AlertDialogHeader>
               <AlertDialogTitle>Êtes-vous sûr de vouloir supprimer ce domaine ?</AlertDialogTitle>
               <AlertDialogDescription>
-                Cette action est irréversible. Le domaine "{domain.title}" sera supprimé définitivement.
+                Cette action est irréversible. Le domaine "{domain.title}" sera supprimé définitiveement.
                 {domain.taskCount > 0 && (
                   <span className="font-bold block mt-2">
                     Attention : {domain.taskCount} tâche(s) associée(s) à ce domaine seront également supprimées.
