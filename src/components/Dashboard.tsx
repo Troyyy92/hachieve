@@ -3,12 +3,11 @@ import { GoalCard } from "@/components/GoalCard";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useData } from "@/contexts/DataContext";
 import { Domain } from "@/types";
+import { AddDomainCard } from "./AddDomainCard";
 
 export const Dashboard = () => {
   const { domains, tasks, mainGoal } = useData();
 
-  // This component is only rendered when mainGoal is not null,
-  // but we add a check to satisfy TypeScript and prevent potential errors.
   if (!mainGoal) return null;
 
   const calculateProgress = (domainId: string) => {
@@ -20,38 +19,29 @@ export const Dashboard = () => {
     return Math.round((completedTasks / domainTasks.length) * 100);
   };
 
-  const domainsWithProgress: (Domain & { progress: number })[] = domains.map(
+  const getTaskCount = (domainId: string) => {
+    return tasks.filter((task) => task.domainId === domainId).length;
+  };
+
+  const domainsWithData: (Domain & { progress: number; taskCount: number })[] = domains.map(
     (domain) => ({
       ...domain,
       progress: calculateProgress(domain.id),
+      taskCount: getTaskCount(domain.id),
     })
   );
 
-  const totalProgress = domainsWithProgress.reduce((sum, domain) => sum + domain.progress, 0);
-  const overallProgress = domainsWithProgress.length > 0 ? Math.round(totalProgress / domainsWithProgress.length) : 0;
-
-  const firstHalf = domainsWithProgress.slice(0, 4);
-  const secondHalf = domainsWithProgress.slice(4);
+  const totalProgress = domainsWithData.reduce((sum, domain) => sum + domain.progress, 0);
+  const overallProgress = domainsWithData.length > 0 ? Math.round(totalProgress / domainsWithData.length) : 0;
 
   return (
     <>
-      {/* Mobile Layout (under 414px) */}
-      <main className="xs:hidden flex flex-col gap-4 mt-12">
+      <main className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mt-12">
         <GoalCard goal={mainGoal} progress={overallProgress} />
-        {domainsWithProgress.map((domain) => (
+        {domainsWithData.map((domain) => (
           <DomainCard key={domain.id} domain={domain} />
         ))}
-      </main>
-
-      {/* Desktop Layout (414px and up) */}
-      <main className="hidden xs:grid grid-cols-3 gap-4 md:gap-6 mt-12">
-        {firstHalf.map((domain) => (
-          <DomainCard key={domain.id} domain={domain} />
-        ))}
-        <GoalCard goal={mainGoal} progress={overallProgress} />
-        {secondHalf.map((domain) => (
-          <DomainCard key={domain.id} domain={domain} />
-        ))}
+        {domains.length < 8 && <AddDomainCard />}
       </main>
       <MadeWithDyad />
     </>

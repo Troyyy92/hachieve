@@ -18,6 +18,8 @@ interface DataContextType {
   updateMainGoal: (title: string, description: string) => Promise<void>;
   setupProject: (goal: { title: string; description: string }, domainTitles: string[]) => Promise<void>;
   updateDomain: (id: string, updates: Partial<Omit<Domain, 'id'>>) => Promise<void>;
+  addDomain: (title: string, iconName: string) => Promise<void>;
+  deleteDomain: (domainId: string) => Promise<void>;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -191,8 +193,54 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const addDomain = async (title: string, iconName: string) => {
+    if (!user || domains.length >= 8) {
+      showError("Vous ne pouvez pas ajouter plus de 8 domaines.");
+      return;
+    }
+    try {
+      const { data: newDomain, error } = await supabase
+        .from('domains')
+        .insert({
+          user_id: user.id,
+          title,
+          icon_name: iconName,
+          description: "Ajoutez une description pour ce domaine afin de clarifier son périmètre et ses objectifs.",
+          is_priority: false,
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setDomains(prev => [...prev, transformDomain(newDomain)]);
+      showSuccess("Domaine ajouté avec succès !");
+    } catch (error) {
+      console.error("Erreur lors de l'ajout du domaine:", error);
+      showError("Impossible d'ajouter le domaine.");
+    }
+  };
+
+  const deleteDomain = async (domainId: string) => {
+    if (!user) return;
+    try {
+      const { error: tasksError } = await supabase.from('tasks').delete().eq('domain_id', domainId);
+      if (tasksError) throw tasksError;
+
+      const { error: domainError } = await supabase.from('domains').delete().eq('id', domainId);
+      if (domainError) throw domainError;
+
+      setDomains(prev => prev.filter(d => d.id !== domainId));
+      setTasks(prev => prev.filter(t => t.domainId !== domainId));
+      showSuccess("Domaine supprimé avec succès.");
+    } catch (error) {
+      console.error("Erreur lors de la suppression du domaine:", error);
+      showError("Impossible de supprimer le domaine.");
+    }
+  };
+
   return (
-    <DataContext.Provider value={{ domains, tasks, mainGoal, loading, addTask, updateTask, deleteTask, setTasks, updateMainGoal, setupProject, updateDomain }}>
+    <DataContext.Provider value={{ domains, tasks, mainGoal, loading, addTask, updateTask, deleteTask, setTasks, updateMainGoal, setupProject, updateDomain, addDomain, deleteDomain }}>
       {children}
     </DataContext.Provider>
   );

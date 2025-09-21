@@ -3,21 +3,38 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Domain } from "@/types";
 import { Button } from "./ui/button";
-import { Star } from "lucide-react";
+import { Star, Trash2 } from "lucide-react";
 import { useData } from "@/contexts/DataContext";
 import { cn } from "@/lib/utils";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface DomainCardProps {
-  domain: Domain & { progress: number };
+  domain: Domain & { progress: number; taskCount: number };
 }
 
 export const DomainCard = ({ domain }: DomainCardProps) => {
-  const { updateDomain } = useData();
+  const { updateDomain, deleteDomain } = useData();
 
   const handleTogglePriority = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     updateDomain(domain.id, { isPriority: !domain.isPriority });
+  };
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    deleteDomain(domain.id);
   };
 
   return (
@@ -41,14 +58,45 @@ export const DomainCard = ({ domain }: DomainCardProps) => {
           </CardContent>
         </Card>
       </Link>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="absolute top-2 right-2 h-8 w-8 opacity-50 group-hover:opacity-100 transition-opacity"
-        onClick={handleTogglePriority}
-      >
-        <Star className={cn("h-5 w-5", domain.isPriority ? "text-yellow-500 fill-yellow-400" : "text-muted-foreground")} />
-      </Button>
+      <div className="absolute top-2 right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8"
+          onClick={handleTogglePriority}
+        >
+          <Star className={cn("h-5 w-5", domain.isPriority ? "text-yellow-500 fill-yellow-400" : "text-muted-foreground")} />
+        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-destructive hover:text-destructive"
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+            >
+              <Trash2 className="h-5 w-5" />
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Êtes-vous sûr de vouloir supprimer ce domaine ?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Cette action est irréversible. Le domaine "{domain.title}" sera supprimé définitivement.
+                {domain.taskCount > 0 && (
+                  <span className="font-bold block mt-2">
+                    Attention : {domain.taskCount} tâche(s) associée(s) à ce domaine seront également supprimées.
+                  </span>
+                )}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Annuler</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDelete}>Supprimer</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
     </div>
   );
 };
