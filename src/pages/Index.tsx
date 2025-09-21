@@ -56,7 +56,7 @@ const Index = () => {
 
         <Tabs defaultValue="dashboard" className="mt-8">
           <div className="flex justify-center">
-            <TabsList className="inline-flex h-auto items-center justify-center rounded-full bg-card/80 p-1.5 backdrop-blur-sm">
+            <TabsList className="inline-flex h-auto items-center justify-center rounded-full bg-card/80 p-1.5 backdrop-blur-sm gap-2">
               <TabsTrigger value="dashboard" className="rounded-full px-6 py-2 transition-colors duration-300 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Tableau de bord</TabsTrigger>
               <TabsTrigger value="calendar" className="rounded-full px-6 py-2 transition-colors duration-300 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Calendrier</TabsTrigger>
             </TabsList>
