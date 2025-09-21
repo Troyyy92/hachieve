@@ -116,7 +116,7 @@ const Login = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-4 mt-2.5 text-lg font-semibold text-white bg-gradient-to-br from-[#FFB366] to-[#FFA34D] rounded-full cursor-pointer transition-all duration-300 ease-in-out shadow-xl shadow-[#FFA34D]/40 hover:shadow-2xl hover:shadow-[#FFA34D]/50 hover:brightness-95 active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
+            className="w-full py-4 mt-2.5 text-lg font-semibold text-white bg-gradient-to-br from-[#FFB366] to-[#FFA34D] rounded-full cursor-pointer transition-all duration-300 ease-in-out shadow-[0_5px_10px_rgba(133,106,82,0.4)] hover:shadow-[0_7px_14px_rgba(133,106,82,0.5)] hover:brightness-95 active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
           >
             {getButtonText()}
           </button>
