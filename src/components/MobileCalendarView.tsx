@@ -79,7 +79,7 @@ export const MobileCalendarView = () => {
                   onClick={() => handleTaskClick(task.id)} 
                   className={cn(
                     "cursor-pointer transition-colors border-none",
-                    task.isPriority ? "bg-[#ff93936b] hover:brightness-95" : "hover:bg-secondary",
+                    task.isPriority ? "bg-red-500/20 dark:bg-red-900/40 hover:brightness-95" : "hover:bg-secondary",
                     isDone && "opacity-70"
                   )}
                 >

@@ -8,6 +8,7 @@ import { Step5Validation } from "./wizard/Step5Validation";
 import { useData } from "@/contexts/DataContext";
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { ThemeSwitcher } from "./ThemeSwitcher";
 
 const TOTAL_STEPS = 5;
 
@@ -142,8 +143,9 @@ export const GoalWizard = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 relative">
-      <div className="absolute top-4 right-4">
+      <div className="absolute top-4 right-4 flex items-center gap-4">
         <LanguageSwitcher />
+        <ThemeSwitcher />
       </div>
       <div className="w-full max-w-2xl">
         <WizardSteps currentStep={currentStep} totalSteps={TOTAL_STEPS} />

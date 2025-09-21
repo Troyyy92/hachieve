@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Eye, EyeOff, Loader2, Terminal } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AuthError } from '@supabase/supabase-js';
+import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 
 const Login = () => {
   const { session } = useAuth();
@@ -58,11 +59,14 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-5">
+    <div className="min-h-screen flex items-center justify-center p-5 relative">
+      <div className="absolute top-4 right-4">
+        <ThemeSwitcher />
+      </div>
       <div className="w-full max-w-md text-center">
         <div className="mb-16">
-          <h1 className="text-6xl md:text-7xl font-bold text-[#4A5FE8] tracking-tighter">Hachieve</h1>
-          <p className="text-2xl md:text-3xl text-[#4A5FE8] font-light tracking-tight">8 paths to achievement</p>
+          <h1 className="text-6xl md:text-7xl font-bold text-primary tracking-tighter">Hachieve</h1>
+          <p className="text-2xl md:text-3xl text-primary/80 font-light tracking-tight">8 paths to achievement</p>
         </div>
 
         <form className="flex flex-col gap-5" onSubmit={handleAuthAction}>
@@ -88,7 +92,7 @@ const Login = () => {
               autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-5 py-4 text-base border-none rounded-2xl bg-[#FBE1C3] shadow-sm transition-all duration-300 ease-in-out outline-none focus:bg-card focus:shadow-lg focus:shadow-[#4a5fe8]/15 placeholder:text-[#8B7355] placeholder:font-normal"
+              className="w-full px-5 py-4 text-base border-none rounded-2xl bg-secondary shadow-sm transition-all duration-300 ease-in-out outline-none focus:bg-card focus:shadow-lg focus:shadow-primary/15 placeholder:text-muted-foreground placeholder:font-normal"
             />
           </div>
 
@@ -101,13 +105,13 @@ const Login = () => {
                 autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-5 py-4 text-base border-none rounded-2xl bg-[#FBE1C3] shadow-sm transition-all duration-300 ease-in-out outline-none focus:bg-card focus:shadow-lg focus:shadow-[#4a5fe8]/15 placeholder:text-[#8B7355] placeholder:font-normal"
+                className="w-full px-5 py-4 text-base border-none rounded-2xl bg-secondary shadow-sm transition-all duration-300 ease-in-out outline-none focus:bg-card focus:shadow-lg focus:shadow-primary/15 placeholder:text-muted-foreground placeholder:font-normal"
               />
               <button type="button" className="absolute right-5 top-1/2 -translate-y-1/2 p-1" onClick={() => setPasswordVisible(!passwordVisible)}>
                 {passwordVisible ? (
-                  <EyeOff className="w-6 h-6 text-[#8B7355]" />
+                  <EyeOff className="w-6 h-6 text-muted-foreground" />
                 ) : (
-                  <Eye className="w-6 h-6 text-[#8B7355]" />
+                  <Eye className="w-6 h-6 text-muted-foreground" />
                 )}
               </button>
             </div>
@@ -116,7 +120,7 @@ const Login = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-4 mt-2.5 text-lg font-semibold text-white bg-gradient-to-br from-[#FFB366] to-[#FFA34D] rounded-full cursor-pointer transition-all duration-300 ease-in-out shadow-[0_5px_10px_rgba(133,106,82,0.4)] hover:shadow-[0_7px_14px_rgba(133,106,82,0.5)] hover:brightness-95 active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
+            className="w-full py-4 mt-2.5 text-lg font-semibold text-primary-foreground bg-primary rounded-full cursor-pointer transition-all duration-300 ease-in-out shadow-[0_5px_10px_rgba(133,106,82,0.4)] hover:shadow-[0_7px_14px_rgba(133,106,82,0.5)] hover:brightness-95 active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
           >
             {getButtonText()}
           </button>
@@ -133,7 +137,7 @@ const Login = () => {
                 setMode(mode === 'signIn' ? 'signUp' : 'signIn');
               }
             }}
-            className="text-[#4A5FE8] text-base transition-opacity duration-300 hover:opacity-70 hover:underline"
+            className="text-primary text-base transition-opacity duration-300 hover:opacity-70 hover:underline"
           >
             {mode === 'signIn'
               ? "Vous n'avez pas de compte ? Inscrivez-vous"
@@ -148,7 +152,7 @@ const Login = () => {
                 setError(null);
                 setSuccessMessage(null);
               }}
-              className="text-[#4A5FE8] text-base transition-opacity duration-300 hover:opacity-70 hover:underline"
+              className="text-primary text-base transition-opacity duration-300 hover:opacity-70 hover:underline"
             >
               Mot de passe oublié ?
             </button>

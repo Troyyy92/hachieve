@@ -10,6 +10,7 @@ import { LogOut } from "lucide-react";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 
 const Index = () => {
   const { mainGoal } = useData();
@@ -30,14 +31,15 @@ const Index = () => {
         <header className="flex justify-between items-center">
           <div className="flex-1" />
           <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-[#2f2f2fcc]">
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground/80">
               Hachieve
             </h1>
-            <p className="text-[#2f2f2fcc] mt-4 text-lg">
+            <p className="text-foreground/80 mt-4 text-lg">
               8 paths to achievement
             </p>
           </div>
           <div className="flex-1 flex justify-end items-center gap-4">
+            <ThemeSwitcher />
             <LanguageSwitcher />
             <Button 
               variant="outline" 

@@ -49,16 +49,16 @@ export const GoalCard = ({ goal, progress }: GoalCardProps) => {
     <>
       <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
         <DialogTrigger asChild>
-          <Card className="bg-[#ffcb6c] text-[#2f2f2fcc] flex flex-col items-center justify-center min-h-56 p-4 cursor-pointer border-none transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1">
+          <Card className="bg-[#ffcb6c] dark:bg-yellow-600 text-yellow-900 dark:text-yellow-100 flex flex-col items-center justify-center min-h-56 p-4 cursor-pointer border-none transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1">
             <CardContent className="flex flex-col items-center justify-center text-center p-0 w-full">
               <Target className="w-10 h-10 mb-4" />
               <h3 className="text-sm font-bold">Objectif Principal</h3>
-              <p className="text-lg font-semibold text-[#2f2f2fcc]/80 px-2">{goal.title}</p>
+              <p className="text-lg font-semibold text-yellow-900/80 dark:text-yellow-100/80 px-2">{goal.title}</p>
               <div className="w-full px-4 mt-4">
-                <div className="text-right text-sm text-[#2f2f2fcc]/80 mb-1">
+                <div className="text-right text-sm text-yellow-900/80 dark:text-yellow-100/80 mb-1">
                   {progress}%
                 </div>
-                <Progress value={progress} className="[&>*]:bg-[#2f2f2fcc]" />
+                <Progress value={progress} className="[&>*]:bg-yellow-900 dark:[&>*]:bg-yellow-100" />
               </div>
             </CardContent>
           </Card>

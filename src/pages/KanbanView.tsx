@@ -46,6 +46,7 @@ import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 
 const initialColumns: Column[] = [
   { id: "todo", title: "À faire" },
@@ -235,6 +236,7 @@ const KanbanView = () => {
           <span className="font-medium text-primary capitalize">{domain?.title}</span>
         </div>
         <div className="flex items-center gap-4">
+          <ThemeSwitcher />
           <LanguageSwitcher />
           <Button 
             variant="outline" 

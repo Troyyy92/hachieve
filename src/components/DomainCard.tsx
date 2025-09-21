@@ -51,7 +51,7 @@ export const DomainCard = ({ domain }: DomainCardProps) => {
       <Link to={`/domain/${domain.id}`} className="block h-full">
         <Card className={cn(
           "flex flex-col min-h-56 h-full border-none transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1",
-          domain.isPriority ? "bg-[#ff93936b]" : "bg-[#ffffff47]"
+          domain.isPriority ? "bg-red-500/20 dark:bg-red-900/40" : "bg-card"
         )}>
           <CardHeader className="flex-shrink-0">
             <CardTitle className="flex items-center text-lg">
@@ -93,7 +93,7 @@ export const DomainCard = ({ domain }: DomainCardProps) => {
             <AlertDialogHeader>
               <AlertDialogTitle>Êtes-vous sûr de vouloir supprimer ce domaine ?</AlertDialogTitle>
               <AlertDialogDescription>
-                Cette action est irréversible. Le domaine "{domain.title}" sera supprimé définitiveement.
+                Cette action est irréversible. Le domaine "{domain.title}" sera supprimé définitivement.
                 {domain.taskCount > 0 && (
                   <span className="font-bold block mt-2">
                     Attention : {domain.taskCount} tâche(s) associée(s) à ce domaine seront également supprimées.

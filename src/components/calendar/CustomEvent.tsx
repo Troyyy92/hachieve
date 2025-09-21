@@ -16,7 +16,7 @@ export const CustomEvent = ({ event }: CustomEventProps) => {
       event.isDone 
         ? "bg-secondary text-muted-foreground border-border" 
         : event.isPriority
-        ? "bg-[#ff93936b] text-foreground border-destructive/20"
+        ? "bg-red-500/20 dark:bg-red-900/40 text-foreground border-destructive/20"
         : "bg-primary/10 text-primary border-primary/20"
     )}>
       <p className={cn(

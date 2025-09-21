@@ -53,7 +53,7 @@ export const KanbanTaskCard = ({ task, onDelete, onEdit }: KanbanTaskCardProps) 
     <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="relative group">
       <Card className={cn(
         "aspect-square flex flex-col justify-between p-3 text-center hover:shadow-md transition-shadow cursor-grab active:cursor-grabbing border-none",
-        task.isPriority ? "bg-[#ff93936b]" : "bg-card",
+        task.isPriority ? "bg-red-500/20 dark:bg-red-900/40" : "bg-card",
         task.columnId === 'done' && "opacity-70"
       )}>
         <CardContent className="p-0 flex-grow flex items-center justify-center">
