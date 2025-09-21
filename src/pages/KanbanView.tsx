@@ -40,10 +40,12 @@ import { Label } from "@/components/ui/label";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
-import { fr } from "date-fns/locale";
+import { fr, enUS } from "date-fns/locale";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
+import { useTranslation } from "react-i18next";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 const initialColumns: Column[] = [
   { id: "todo", title: "À faire" },
@@ -63,8 +65,14 @@ const KanbanView = () => {
   const { domainId } = useParams();
   const { domains, tasks, setTasks, addTask, updateTask, deleteTask, updateDomain } = useData();
   const domain = domains.find(d => d.id === domainId);
+  const { t, i18n } = useTranslation();
+  const dateLocale = i18n.language === 'en' ? enUS : fr;
 
-  const [columns] = useState<Column[]>(initialColumns);
+  const columns: Column[] = useMemo(() => [
+    { id: "todo", title: t('kanban.todo') },
+    { id: "inprogress", title: t('kanban.inprogress') },
+    { id: "done", title: t('kanban.done') },
+  ], [t]);
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
 
   const domainTasks = useMemo(() => tasks.filter(task => task.domainId === domainId), [tasks, domainId]);
@@ -221,19 +229,20 @@ const KanbanView = () => {
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center text-sm text-muted-foreground">
           <Link to="/" className="hover:text-primary">
-            Vue d'ensemble
+            {t('kanban.overview')}
           </Link>
           <ChevronRight className="w-4 h-4 mx-1" />
           <span className="font-medium text-primary capitalize">{domain?.title}</span>
         </div>
-        <div>
+        <div className="flex items-center gap-4">
+          <LanguageSwitcher />
           <Button 
             variant="outline" 
             onClick={handleLogout}
             className="hidden sm:flex"
           >
             <LogOut className="h-4 w-4 mr-2" />
-            Déconnexion
+            {t('common.logout')}
           </Button>
           <Button 
             variant="outline" 
@@ -247,12 +256,12 @@ const KanbanView = () => {
       </div>
 
       <h1 className="text-3xl font-bold mb-4 capitalize">
-        Tableau Kanban : {domain?.title}
+        {t('kanban.kanbanBoard')} : {domain?.title}
       </h1>
 
       <div className="mb-8 p-4 rounded-lg bg-secondary/50">
         <div className="flex justify-between items-center mb-2">
-            <h2 className="text-xl font-semibold">Description du domaine</h2>
+            <h2 className="text-xl font-semibold">{t('kanban.domainDescription')}</h2>
             {!isEditingDomainDesc && (
                 <Button variant="ghost" size="icon" onClick={() => { setIsEditingDomainDesc(true); setEditedDomainDesc(domain?.description || ""); }}>
                     <Pencil className="w-4 h-4" />
@@ -265,16 +274,16 @@ const KanbanView = () => {
                     value={editedDomainDesc}
                     onChange={(e) => setEditedDomainDesc(e.target.value)}
                     className="min-h-[100px] mb-2"
-                    placeholder="Ajoutez une description pour ce domaine..."
+                    placeholder={t('taskForm.descriptionPlaceholder')}
                 />
                 <div className="flex justify-end gap-2">
-                    <Button variant="ghost" onClick={() => setIsEditingDomainDesc(false)}>Annuler</Button>
-                    <Button onClick={handleUpdateDomainDesc}>Enregistrer</Button>
+                    <Button variant="ghost" onClick={() => setIsEditingDomainDesc(false)}>{t('common.cancel')}</Button>
+                    <Button onClick={handleUpdateDomainDesc}>{t('common.save')}</Button>
                 </div>
             </div>
         ) : (
             <p className="text-muted-foreground whitespace-pre-wrap">
-                {domain?.description || "Aucune description pour ce domaine."}
+                {domain?.description || t('kanban.noDomainDescription')}
             </p>
         )}
       </div>
@@ -283,32 +292,32 @@ const KanbanView = () => {
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
             <DialogTrigger asChild>
                 <Button>
-                    <Plus className="w-4 h-4 mr-2" /> Ajouter une tâche
+                    <Plus className="w-4 h-4 mr-2" /> {t('kanban.addTask')}
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader><DialogTitle>Nouvelle tâche</DialogTitle></DialogHeader>
+                <DialogHeader><DialogTitle>{t('kanban.newTask')}</DialogTitle></DialogHeader>
                 <div className="py-4 space-y-4">
                     <div>
-                        <Label htmlFor="new-task-content">Contenu</Label>
-                        <Textarea id="new-task-content" value={newTaskData.content} onChange={(e) => setNewTaskData(d => ({...d, content: e.target.value}))} className="min-h-[100px]" placeholder="Contenu principal de la tâche..." />
+                        <Label htmlFor="new-task-content">{t('taskForm.content')}</Label>
+                        <Textarea id="new-task-content" value={newTaskData.content} onChange={(e) => setNewTaskData(d => ({...d, content: e.target.value}))} className="min-h-[100px]" placeholder={t('taskForm.contentPlaceholder')} />
                     </div>
                     <div>
-                        <Label htmlFor="new-task-description">Description (facultatif)</Label>
-                        <Textarea id="new-task-description" value={newTaskData.description} onChange={(e) => setNewTaskData(d => ({...d, description: e.target.value}))} className="min-h-[100px]" placeholder="Ajoutez plus de détails..." />
+                        <Label htmlFor="new-task-description">{t('taskForm.description')} ({t('common.optional')})</Label>
+                        <Textarea id="new-task-description" value={newTaskData.description} onChange={(e) => setNewTaskData(d => ({...d, description: e.target.value}))} className="min-h-[100px]" placeholder={t('taskForm.descriptionPlaceholder')} />
                     </div>
                     <div className="flex items-center space-x-2">
                         <Checkbox id="new-isAllDay" checked={newTaskData.isAllDay} onCheckedChange={(checked) => setNewTaskData(d => ({...d, isAllDay: !!checked}))} />
-                        <Label htmlFor="new-isAllDay">Toute la journée</Label>
+                        <Label htmlFor="new-isAllDay">{t('common.allDay')}</Label>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <Label>Date de début (facultatif)</Label>
+                            <Label>{t('taskForm.startDate')} ({t('common.optional')})</Label>
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <Button variant="outline" className="w-full justify-start text-left font-normal">
                                         <CalendarIcon className="mr-2 h-4 w-4" />
-                                        {newTaskData.startDate ? format(newTaskData.startDate, "PPP", { locale: fr }) : <span>Choisir une date</span>}
+                                        {newTaskData.startDate ? format(newTaskData.startDate, "PPP", { locale: dateLocale }) : <span>{t('taskForm.chooseDate')}</span>}
                                     </Button>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-auto p-0">
@@ -318,6 +327,7 @@ const KanbanView = () => {
                                         onSelect={(date) => setNewTaskData(d => ({...d, startDate: date ?? undefined, endDate: (d.endDate && date && d.endDate < date) ? undefined : d.endDate}))} 
                                         disabled={newTaskData.endDate ? { after: newTaskData.endDate } : undefined}
                                         initialFocus 
+                                        locale={dateLocale}
                                     />
                                 </PopoverContent>
                             </Popover>
@@ -332,12 +342,12 @@ const KanbanView = () => {
                             )}
                         </div>
                         <div>
-                            <Label>Date de fin (facultatif)</Label>
+                            <Label>{t('taskForm.endDate')} ({t('common.optional')})</Label>
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <Button variant="outline" className="w-full justify-start text-left font-normal">
                                         <CalendarIcon className="mr-2 h-4 w-4" />
-                                        {newTaskData.endDate ? format(newTaskData.endDate, "PPP", { locale: fr }) : <span>Choisir une date</span>}
+                                        {newTaskData.endDate ? format(newTaskData.endDate, "PPP", { locale: dateLocale }) : <span>{t('taskForm.chooseDate')}</span>}
                                     </Button>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-auto p-0">
@@ -347,6 +357,7 @@ const KanbanView = () => {
                                         onSelect={(date) => setNewTaskData(d => ({...d, endDate: date ?? undefined}))} 
                                         disabled={newTaskData.startDate ? { before: newTaskData.startDate } : undefined}
                                         initialFocus 
+                                        locale={dateLocale}
                                     />
                                 </PopoverContent>
                             </Popover>
@@ -363,8 +374,8 @@ const KanbanView = () => {
                     </div>
                 </div>
                 <DialogFooter>
-                    <DialogClose asChild><Button type="button" variant="secondary">Annuler</Button></DialogClose>
-                    <Button type="button" onClick={handleAddTask} disabled={!newTaskData.content.trim()}>Enregistrer</Button>
+                    <DialogClose asChild><Button type="button" variant="secondary">{t('common.cancel')}</Button></DialogClose>
+                    <Button type="button" onClick={handleAddTask} disabled={!newTaskData.content.trim()}>{t('common.save')}</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
@@ -398,28 +409,28 @@ const KanbanView = () => {
 
       <Dialog open={!!taskToEdit} onOpenChange={() => setTaskToEdit(null)}>
         <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader><DialogTitle>Modifier la tâche</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>{t('kanban.editTask')}</DialogTitle></DialogHeader>
           <div className="py-4 space-y-4">
             <div>
-              <Label htmlFor="task-content">Contenu</Label>
+              <Label htmlFor="task-content">{t('taskForm.content')}</Label>
               <Textarea id="task-content" value={editedTaskData.content} onChange={(e) => setEditedTaskData(d => ({...d, content: e.target.value}))} className="min-h-[100px]" />
             </div>
             <div>
-              <Label htmlFor="task-description">Description (facultatif)</Label>
-              <Textarea id="task-description" value={editedTaskData.description} onChange={(e) => setEditedTaskData(d => ({...d, description: e.target.value}))} className="min-h-[100px]" placeholder="Ajoutez plus de détails..." />
+              <Label htmlFor="task-description">{t('taskForm.description')} ({t('common.optional')})</Label>
+              <Textarea id="task-description" value={editedTaskData.description} onChange={(e) => setEditedTaskData(d => ({...d, description: e.target.value}))} className="min-h-[100px]" placeholder={t('taskForm.descriptionPlaceholder')} />
             </div>
             <div className="flex items-center space-x-2">
                 <Checkbox id="edit-isAllDay" checked={editedTaskData.isAllDay} onCheckedChange={(checked) => setEditedTaskData(d => ({...d, isAllDay: !!checked}))} />
-                <Label htmlFor="edit-isAllDay">Toute la journée</Label>
+                <Label htmlFor="edit-isAllDay">{t('common.allDay')}</Label>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label>Date de début (facultatif)</Label>
+                <Label>{t('taskForm.startDate')} ({t('common.optional')})</Label>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" className="w-full justify-start text-left font-normal">
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {editedTaskData.startDate ? format(editedTaskData.startDate, "PPP", { locale: fr }) : <span>Choisir une date</span>}
+                      {editedTaskData.startDate ? format(editedTaskData.startDate, "PPP", { locale: dateLocale }) : <span>{t('taskForm.chooseDate')}</span>}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
@@ -429,6 +440,7 @@ const KanbanView = () => {
                       onSelect={(date) => setEditedTaskData(d => ({...d, startDate: date ?? undefined, endDate: (d.endDate && date && d.endDate < date) ? undefined : d.endDate}))}
                       disabled={editedTaskData.endDate ? { after: editedTaskData.endDate } : undefined}
                       initialFocus
+                      locale={dateLocale}
                     />
                   </PopoverContent>
                 </Popover>
@@ -443,12 +455,12 @@ const KanbanView = () => {
                 )}
               </div>
               <div>
-                <Label>Date de fin (facultatif)</Label>
+                <Label>{t('taskForm.endDate')} ({t('common.optional')})</Label>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" className="w-full justify-start text-left font-normal">
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {editedTaskData.endDate ? format(editedTaskData.endDate, "PPP", { locale: fr }) : <span>Choisir une date</span>}
+                      {editedTaskData.endDate ? format(editedTaskData.endDate, "PPP", { locale: dateLocale }) : <span>{t('taskForm.chooseDate')}</span>}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
@@ -458,6 +470,7 @@ const KanbanView = () => {
                       onSelect={(date) => setEditedTaskData(d => ({...d, endDate: date ?? undefined}))}
                       disabled={editedTaskData.startDate ? { before: editedTaskData.startDate } : undefined}
                       initialFocus
+                      locale={dateLocale}
                     />
                   </PopoverContent>
                 </Popover>
@@ -474,8 +487,8 @@ const KanbanView = () => {
             </div>
           </div>
           <DialogFooter>
-            <DialogClose asChild><Button type="button" variant="secondary">Annuler</Button></DialogClose>
-            <Button type="button" onClick={handleUpdateTask}>Enregistrer</Button>
+            <DialogClose asChild><Button type="button" variant="secondary">{t('common.cancel')}</Button></DialogClose>
+            <Button type="button" onClick={handleUpdateTask}>{t('common.save')}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -483,12 +496,12 @@ const KanbanView = () => {
       <AlertDialog open={!!taskToDelete} onOpenChange={() => setTaskToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
-            <AlertDialogDescription>Cette action est irréversible. La tâche sera supprimée définitivement.</AlertDialogDescription>
+            <AlertDialogTitle>{t('common.areYouSure')}</AlertDialogTitle>
+            <AlertDialogDescription>{t('kanban.deleteTaskConfirmation')}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Annuler</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirmDelete}>Supprimer</AlertDialogAction>
+            <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmDelete}>{t('common.delete')}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

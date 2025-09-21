@@ -1,0 +1,109 @@
+{
+  "common": {
+    "logout": "Déconnexion",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "submit": "Valider",
+    "confirm": "Confirmer",
+    "optional": "facultatif",
+    "today": "Aujourd'hui",
+    "error": "Erreur",
+    "success": "Succès",
+    "loading": "Chargement...",
+    "allDay": "Toute la journée",
+    "areYouSure": "Êtes-vous sûr ?",
+    "irreversibleAction": "Cette action est irréversible."
+  },
+  "header": {
+    "dashboard": "Tableau de bord",
+    "calendar": "Calendrier"
+  },
+  "login": {
+    "email": "Adresse mail",
+    "password": "Mot de passe",
+    "signIn": "Se connecter",
+    "signUp": "S'inscrire",
+    "forgotPassword": "Mot de passe oublié ?",
+    "sendResetLink": "Envoyer le lien de réinitialisation",
+    "noAccount": "Vous n'avez pas de compte ? Inscrivez-vous",
+    "hasAccount": "Vous avez déjà un compte ? Connectez-vous",
+    "backToLogin": "Retour à la connexion",
+    "checkEmailReset": "Si un compte existe pour cet e-mail, un lien de réinitialisation a été envoyé.",
+    "checkEmailConfirm": "Inscription réussie ! Veuillez vérifier votre e-mail pour confirmer votre compte."
+  },
+  "dashboard": {
+    "addDomain": "Ajouter un domaine",
+    "mainGoal": "Objectif Principal",
+    "deleteDomainTitle": "Êtes-vous sûr de vouloir supprimer ce domaine ?",
+    "deleteDomainDescription": "Le domaine \"{{domainTitle}}\" sera supprimé définitivement.",
+    "deleteDomainWarning": "Attention : {{taskCount}} tâche(s) associée(s) à ce domaine seront également supprimées."
+  },
+  "kanban": {
+    "overview": "Vue d'ensemble",
+    "kanbanBoard": "Tableau Kanban",
+    "domainDescription": "Description du domaine",
+    "noDomainDescription": "Aucune description pour ce domaine.",
+    "addTask": "Ajouter une tâche",
+    "todo": "À faire",
+    "inprogress": "En cours",
+    "done": "Terminé",
+    "editTask": "Modifier la tâche",
+    "newTask": "Nouvelle tâche",
+    "deleteTaskConfirmation": "La tâche sera supprimée définitivement."
+  },
+  "taskForm": {
+    "content": "Contenu",
+    "contentPlaceholder": "Contenu principal de la tâche...",
+    "description": "Description",
+    "descriptionPlaceholder": "Ajoutez plus de détails...",
+    "startDate": "Date de début",
+    "endDate": "Date de fin",
+    "chooseDate": "Choisir une date"
+  },
+  "calendar": {
+    "month": "Mois",
+    "week": "Semaine",
+    "day": "Jour",
+    "noTasksForDay": "Aucune tâche planifiée pour ce jour."
+  },
+  "wizard": {
+    "step1_title": "Quel est votre objectif principal ?",
+    "step1_desc": "Soyez précis et ambitieux. C'est le point de départ de votre réussite.",
+    "step1_placeholder": "Ex: Devenir directeur commercial d'ici 2 ans...",
+    "step1_char_count": "Minimum 10 caractères. Actuellement : {{count}}",
+    "step1_button": "Analyser mon objectif",
+    "step1_button_loading": "Analyse en cours...",
+    "step2_title": "Approfondissons votre objectif",
+    "step2_desc": "Répondez à ces quelques questions pour clarifier votre vision.",
+    "step2_question": "Question {{current}} sur {{total}}",
+    "step2_answer_placeholder": "Votre réponse...",
+    "step2_finish_button": "Terminer & Suivant",
+    "step3_title": "Vos domaines de développement",
+    "step3_desc": "Voici une première suggestion de domaines clés pour atteindre votre objectif. Nous les personnaliserons à l'étape suivante.",
+    "step3_button": "Personnaliser",
+    "step4_title": "Personnalisez vos domaines",
+    "step4_desc": "Modifiez, supprimez ou réorganisez ces domaines. Vous devez en sélectionner entre 1 et 8.",
+    "step4_alert_title": "Attention",
+    "step4_alert_desc": "Vous devez avoir entre 1 et 8 domaines. Vous en avez actuellement {{count}}.",
+    "step4_add_domain": "Ajouter un domaine",
+    "step4_button": "Valider mes domaines",
+    "step5_title": "Prêt à commencer ?",
+    "step5_desc": "Vérifiez une dernière fois votre objectif et vos domaines d'action. C'est le début de votre parcours vers la réussite.",
+    "step5_your_goal": "Votre Objectif Principal",
+    "step5_your_domains": "Vos {{count}} Domaines d'Action",
+    "step5_button": "Lancer mon plan",
+    "step5_button_loading": "Création du plan..."
+  },
+  "addDomainModal": {
+    "title": "Nouveau domaine",
+    "description": "Ajoutez un nouveau domaine d'action pour vous rapprocher de votre objectif.",
+    "domainTitle": "Titre",
+    "domainTitlePlaceholder": "Ex: Santé & Bien-être",
+    "icon": "Icône"
+  }
+}

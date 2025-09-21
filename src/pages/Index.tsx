@@ -8,10 +8,13 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { LogOut } from "lucide-react";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
+import { useTranslation } from "react-i18next";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 const Index = () => {
   const { mainGoal } = useData();
   const isMobile = useBreakpoint(414);
+  const { t } = useTranslation();
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -34,14 +37,15 @@ const Index = () => {
               8 paths to achievement
             </p>
           </div>
-          <div className="flex-1 flex justify-end">
+          <div className="flex-1 flex justify-end items-center gap-4">
+            <LanguageSwitcher />
             <Button 
               variant="outline" 
               onClick={handleLogout}
               className="hidden sm:flex"
             >
               <LogOut className="h-4 w-4 mr-2" />
-              Déconnexion
+              {t('common.logout')}
             </Button>
             <Button 
               variant="outline" 
@@ -57,8 +61,8 @@ const Index = () => {
         <Tabs defaultValue="dashboard" className="mt-8">
           <div className="flex justify-center">
             <TabsList className="inline-flex h-auto items-center justify-center rounded-full bg-card/80 p-1.5 backdrop-blur-sm gap-2">
-              <TabsTrigger value="dashboard" className="rounded-full px-6 py-2 transition-colors duration-300 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Tableau de bord</TabsTrigger>
-              <TabsTrigger value="calendar" className="rounded-full px-6 py-2 transition-colors duration-300 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Calendrier</TabsTrigger>
+              <TabsTrigger value="dashboard" className="rounded-full px-6 py-2 transition-colors duration-300 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">{t('header.dashboard')}</TabsTrigger>
+              <TabsTrigger value="calendar" className="rounded-full px-6 py-2 transition-colors duration-300 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">{t('header.calendar')}</TabsTrigger>
             </TabsList>
           </div>
           <TabsContent value="dashboard" className="mt-4">

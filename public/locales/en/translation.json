@@ -1,0 +1,109 @@
+{
+  "common": {
+    "logout": "Logout",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "confirm": "Confirm",
+    "optional": "optional",
+    "today": "Today",
+    "error": "Error",
+    "success": "Success",
+    "loading": "Loading...",
+    "allDay": "All day",
+    "areYouSure": "Are you sure?",
+    "irreversibleAction": "This action cannot be undone."
+  },
+  "header": {
+    "dashboard": "Dashboard",
+    "calendar": "Calendar"
+  },
+  "login": {
+    "email": "Email address",
+    "password": "Password",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "forgotPassword": "Forgot password?",
+    "sendResetLink": "Send reset link",
+    "noAccount": "Don't have an account? Sign up",
+    "hasAccount": "Already have an account? Sign in",
+    "backToLogin": "Back to login",
+    "checkEmailReset": "If an account exists for this email, a reset link has been sent.",
+    "checkEmailConfirm": "Sign up successful! Please check your email to confirm your account."
+  },
+  "dashboard": {
+    "addDomain": "Add domain",
+    "mainGoal": "Main Goal",
+    "deleteDomainTitle": "Are you sure you want to delete this domain?",
+    "deleteDomainDescription": "The domain \"{{domainTitle}}\" will be permanently deleted.",
+    "deleteDomainWarning": "Warning: {{taskCount}} task(s) associated with this domain will also be deleted."
+  },
+  "kanban": {
+    "overview": "Overview",
+    "kanbanBoard": "Kanban Board",
+    "domainDescription": "Domain Description",
+    "noDomainDescription": "No description for this domain.",
+    "addTask": "Add task",
+    "todo": "To Do",
+    "inprogress": "In Progress",
+    "done": "Done",
+    "editTask": "Edit Task",
+    "newTask": "New Task",
+    "deleteTaskConfirmation": "The task will be permanently deleted."
+  },
+  "taskForm": {
+    "content": "Content",
+    "contentPlaceholder": "Main content of the task...",
+    "description": "Description",
+    "descriptionPlaceholder": "Add more details...",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "chooseDate": "Pick a date"
+  },
+  "calendar": {
+    "month": "Month",
+    "week": "Week",
+    "day": "Day",
+    "noTasksForDay": "No tasks scheduled for this day."
+  },
+  "wizard": {
+    "step1_title": "What is your main goal?",
+    "step1_desc": "Be specific and ambitious. This is the starting point for your success.",
+    "step1_placeholder": "Ex: Become a sales director within 2 years...",
+    "step1_char_count": "Minimum 10 characters. Currently: {{count}}",
+    "step1_button": "Analyze my goal",
+    "step1_button_loading": "Analyzing...",
+    "step2_title": "Let's elaborate on your goal",
+    "step2_desc": "Answer these few questions to clarify your vision.",
+    "step2_question": "Question {{current}} of {{total}}",
+    "step2_answer_placeholder": "Your answer...",
+    "step2_finish_button": "Finish & Next",
+    "step3_title": "Your development domains",
+    "step3_desc": "Here is an initial suggestion of key domains to achieve your goal. We will customize them in the next step.",
+    "step3_button": "Customize",
+    "step4_title": "Customize your domains",
+    "step4_desc": "Edit, delete, or rearrange these domains. You must select between 1 and 8.",
+    "step4_alert_title": "Warning",
+    "step4_alert_desc": "You must have between 1 and 8 domains. You currently have {{count}}.",
+    "step4_add_domain": "Add a domain",
+    "step4_button": "Validate my domains",
+    "step5_title": "Ready to start?",
+    "step5_desc": "Give your goal and action areas one last check. This is the beginning of your journey to success.",
+    "step5_your_goal": "Your Main Goal",
+    "step5_your_domains": "Your {{count}} Action Domains",
+    "step5_button": "Launch my plan",
+    "step5_button_loading": "Creating plan..."
+  },
+  "addDomainModal": {
+    "title": "New domain",
+    "description": "Add a new action area to get closer to your goal.",
+    "domainTitle": "Title",
+    "domainTitlePlaceholder": "Ex: Health & Wellness",
+    "icon": "Icon"
+  }
+}
