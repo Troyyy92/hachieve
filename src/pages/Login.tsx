@@ -58,7 +58,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-5 bg-gradient-to-br from-[#FFDDC1] to-[#FFD4B2]">
+    <div className="min-h-screen flex items-center justify-center p-5">
       <div className="w-full max-w-md text-center">
         <div className="mb-16">
           <h1 className="text-6xl md:text-7xl font-bold text-[#4A5FE8] tracking-tighter">Hachieve</h1>

@@ -217,7 +217,7 @@ const KanbanView = () => {
   };
 
   return (
-    <div className="p-4 md:p-8">
+    <div className="min-h-screen p-4 md:p-8">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center text-sm text-muted-foreground">
           <Link to="/" className="hover:text-primary">

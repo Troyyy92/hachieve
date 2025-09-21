@@ -22,7 +22,7 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground p-4 md:p-8">
+    <div className="min-h-screen text-foreground p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
         <header className="flex justify-between items-center">
           <div className="flex-1" />

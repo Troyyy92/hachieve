@@ -74,7 +74,9 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply text-foreground font-sans antialiased;
+    background-image: linear-gradient(to bottom right, #FFDDC1, #FFD4B2);
+    background-attachment: fixed;
   }
 
   h1, h2, h3, h4, h5, h6 {
