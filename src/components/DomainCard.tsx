@@ -31,17 +31,15 @@ export const DomainCard = ({ domain }: DomainCardProps) => {
     updateDomain(domain.id, { isPriority: !domain.isPriority });
   };
 
-  const handleDelete = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleDeleteConfirm = () => {
     deleteDomain(domain.id);
   };
 
   return (
-    <div className="relative group">
-      <Link to={`/domain/${domain.id}`}>
+    <div className="relative group h-full">
+      <Link to={`/domain/${domain.id}`} className="block h-full">
         <Card className={cn(
-          "hover:shadow-xl hover:-translate-y-1 flex flex-col bg-card min-h-56",
+          "hover:shadow-xl hover:-translate-y-1 flex flex-col bg-card min-h-56 h-full",
           domain.isPriority && "bg-cyan-50 border-cyan-200"
         )}>
           <CardHeader className="flex-shrink-0">
@@ -64,6 +62,7 @@ export const DomainCard = ({ domain }: DomainCardProps) => {
           size="icon"
           className="h-8 w-8"
           onClick={handleTogglePriority}
+          aria-label="Toggle priority"
         >
           <Star className={cn("h-5 w-5", domain.isPriority ? "text-yellow-500 fill-yellow-400" : "text-muted-foreground")} />
         </Button>
@@ -74,11 +73,12 @@ export const DomainCard = ({ domain }: DomainCardProps) => {
               size="icon"
               className="h-8 w-8 text-destructive hover:text-destructive"
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+              aria-label="Delete domain"
             >
               <Trash2 className="h-5 w-5" />
             </Button>
           </AlertDialogTrigger>
-          <AlertDialogContent onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
+          <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Êtes-vous sûr de vouloir supprimer ce domaine ?</AlertDialogTitle>
               <AlertDialogDescription>
@@ -92,7 +92,7 @@ export const DomainCard = ({ domain }: DomainCardProps) => {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Annuler</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDelete}>Supprimer</AlertDialogAction>
+              <AlertDialogAction onClick={handleDeleteConfirm}>Supprimer</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
