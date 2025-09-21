@@ -88,7 +88,7 @@ const Login = () => {
               autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-5 py-4 text-base border-none rounded-2xl bg-[#FBE1C3] shadow-sm transition-all duration-300 ease-in-out outline-none focus:bg-white focus:shadow-lg focus:shadow-[#4a5fe8]/15 placeholder:text-[#8B7355] placeholder:font-normal"
+              className="w-full px-5 py-4 text-base border-none rounded-2xl bg-[#FBE1C3] shadow-sm transition-all duration-300 ease-in-out outline-none focus:bg-card focus:shadow-lg focus:shadow-[#4a5fe8]/15 placeholder:text-[#8B7355] placeholder:font-normal"
             />
           </div>
 
@@ -101,7 +101,7 @@ const Login = () => {
                 autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-5 py-4 text-base border-none rounded-2xl bg-[#FBE1C3] shadow-sm transition-all duration-300 ease-in-out outline-none focus:bg-white focus:shadow-lg focus:shadow-[#4a5fe8]/15 placeholder:text-[#8B7355] placeholder:font-normal"
+                className="w-full px-5 py-4 text-base border-none rounded-2xl bg-[#FBE1C3] shadow-sm transition-all duration-300 ease-in-out outline-none focus:bg-card focus:shadow-lg focus:shadow-[#4a5fe8]/15 placeholder:text-[#8B7355] placeholder:font-normal"
               />
               <button type="button" className="absolute right-5 top-1/2 -translate-y-1/2 p-1" onClick={() => setPasswordVisible(!passwordVisible)}>
                 {passwordVisible ? (
