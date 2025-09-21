@@ -17,8 +17,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useState, useEffect } from "react";
-import Confetti from "react-confetti";
+import { useState } from "react";
 
 interface DomainCardProps {
   domain: Domain & { progress: number; taskCount: number };
@@ -27,15 +26,6 @@ interface DomainCardProps {
 export const DomainCard = ({ domain }: DomainCardProps) => {
   const { updateDomain, deleteDomain } = useData();
   const [isAlertOpen, setIsAlertOpen] = useState(false);
-  const [showConfetti, setShowConfetti] = useState(false);
-
-  useEffect(() => {
-    if (domain.progress === 100) {
-      setShowConfetti(true);
-      const timer = setTimeout(() => setShowConfetti(false), 5000); // Confettis pendant 5 secondes
-      return () => clearTimeout(timer);
-    }
-  }, [domain.progress]);
 
   const handleTogglePriority = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -58,7 +48,6 @@ export const DomainCard = ({ domain }: DomainCardProps) => {
 
   return (
     <div className="relative group h-full">
-      {showConfetti && <Confetti recycle={false} numberOfPieces={200} />}
       <Link to={`/domain/${domain.id}`} className="block h-full">
         <Card className={cn(
           "flex flex-col min-h-56 h-full border-none transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1",

@@ -15,9 +15,8 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Label } from "./ui/label";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useData } from "@/contexts/DataContext";
-import Confetti from "react-confetti";
 
 interface GoalCardProps {
   goal: {
@@ -32,15 +31,6 @@ export const GoalCard = ({ goal, progress }: GoalCardProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editedTitle, setEditedTitle] = useState(goal.title);
   const [editedDescription, setEditedDescription] = useState(goal.description);
-  const [showConfetti, setShowConfetti] = useState(false);
-
-  useEffect(() => {
-    if (progress === 100) {
-      setShowConfetti(true);
-      const timer = setTimeout(() => setShowConfetti(false), 5000); // Confettis pendant 5 secondes
-      return () => clearTimeout(timer);
-    }
-  }, [progress]);
 
   const handleOpenChange = (open: boolean) => {
     if (open) {
@@ -57,7 +47,6 @@ export const GoalCard = ({ goal, progress }: GoalCardProps) => {
 
   return (
     <>
-      {showConfetti && <Confetti recycle={false} numberOfPieces={200} />}
       <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
         <DialogTrigger asChild>
           <Card className="bg-[#ffcb6c] text-[#2f2f2fcc] flex flex-col items-center justify-center min-h-56 p-4 cursor-pointer border-none transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1">
