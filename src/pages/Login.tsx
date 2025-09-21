@@ -4,6 +4,7 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Eye, EyeOff, Loader2, Terminal } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AuthError } from '@supabase/supabase-js';
 
 const Login = () => {
   const { session } = useAuth();
@@ -21,16 +22,21 @@ const Login = () => {
     setError(null);
     setSuccessMessage(null);
 
-    const authMethod = mode === 'signIn' ? supabase.auth.signInWithPassword : supabase.auth.signUp;
+    let authError: AuthError | null = null;
 
-    const { error } = await authMethod({ email, password });
+    if (mode === 'signIn') {
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      authError = error;
+    } else {
+      const { error } = await supabase.auth.signUp({ email, password });
+      authError = error;
+    }
 
-    if (error) {
-      setError(error.message);
+    if (authError) {
+      setError(authError.message);
     } else if (mode === 'signUp') {
       setSuccessMessage('Inscription réussie ! Veuillez vérifier votre e-mail pour confirmer votre compte.');
     }
-    // Sur une connexion réussie, le AuthProvider gérera la redirection.
     setLoading(false);
   };
 
