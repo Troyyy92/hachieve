@@ -88,7 +88,7 @@ const Login = () => {
               autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-5 py-4 text-base border-none rounded-2xl bg-[#FFF4E6] shadow-sm transition-all duration-300 ease-in-out outline-none focus:bg-white focus:shadow-lg focus:shadow-[#4a5fe8]/15 placeholder:text-[#8B7355] placeholder:font-normal"
+              className="w-full px-5 py-4 text-base border-none rounded-2xl bg-[#FBE1C3] shadow-sm transition-all duration-300 ease-in-out outline-none focus:bg-white focus:shadow-lg focus:shadow-[#4a5fe8]/15 placeholder:text-[#8B7355] placeholder:font-normal"
             />
           </div>
 
@@ -101,7 +101,7 @@ const Login = () => {
                 autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-5 py-4 text-base border-none rounded-2xl bg-[#FFF4E6] shadow-sm transition-all duration-300 ease-in-out outline-none focus:bg-white focus:shadow-lg focus:shadow-[#4a5fe8]/15 placeholder:text-[#8B7355] placeholder:font-normal"
+                className="w-full px-5 py-4 text-base border-none rounded-2xl bg-[#FBE1C3] shadow-sm transition-all duration-300 ease-in-out outline-none focus:bg-white focus:shadow-lg focus:shadow-[#4a5fe8]/15 placeholder:text-[#8B7355] placeholder:font-normal"
               />
               <button type="button" className="absolute right-5 top-1/2 -translate-y-1/2 p-1" onClick={() => setPasswordVisible(!passwordVisible)}>
                 {passwordVisible ? (
@@ -116,7 +116,7 @@ const Login = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-4 mt-2.5 text-lg font-semibold text-white bg-gradient-to-br from-[#FFB366] to-[#FFA34D] rounded-full cursor-pointer transition-all duration-300 ease-in-out shadow-[0_4px_15px_rgba(255,163,77,0.3)] hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(255,163,77,0.4)] active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
+            className="w-full py-4 mt-2.5 text-lg font-semibold text-white bg-gradient-to-br from-[#FFB366] to-[#FFA34D] rounded-full cursor-pointer transition-all duration-300 ease-in-out shadow-lg shadow-[#FFA34D]/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#FFA34D]/40 active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
           >
             {getButtonText()}
           </button>
