@@ -40,6 +40,7 @@ export const AdvancedCalendarView = () => {
           allDay: task.isAllDay ?? true,
           isDone: isDone,
           domainTitle: domain?.title,
+          isPriority: task.isPriority,
         };
       });
   }, [tasks, domains]);
@@ -57,7 +58,7 @@ export const AdvancedCalendarView = () => {
   }), []);
 
   return (
-    <div className="mt-8 h-[70vh] bg-card p-4 rounded-lg border calendar-container">
+    <div className="mt-8 h-[70vh] bg-card/80 backdrop-blur-sm p-4 rounded-lg calendar-container">
       <Calendar
         localizer={localizer}
         events={events}

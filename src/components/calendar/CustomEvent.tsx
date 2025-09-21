@@ -5,6 +5,7 @@ interface CustomEventProps {
     title: string;
     isDone: boolean;
     domainTitle?: string;
+    isPriority?: boolean;
   };
 }
 
@@ -14,6 +15,8 @@ export const CustomEvent = ({ event }: CustomEventProps) => {
       "p-1 rounded-md h-full text-xs text-left overflow-hidden border",
       event.isDone 
         ? "bg-secondary text-muted-foreground border-border" 
+        : event.isPriority
+        ? "bg-[#ff93936b] text-foreground border-destructive/20"
         : "bg-primary/10 text-primary border-primary/20"
     )}>
       <p className={cn(
