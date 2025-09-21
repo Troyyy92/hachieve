@@ -55,14 +55,16 @@ const Index = () => {
         </header>
 
         <Tabs defaultValue="dashboard" className="mt-8">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="dashboard">Tableau de bord</TabsTrigger>
-            <TabsTrigger value="calendar">Calendrier</TabsTrigger>
-          </TabsList>
-          <TabsContent value="dashboard">
+          <div className="flex justify-center">
+            <TabsList className="inline-flex h-auto items-center justify-center rounded-full bg-card/80 p-1.5 backdrop-blur-sm">
+              <TabsTrigger value="dashboard" className="rounded-full px-6 py-2 data-[state=active]:bg-[#2f2f2fcc] data-[state=active]:text-white">Tableau de bord</TabsTrigger>
+              <TabsTrigger value="calendar" className="rounded-full px-6 py-2 data-[state=active]:bg-[#2f2f2fcc] data-[state=active]:text-white">Calendrier</TabsTrigger>
+            </TabsList>
+          </div>
+          <TabsContent value="dashboard" className="mt-4">
             <Dashboard />
           </TabsContent>
-          <TabsContent value="calendar">
+          <TabsContent value="calendar" className="mt-4">
             {isMobile ? <MobileCalendarView /> : <AdvancedCalendarView />}
           </TabsContent>
         </Tabs>
