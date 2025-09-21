@@ -17,6 +17,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogC
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useTranslation } from "react-i18next";
 
 interface Step4CustomizationProps {
   goal: string;
@@ -27,6 +28,7 @@ interface Step4CustomizationProps {
 }
 
 export const Step4Customization = ({ goal, domains, setDomains, onNext, onBack }: Step4CustomizationProps) => {
+  const { t } = useTranslation();
   const [activeDomain, setActiveDomain] = useState<string | null>(null);
   const [editingDomain, setEditingDomain] = useState<{ index: number; text: string } | null>(null);
   const [newDomain, setNewDomain] = useState("");
@@ -86,23 +88,23 @@ export const Step4Customization = ({ goal, domains, setDomains, onNext, onBack }
     <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <Card>
         <CardHeader>
-          <CardTitle>Personnalisez vos domaines</CardTitle>
+          <CardTitle>{t('wizard.step4_title')}</CardTitle>
           <CardDescription>
-            Modifiez, supprimez ou réorganisez ces domaines. Vous devez en sélectionner entre 1 et 8.
+            {t('wizard.step4_desc')}
           </CardDescription>
         </CardHeader>
         <CardContent>
           {!isGridValid && (
             <Alert variant="destructive" className="mb-4">
-              <AlertTitle>Attention</AlertTitle>
+              <AlertTitle>{t('wizard.step4_alert_title')}</AlertTitle>
               <AlertDescription>
-                Vous devez avoir entre 1 et 8 domaines. Vous en avez actuellement {domains.length}.
+                {t('wizard.step4_alert_desc', { count: domains.length })}
               </AlertDescription>
             </Alert>
           )}
           <div className="mb-6 p-4 border rounded-lg bg-secondary flex flex-col items-center justify-center text-center">
             <Target className="w-8 h-8 mb-2 text-primary" />
-            <h3 className="font-bold text-sm">Objectif Principal</h3>
+            <h3 className="font-bold text-sm">{t('dashboard.mainGoal')}</h3>
             <p className="text-xs text-muted-foreground mt-1 line-clamp-3">{goal}</p>
           </div>
           
@@ -122,17 +124,17 @@ export const Step4Customization = ({ goal, domains, setDomains, onNext, onBack }
 
           {domains.length < 8 && (
             <Button variant="outline" className="w-full mt-4" onClick={() => setIsAddDialogOpen(true)}>
-              <Plus className="mr-2 h-4 w-4" /> Ajouter un domaine
+              <Plus className="mr-2 h-4 w-4" /> {t('wizard.step4_add_domain')}
             </Button>
           )}
         </CardContent>
         <CardFooter className="flex justify-between">
           <Button variant="outline" onClick={onBack}>
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Précédent
+            {t('common.previous')}
           </Button>
           <Button onClick={onNext} disabled={!isGridValid}>
-            Valider mes domaines
+            {t('wizard.step4_button')}
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </CardFooter>
@@ -149,9 +151,9 @@ export const Step4Customization = ({ goal, domains, setDomains, onNext, onBack }
 
       <Dialog open={!!editingDomain} onOpenChange={() => setEditingDomain(null)}>
         <DialogContent>
-          <DialogHeader><DialogTitle>Modifier le domaine</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>{t('addDomainModal.editTitle')}</DialogTitle></DialogHeader>
           <div className="py-4">
-            <Label htmlFor="domain-text">Nom du domaine</Label>
+            <Label htmlFor="domain-text">{t('addDomainModal.domainTitle')}</Label>
             <Input
               id="domain-text"
               value={editingDomain?.text || ''}
@@ -160,28 +162,28 @@ export const Step4Customization = ({ goal, domains, setDomains, onNext, onBack }
             />
           </div>
           <DialogFooter>
-            <DialogClose asChild><Button type="button" variant="secondary">Annuler</Button></DialogClose>
-            <Button type="button" onClick={handleUpdateDomain}>Enregistrer</Button>
+            <DialogClose asChild><Button type="button" variant="secondary">{t('common.cancel')}</Button></DialogClose>
+            <Button type="button" onClick={handleUpdateDomain}>{t('common.save')}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
         <DialogContent>
-          <DialogHeader><DialogTitle>Ajouter un nouveau domaine</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>{t('addDomainModal.title')}</DialogTitle></DialogHeader>
           <div className="py-4">
-            <Label htmlFor="new-domain-text">Nom du domaine</Label>
+            <Label htmlFor="new-domain-text">{t('addDomainModal.domainTitle')}</Label>
             <Input
               id="new-domain-text"
               value={newDomain}
               onChange={(e) => setNewDomain(e.target.value)}
               className="mt-1"
-              placeholder="Ex: Apprentissage de l'anglais"
+              placeholder={t('addDomainModal.domainTitlePlaceholder')}
             />
           </div>
           <DialogFooter>
-            <DialogClose asChild><Button type="button" variant="secondary">Annuler</Button></DialogClose>
-            <Button type="button" onClick={handleAddDomain}>Ajouter</Button>
+            <DialogClose asChild><Button type="button" variant="secondary">{t('common.cancel')}</Button></DialogClose>
+            <Button type="button" onClick={handleAddDomain}>{t('common.add')}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

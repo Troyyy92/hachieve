@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Check, Loader2, Target } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface Step5ValidationProps {
   goal: string;
@@ -11,6 +12,7 @@ interface Step5ValidationProps {
 }
 
 export const Step5Validation = ({ goal, domains, onSubmit, onBack }: Step5ValidationProps) => {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = () => {
@@ -25,21 +27,21 @@ export const Step5Validation = ({ goal, domains, onSubmit, onBack }: Step5Valida
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Prêt à commencer ?</CardTitle>
+        <CardTitle>{t('wizard.step5_title')}</CardTitle>
         <CardDescription>
-          Vérifiez une dernière fois votre objectif et vos domaines d'action. C'est le début de votre parcours vers la réussite.
+          {t('wizard.step5_desc')}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="p-4 border rounded-lg bg-secondary">
           <div className="flex items-center mb-2">
             <Target className="w-5 h-5 mr-3 text-primary" />
-            <h3 className="font-semibold text-lg">Votre Objectif Principal</h3>
+            <h3 className="font-semibold text-lg">{t('wizard.step5_your_goal')}</h3>
           </div>
           <p className="text-muted-foreground pl-8">{goal}</p>
         </div>
         <div>
-          <h3 className="font-semibold text-lg mb-2">Vos {domains.length} Domaines d'Action</h3>
+          <h3 className="font-semibold text-lg mb-2">{t('wizard.step5_your_domains', { count: domains.length })}</h3>
           <ul className="grid grid-cols-2 gap-x-4 gap-y-2 list-none pl-0">
             {domains.map((domain) => (
               <li key={domain} className="flex items-center">
@@ -53,16 +55,16 @@ export const Step5Validation = ({ goal, domains, onSubmit, onBack }: Step5Valida
       <CardFooter className="flex justify-between">
         <Button variant="outline" onClick={onBack} disabled={isLoading}>
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Précédent
+          {t('common.previous')}
         </Button>
         <Button onClick={handleSubmit} disabled={isLoading}>
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Création du plan...
+              {t('wizard.step5_button_loading')}
             </>
           ) : (
-            "Lancer mon plan"
+            t('wizard.step5_button')
           )}
         </Button>
       </CardFooter>

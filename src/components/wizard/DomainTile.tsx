@@ -3,6 +3,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { GripVertical, Pencil, Trash2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface DomainTileProps {
   id: string;
@@ -12,6 +13,7 @@ interface DomainTileProps {
 }
 
 export const DomainTile = ({ id, domain, onEdit, onDelete }: DomainTileProps) => {
+  const { t } = useTranslation();
   const {
     attributes,
     listeners,
@@ -43,7 +45,7 @@ export const DomainTile = ({ id, domain, onEdit, onDelete }: DomainTileProps) =>
               <p className="text-sm font-medium text-secondary-foreground line-clamp-3">{domain}</p>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Ce domaine contribue-t-il directement à votre objectif ?</p>
+              <p>{t('wizard.domain_tooltip')}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

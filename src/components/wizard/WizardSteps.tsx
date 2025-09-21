@@ -1,17 +1,20 @@
+import { useTranslation } from "react-i18next";
+
 interface WizardStepsProps {
   currentStep: number;
   totalSteps: number;
 }
 
-const steps = [
-  "Objectif",
-  "Découverte",
-  "Domaines",
-  "Personnalisation",
-  "Validation",
-];
-
 export const WizardSteps = ({ currentStep, totalSteps }: WizardStepsProps) => {
+  const { t } = useTranslation();
+  const steps = [
+    t('wizard.steps.goal'),
+    t('wizard.steps.discovery'),
+    t('wizard.steps.domains'),
+    t('wizard.steps.customization'),
+    t('wizard.steps.validation'),
+  ];
+
   return (
     <div className="w-full">
       <div className="flex items-center justify-between">

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { WizardSteps } from "./wizard/WizardSteps";
 import { Step1Goal } from "./wizard/Step1Goal";
 import { Step2Discovery } from "./wizard/Step2Discovery";
@@ -6,47 +6,39 @@ import { Step3Domains } from "./wizard/Step3Domains";
 import { Step4Customization } from "./wizard/Step4Customization";
 import { Step5Validation } from "./wizard/Step5Validation";
 import { useData } from "@/contexts/DataContext";
+import { useTranslation } from "react-i18next";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 const TOTAL_STEPS = 5;
 
-const questionsByCategory = {
-  career: [
-    "Quel poste ou niveau visez-vous exactement ?",
-    "Quelles sont les 3 compétences clés qui vous manquent pour y arriver ?",
-    "Quelle est votre échéance pour atteindre cet objectif ?",
-    "Qui sont les personnes clés qui pourraient vous aider ?",
-  ],
-  sport: [
-    "Quel est votre niveau de performance actuel ?",
-    "Quelle est la date de l'événement ou l'échéance de votre objectif ?",
-    "Quels sont les principaux obstacles que vous anticipez (physiques, mentaux) ?",
-    "Comment prévoyez-vous de suivre vos progrès ?",
-  ],
-  business: [
-    "Quel est le problème principal que votre projet résout ?",
-    "Qui sont vos clients cibles ?",
-    "Quelles sont vos premières sources de financement envisagées ?",
-    "Quelle est la plus grande inconnue ou le plus grand risque actuel ?",
-  ],
-  general: [
-    "Qu'est-ce qui rend cet objectif si important pour vous personnellement ?",
-    "Comment saurez-vous que vous avez réussi ?",
-    "Quels sont les premiers petits pas que vous pourriez faire dès cette semaine ?",
-    "Qui peut vous soutenir dans cette démarche ?",
-  ],
-};
-
-const domainTemplates = {
-  career: ["Compétences techniques", "Leadership", "Réseau professionnel", "Formation continue", "Visibilité interne", "Gestion de projet", "Communication", "Performance mesurable"],
-  sport: ["Technique de base", "Endurance", "Force/vitesse", "Nutrition", "Récupération", "Mental", "Équipement", "Planification d'entraînement"],
-  business: ["Produit/Service", "Marché/clients", "Financement", "Équipe", "Marketing", "Légal/admin", "Technologie", "Réseau/partenaires"],
-  general: ["Développement personnel", "Santé & Bien-être", "Relations sociales", "Finances personnelles", "Environnement", "Contribution", "Loisirs & Passions", "Apprentissage continu"],
-};
-
-type GoalCategory = keyof typeof questionsByCategory;
+type GoalCategory = 'career' | 'sport' | 'business' | 'general';
 
 export const GoalWizard = () => {
   const { setupProject } = useData();
+  const { t } = useTranslation();
+  
+  const questionsByCategory = useMemo(() => ({
+    career: [
+      t('wizard.questions.career1'), t('wizard.questions.career2'), t('wizard.questions.career3'), t('wizard.questions.career4'),
+    ],
+    sport: [
+      t('wizard.questions.sport1'), t('wizard.questions.sport2'), t('wizard.questions.sport3'), t('wizard.questions.sport4'),
+    ],
+    business: [
+      t('wizard.questions.business1'), t('wizard.questions.business2'), t('wizard.questions.business3'), t('wizard.questions.business4'),
+    ],
+    general: [
+      t('wizard.questions.general1'), t('wizard.questions.general2'), t('wizard.questions.general3'), t('wizard.questions.general4'),
+    ],
+  }), [t]);
+
+  const domainTemplates = useMemo(() => ({
+    career: [t('wizard.domains.career1'), t('wizard.domains.career2'), t('wizard.domains.career3'), t('wizard.domains.career4'), t('wizard.domains.career5'), t('wizard.domains.career6'), t('wizard.domains.career7'), t('wizard.domains.career8')],
+    sport: [t('wizard.domains.sport1'), t('wizard.domains.sport2'), t('wizard.domains.sport3'), t('wizard.domains.sport4'), t('wizard.domains.sport5'), t('wizard.domains.sport6'), t('wizard.domains.sport7'), t('wizard.domains.sport8')],
+    business: [t('wizard.domains.business1'), t('wizard.domains.business2'), t('wizard.domains.business3'), t('wizard.domains.business4'), t('wizard.domains.business5'), t('wizard.domains.business6'), t('wizard.domains.business7'), t('wizard.domains.business8')],
+    general: [t('wizard.domains.general1'), t('wizard.domains.general2'), t('wizard.domains.general3'), t('wizard.domains.general4'), t('wizard.domains.general5'), t('wizard.domains.general6'), t('wizard.domains.general7'), t('wizard.domains.general8')],
+  }), [t]);
+
   const [currentStep, setCurrentStep] = useState(1);
   const [goal, setGoal] = useState({ title: "", description: "" });
   const [goalCategory, setGoalCategory] = useState<GoalCategory>('general');
@@ -68,9 +60,9 @@ export const GoalWizard = () => {
 
   const detectCategory = (goalText: string): GoalCategory => {
     const lowerGoal = goalText.toLowerCase();
-    if (/\b(carrière|directeur|promotion|poste|emploi|manager)\b/.test(lowerGoal)) return 'career';
-    if (/\b(marathon|courir|sport|compétition|match|course)\b/.test(lowerGoal)) return 'sport';
-    if (/\b(startup|business|lancer|entreprise|saas|projet)\b/.test(lowerGoal)) return 'business';
+    if (/\b(carrière|directeur|promotion|poste|emploi|manager|career|director|promotion|job|manager)\b/.test(lowerGoal)) return 'career';
+    if (/\b(marathon|courir|sport|compétition|match|course|run|competition|game|race)\b/.test(lowerGoal)) return 'sport';
+    if (/\b(startup|business|lancer|entreprise|saas|projet|launch|company|project)\b/.test(lowerGoal)) return 'business';
     return 'general';
   };
 
@@ -144,12 +136,15 @@ export const GoalWizard = () => {
           />
         );
       default:
-        return <div>Étape {currentStep} à venir...</div>;
+        return <div>{t('wizard.step_coming_soon', { step: currentStep })}</div>;
     }
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 relative">
+      <div className="absolute top-4 right-4">
+        <LanguageSwitcher />
+      </div>
       <div className="w-full max-w-2xl">
         <WizardSteps currentStep={currentStep} totalSteps={TOTAL_STEPS} />
         <div className="mt-8">

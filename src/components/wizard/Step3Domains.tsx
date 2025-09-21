@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, ArrowRight, Target } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface Step3DomainsProps {
   goal: string;
@@ -10,19 +11,19 @@ interface Step3DomainsProps {
 }
 
 export const Step3Domains = ({ goal, domains, onNext, onBack }: Step3DomainsProps) => {
+  const { t } = useTranslation();
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Vos domaines de développement</CardTitle>
+        <CardTitle>{t('wizard.step3_title')}</CardTitle>
         <CardDescription>
-          Voici une première suggestion de domaines clés pour atteindre votre objectif.
-          Nous les personnaliserons à l'étape suivante.
+          {t('wizard.step3_desc')}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="mb-6 p-4 border rounded-lg bg-primary text-primary-foreground flex flex-col items-center justify-center text-center">
           <Target className="w-8 h-8 mb-2" />
-          <h3 className="font-bold text-sm">Objectif Principal</h3>
+          <h3 className="font-bold text-sm">{t('dashboard.mainGoal')}</h3>
           <p className="text-xs text-primary-foreground/80 mt-1 line-clamp-3">{goal}</p>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -36,10 +37,10 @@ export const Step3Domains = ({ goal, domains, onNext, onBack }: Step3DomainsProp
       <CardFooter className="flex justify-between">
         <Button variant="outline" onClick={onBack}>
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Précédent
+          {t('common.previous')}
         </Button>
         <Button onClick={onNext}>
-          Personnaliser
+          {t('wizard.step3_button')}
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
       </CardFooter>
