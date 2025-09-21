@@ -27,10 +27,10 @@ const Index = () => {
         <header className="flex justify-between items-center">
           <div className="flex-1" />
           <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-[#2f2f2fcc]">
               Hachieve
             </h1>
-            <p className="text-muted-foreground mt-4 text-lg">
+            <p className="text-[#2f2f2fcc] mt-4 text-lg">
               8 paths to achievement
             </p>
           </div>
