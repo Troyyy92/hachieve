@@ -1,12 +1,13 @@
 import { useMemo } from 'react';
-import { Calendar, dateFnsLocalizer, Views } from 'react-big-calendar';
+import { Calendar, dateFnsLocalizer, Views, ToolbarProps } from 'react-big-calendar';
 import { format, parse, startOfWeek, getDay } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useData } from '@/contexts/DataContext';
 import { useNavigate } from 'react-router-dom';
-import { cn } from '@/lib/utils';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
+import { CustomToolbar } from './calendar/CustomToolbar';
+import { CustomEvent } from './calendar/CustomEvent';
 
 const locales = {
   'fr': fr,
@@ -19,20 +20,6 @@ const localizer = dateFnsLocalizer({
   getDay,
   locales,
 });
-
-const eventStyleGetter = (event: any) => {
-  const style = {
-    backgroundColor: event.isDone ? '#d1d5db' : '#3b82f6', // gray for done, blue for active
-    borderRadius: '5px',
-    opacity: 0.8,
-    color: 'white',
-    border: '0px',
-    display: 'block',
-  };
-  return {
-    style: style,
-  };
-};
 
 export const AdvancedCalendarView = () => {
   const { tasks, domains } = useData();
@@ -47,16 +34,12 @@ export const AdvancedCalendarView = () => {
         const isDone = task.columnId === 'done';
         return {
           id: task.id,
-          title: (
-            <div className={cn(isDone && "line-through")}>
-              <p className="font-semibold">{task.content}</p>
-              {domain && <p className="text-xs italic">{domain.title}</p>}
-            </div>
-          ),
+          title: task.content,
           start: new Date(task.startDate!),
           end: new Date(task.endDate || task.startDate!),
           allDay: task.isAllDay ?? true,
           isDone: isDone,
+          domainTitle: domain?.title,
         };
       });
   }, [tasks, domains]);
@@ -68,8 +51,13 @@ export const AdvancedCalendarView = () => {
     }
   };
 
+  const components = useMemo(() => ({
+    toolbar: (props: ToolbarProps) => <CustomToolbar {...props} />,
+    event: (props: { event: any }) => <CustomEvent event={props.event} />,
+  }), []);
+
   return (
-    <div className="mt-8 h-[70vh] bg-card p-4 rounded-lg border">
+    <div className="mt-8 h-[70vh] bg-card p-4 rounded-lg border calendar-container">
       <Calendar
         localizer={localizer}
         events={events}
@@ -93,7 +81,7 @@ export const AdvancedCalendarView = () => {
           showMore: total => `+ ${total} de plus`
         }}
         onSelectEvent={handleSelectEvent}
-        eventPropGetter={eventStyleGetter}
+        components={components}
       />
     </div>
   );

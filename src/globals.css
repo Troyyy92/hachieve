@@ -103,4 +103,73 @@
     border-radius: 50%;
     background-color: hsl(var(--primary));
   }
+
+  /* Custom React Big Calendar Styles */
+  .calendar-container .rbc-calendar {
+    @apply h-full;
+  }
+
+  .calendar-container .rbc-toolbar {
+    @apply hidden; /* On cache la barre d'outils par défaut */
+  }
+
+  .calendar-container .rbc-header {
+    @apply text-center p-2 border-b border-border text-sm font-medium text-muted-foreground;
+  }
+
+  .calendar-container .rbc-month-view,
+  .calendar-container .rbc-time-view {
+    @apply border-none;
+  }
+
+  .calendar-container .rbc-day-bg {
+    @apply border-l border-border;
+  }
+  .calendar-container .rbc-day-bg:first-child {
+    @apply border-l-0;
+  }
+
+  .calendar-container .rbc-month-row {
+    @apply border-b border-border;
+  }
+  
+  .calendar-container .rbc-month-row:last-child {
+    @apply border-b-0;
+  }
+
+  .calendar-container .rbc-off-range-bg {
+    @apply bg-secondary/50;
+  }
+
+  .calendar-container .rbc-today {
+    @apply bg-primary/10;
+  }
+
+  .calendar-container .rbc-event {
+    @apply p-0 bg-transparent cursor-pointer;
+  }
+
+  .calendar-container .rbc-event-content {
+    @apply h-full;
+  }
+
+  .calendar-container .rbc-show-more {
+    @apply text-primary text-xs hover:underline;
+  }
+
+  .calendar-container .rbc-time-content {
+    @apply border-t-0;
+  }
+
+  .calendar-container .rbc-time-header-content {
+    @apply border-l-0;
+  }
+
+  .calendar-container .rbc-time-slot {
+    @apply border-t-0;
+  }
+
+  .calendar-container .rbc-current-time-indicator {
+    @apply bg-destructive;
+  }
 }
