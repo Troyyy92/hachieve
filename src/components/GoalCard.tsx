@@ -48,16 +48,16 @@ export const GoalCard = ({ goal, progress }: GoalCardProps) => {
   return (
     <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Card className="bg-primary text-primary-foreground flex flex-col items-center justify-center min-h-56 p-4 cursor-pointer hover:shadow-xl hover:-translate-y-1">
+        <Card className="bg-[#ffcb6c] text-[#2f2f2fcc] flex flex-col items-center justify-center min-h-56 p-4 cursor-pointer hover:shadow-xl hover:-translate-y-1 border-none">
           <CardContent className="flex flex-col items-center justify-center text-center p-0 w-full">
             <Target className="w-10 h-10 mb-4" />
             <h3 className="text-lg font-bold">Objectif Principal</h3>
-            <p className="text-md text-primary-foreground/80 px-2">{goal.title}</p>
+            <p className="text-md text-[#2f2f2fcc]/80 px-2">{goal.title}</p>
             <div className="w-full px-4 mt-4">
-              <div className="text-right text-sm text-primary-foreground/80 mb-1">
+              <div className="text-right text-sm text-[#2f2f2fcc]/80 mb-1">
                 {progress}%
               </div>
-              <Progress value={progress} className="[&>*]:bg-primary-foreground" />
+              <Progress value={progress} className="[&>*]:bg-[#2f2f2fcc]" />
             </div>
           </CardContent>
         </Card>

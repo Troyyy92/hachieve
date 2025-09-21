@@ -50,8 +50,8 @@ export const DomainCard = ({ domain }: DomainCardProps) => {
     <div className="relative group h-full">
       <Link to={`/domain/${domain.id}`} className="block h-full">
         <Card className={cn(
-          "hover:shadow-xl hover:-translate-y-1 flex flex-col bg-card min-h-56 h-full",
-          domain.isPriority && "bg-cyan-50 border-cyan-200"
+          "hover:shadow-xl hover:-translate-y-1 flex flex-col min-h-56 h-full border-none",
+          domain.isPriority ? "bg-[#ff93936b]" : "bg-[#ffffff47]"
         )}>
           <CardHeader className="flex-shrink-0">
             <CardTitle className="flex items-center text-lg">
