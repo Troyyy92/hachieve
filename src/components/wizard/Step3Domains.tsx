@@ -10,40 +10,27 @@ interface Step3DomainsProps {
 }
 
 export const Step3Domains = ({ goal, domains, onNext, onBack }: Step3DomainsProps) => {
-  const gridItems = [
-    ...domains.slice(0, 4),
-    goal,
-    ...domains.slice(4),
-  ];
-
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Vos 8 domaines de développement</CardTitle>
+        <CardTitle>Vos domaines de développement</CardTitle>
         <CardDescription>
           Voici une première suggestion de domaines clés pour atteindre votre objectif.
           Nous les personnaliserons à l'étape suivante.
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-3 gap-4">
-          {gridItems.map((item, index) => {
-            const isGoal = index === 4;
-            if (isGoal) {
-              return (
-                <div key="goal" className="bg-primary text-primary-foreground rounded-lg flex flex-col items-center justify-center text-center p-4 aspect-square">
-                  <Target className="w-8 h-8 mb-2" />
-                  <h3 className="font-bold text-sm">Objectif Principal</h3>
-                  <p className="text-xs text-primary-foreground/80 mt-1 line-clamp-3">{item}</p>
-                </div>
-              );
-            }
-            return (
-              <div key={item} className="bg-secondary rounded-lg flex items-center justify-center text-center p-2 aspect-square">
-                <p className="text-sm font-medium text-secondary-foreground">{item}</p>
-              </div>
-            );
-          })}
+        <div className="mb-6 p-4 border rounded-lg bg-primary text-primary-foreground flex flex-col items-center justify-center text-center">
+          <Target className="w-8 h-8 mb-2" />
+          <h3 className="font-bold text-sm">Objectif Principal</h3>
+          <p className="text-xs text-primary-foreground/80 mt-1 line-clamp-3">{goal}</p>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {domains.map((item) => (
+            <div key={item} className="bg-secondary rounded-lg flex items-center justify-center text-center p-2 aspect-square">
+              <p className="text-sm font-medium text-secondary-foreground">{item}</p>
+            </div>
+          ))}
         </div>
       </CardContent>
       <CardFooter className="flex justify-between">

@@ -33,7 +33,7 @@ export const Step4Customization = ({ goal, domains, setDomains, onNext, onBack }
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
   const domainIds = useMemo(() => domains, [domains]);
-  const isGridValid = domains.length === 8;
+  const isGridValid = domains.length >= 1 && domains.length <= 8;
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -82,19 +82,13 @@ export const Step4Customization = ({ goal, domains, setDomains, onNext, onBack }
     }
   };
 
-  const gridItems = [
-    ...domains.slice(0, 4),
-    "goal",
-    ...domains.slice(4),
-  ];
-
   return (
     <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <Card>
         <CardHeader>
           <CardTitle>Personnalisez vos domaines</CardTitle>
           <CardDescription>
-            Modifiez, supprimez ou réorganisez ces domaines pour qu'ils correspondent parfaitement à votre vision. Vous devez en avoir exactement 8.
+            Modifiez, supprimez ou réorganisez ces domaines. Vous devez en sélectionner entre 1 et 8.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -102,36 +96,30 @@ export const Step4Customization = ({ goal, domains, setDomains, onNext, onBack }
             <Alert variant="destructive" className="mb-4">
               <AlertTitle>Attention</AlertTitle>
               <AlertDescription>
-                Vous devez avoir exactement 8 domaines. Vous en avez actuellement {domains.length}.
+                Vous devez avoir entre 1 et 8 domaines. Vous en avez actuellement {domains.length}.
               </AlertDescription>
             </Alert>
           )}
-          <div className="grid grid-cols-3 gap-4">
+          <div className="mb-6 p-4 border rounded-lg bg-secondary flex flex-col items-center justify-center text-center">
+            <Target className="w-8 h-8 mb-2 text-primary" />
+            <h3 className="font-bold text-sm">Objectif Principal</h3>
+            <p className="text-xs text-muted-foreground mt-1 line-clamp-3">{goal}</p>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             <SortableContext items={domainIds}>
-              {gridItems.map((item, index) => {
-                if (item === "goal") {
-                  return (
-                    <div key="goal" className="bg-primary text-primary-foreground rounded-lg flex flex-col items-center justify-center text-center p-4 aspect-square">
-                      <Target className="w-8 h-8 mb-2" />
-                      <h3 className="font-bold text-sm">Objectif Principal</h3>
-                      <p className="text-xs text-primary-foreground/80 mt-1 line-clamp-3">{goal}</p>
-                    </div>
-                  );
-                }
-                
-                const domainIndex = index > 4 ? index - 1 : index;
-                return (
-                  <DomainTile
-                    key={item}
-                    id={item}
-                    domain={item}
-                    onDelete={() => handleDelete(domainIndex)}
-                    onEdit={() => handleEdit(domainIndex)}
-                  />
-                );
-              })}
+              {domains.map((domain, index) => (
+                <DomainTile
+                  key={domain}
+                  id={domain}
+                  domain={domain}
+                  onDelete={() => handleDelete(index)}
+                  onEdit={() => handleEdit(index)}
+                />
+              ))}
             </SortableContext>
           </div>
+
           {domains.length < 8 && (
             <Button variant="outline" className="w-full mt-4" onClick={() => setIsAddDialogOpen(true)}>
               <Plus className="mr-2 h-4 w-4" /> Ajouter un domaine

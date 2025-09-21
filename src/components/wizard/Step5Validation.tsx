@@ -39,7 +39,7 @@ export const Step5Validation = ({ goal, domains, onSubmit, onBack }: Step5Valida
           <p className="text-muted-foreground pl-8">{goal}</p>
         </div>
         <div>
-          <h3 className="font-semibold text-lg mb-2">Vos 8 Domaines d'Action</h3>
+          <h3 className="font-semibold text-lg mb-2">Vos {domains.length} Domaines d'Action</h3>
           <ul className="grid grid-cols-2 gap-x-4 gap-y-2 list-none pl-0">
             {domains.map((domain) => (
               <li key={domain} className="flex items-center">
