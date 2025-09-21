@@ -15,7 +15,7 @@
     --popover: 0 0% 100% / 0.85;
     --popover-foreground: 240 10% 3.9%;
 
-    --primary: 221 83% 53%;
+    --primary: 207 90% 54%;
     --primary-foreground: 0 0% 98%;
 
     --secondary: 240 4.8% 95.9% / 0.85;
@@ -32,7 +32,7 @@
 
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
-    --ring: 221 83% 53%;
+    --ring: 207 90% 54%;
 
     --radius: 0.5rem;
   }
@@ -86,7 +86,7 @@
 
 @layer components {
   .card {
-    @apply transition-all duration-300;
+    @apply transition-all duration-300 ease-in-out;
   }
   
   .day-with-task {
