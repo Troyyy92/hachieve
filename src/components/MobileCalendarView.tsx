@@ -71,7 +71,14 @@ export const MobileCalendarView = () => {
               const domain = domains.find(d => d.id === task.domainId);
               const isDone = task.columnId === 'done';
               return (
-                <Card key={task.id} onClick={() => handleTaskClick(task.id)} className="cursor-pointer hover:bg-secondary transition-colors">
+                <Card 
+                  key={task.id} 
+                  onClick={() => handleTaskClick(task.id)} 
+                  className={cn(
+                    "cursor-pointer transition-colors",
+                    task.isPriority ? "bg-[#ff93936b] hover:brightness-95" : "hover:bg-secondary"
+                  )}
+                >
                   <CardContent className="p-3 flex items-start gap-3">
                     <div className="text-xs text-muted-foreground pt-1 w-12 text-center">
                       {task.isAllDay ? (
