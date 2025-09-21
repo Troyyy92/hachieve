@@ -250,7 +250,7 @@ const KanbanView = () => {
         Tableau Kanban : {domain?.title}
       </h1>
 
-      <div className="mb-8 p-4 border rounded-lg bg-secondary/50">
+      <div className="mb-8 p-4 rounded-lg bg-secondary/50">
         <div className="flex justify-between items-center mb-2">
             <h2 className="text-xl font-semibold">Description du domaine</h2>
             {!isEditingDomainDesc && (

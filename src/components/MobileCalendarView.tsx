@@ -75,8 +75,9 @@ export const MobileCalendarView = () => {
                   key={task.id} 
                   onClick={() => handleTaskClick(task.id)} 
                   className={cn(
-                    "cursor-pointer transition-colors",
-                    task.isPriority ? "bg-[#ff93936b] hover:brightness-95" : "hover:bg-secondary"
+                    "cursor-pointer transition-colors border-none",
+                    task.isPriority ? "bg-[#ff93936b] hover:brightness-95" : "hover:bg-secondary",
+                    isDone && "opacity-70"
                   )}
                 >
                   <CardContent className="p-3 flex items-start gap-3">
