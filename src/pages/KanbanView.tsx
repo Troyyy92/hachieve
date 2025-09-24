@@ -25,6 +25,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
+  
 } from "@/components/ui/alert-dialog";
 import {
   Dialog,
@@ -173,8 +174,13 @@ const KanbanView = () => {
   }, [domain?.title, isMobile]);
 
   const handleLogout = async () => {
-    console.log("Logout button clicked from KanbanView page!"); // Debug log
-    await supabase.auth.signOut();
+    console.log("Logout button clicked from KanbanView page!");
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error("Error during logout:", error);
+    } else {
+      console.log("Logout successful from KanbanView page!");
+    }
   };
 
   const handleAddTask = () => {

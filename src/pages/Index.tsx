@@ -30,8 +30,13 @@ const Index = () => {
   const isMobile = useIsMobile();
 
   const handleLogout = async () => {
-    console.log("Logout button clicked from Index page!"); // Debug log
-    await supabase.auth.signOut();
+    console.log("Logout button clicked from Index page!");
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error("Error during logout:", error);
+    } else {
+      console.log("Logout successful from Index page!");
+    }
   };
 
   const getTabTitle = (tabValue: string) => {
