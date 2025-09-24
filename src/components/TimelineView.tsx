@@ -36,52 +36,41 @@ export const TimelineView = () => {
     return column ? column.title : '';
   };
 
-  // Helper function to determine the priority level of a task
-  const getTaskPriorityLevel = (task: Task): number => {
-    const hasEndDate = !!task.endDate;
-    const hasStartDate = !!task.startDate;
-    const isPriority = !!task.isPriority;
-
-    if (isPriority && hasEndDate) return 1;
-    if (isPriority && hasStartDate && !hasEndDate) return 2;
-    if (isPriority && !hasStartDate && !hasEndDate) return 3;
-    if (!isPriority && hasEndDate) return 4;
-    if (!isPriority && hasStartDate && !hasEndDate) return 5;
-    if (!isPriority && !hasStartDate && !hasEndDate) return 6;
-    return 6; // Fallback, though all cases should be covered
+  const getTaskEffectiveDate = (task: Task): Date | null => {
+    if (task.endDate) {
+      return parseISO(task.endDate);
+    }
+    if (task.startDate) {
+      return parseISO(task.startDate);
+    }
+    return null;
   };
 
   const prioritizedTasks = useMemo(() => {
     return tasks
       .filter(task => task.columnId !== 'done') // Only active tasks
       .sort((a, b) => {
-        const priorityA = getTaskPriorityLevel(a);
-        const priorityB = getTaskPriorityLevel(b);
+        const dateA = getTaskEffectiveDate(a);
+        const dateB = getTaskEffectiveDate(b);
 
-        // Primary sort: by defined priority level
-        if (priorityA !== priorityB) {
-          return priorityA - priorityB;
-        }
-
-        // Secondary sort: within the same priority level
-        // For levels 1 and 4 (has endDate): sort by endDate (closest first)
-        if (priorityA === 1 || priorityA === 4) {
-          const endDateA = a.endDate ? parseISO(a.endDate).getTime() : Infinity;
-          const endDateB = b.endDate ? parseISO(b.endDate).getTime() : Infinity;
-          if (endDateA !== endDateB) {
-            return endDateA - endDateB;
+        // 1. Compare by effective date first (earliest first)
+        if (dateA && dateB) {
+          const timeComparison = dateA.getTime() - dateB.getTime();
+          if (timeComparison !== 0) {
+            return timeComparison;
           }
+        } else if (dateA && !dateB) {
+          return -1; // Task A has a date, Task B does not -> A comes first
+        } else if (!dateA && dateB) {
+          return 1; // Task B has a date, Task A does not -> B comes first
         }
-        // For levels 2 and 5 (has startDate but no endDate): sort by startDate (earliest first)
-        else if (priorityA === 2 || priorityA === 5) {
-          const startDateA = a.startDate ? parseISO(a.startDate).getTime() : Infinity;
-          const startDateB = b.startDate ? parseISO(b.startDate).getTime() : Infinity;
-          if (startDateA !== startDateB) {
-            return startDateA - startDateB;
-          }
-        }
+        // If both have no date, or dates are identical, proceed to priority status
 
-        // Tertiary sort: alphabetical by content if all else is equal
+        // 2. Compare by priority status (priority first)
+        if (a.isPriority && !b.isPriority) return -1; // A is priority, B is not -> A comes first
+        if (!a.isPriority && b.isPriority) return 1;  // B is priority, A is not -> B comes first
+
+        // 3. If dates and priority status are identical, sort by content
         return a.content.localeCompare(b.content, i18n.language);
       });
   }, [tasks, i18n.language]);
@@ -116,8 +105,8 @@ export const TimelineView = () => {
         <div className="flex overflow-x-auto space-x-4 p-4 -mx-4 sm:-mx-8 lg:-mx-12 custom-scrollbar">
           {prioritizedTasks.map(task => {
             const domain = domains.find(d => d.id === task.domainId);
-            const taskEndDate = task.endDate ? parseISO(task.endDate) : null;
-            const isOverdue = taskEndDate && isPast(taskEndDate) && task.columnId !== 'done';
+            const taskEffectiveDate = getTaskEffectiveDate(task);
+            const isOverdue = taskEffectiveDate && isPast(taskEffectiveDate) && task.columnId !== 'done';
 
             return (
               <div key={task.id} className="flex-shrink-0 w-[150px]"> {/* Fixed width for timeline cards */}
@@ -128,7 +117,7 @@ export const TimelineView = () => {
                   onDelete={handleDeleteTask}
                   onDuplicate={handleDuplicateTask}
                   onTogglePriority={handleTogglePriority}
-                  taskEndDate={taskEndDate}
+                  taskEndDate={taskEffectiveDate} // Pass effective date for display
                   isOverdue={isOverdue}
                   domainTitle={domain?.title}
                 />
