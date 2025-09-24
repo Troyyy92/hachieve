@@ -15,11 +15,18 @@ export const Logo = ({ className, size = 40 }: LogoProps) => {
       xmlns="http://www.w3.org/2000/svg" 
       className={cn(className)}
     >
-      {/* Path for the octagonal shape with a transparent square inside */}
+      {/* Octagonal outline */}
       <path 
-        d="M 50 5 L 15 15 L 5 50 L 15 85 L 50 95 L 85 85 L 95 50 L 85 15 Z M 35 35 L 65 35 L 65 65 L 35 65 Z" 
-        fill="currentColor" 
-        fillRule="evenodd"
+        d="M 50 5 L 85 15 L 95 50 L 85 85 L 50 95 L 15 85 L 5 50 L 15 15 Z" 
+        fill="none" 
+        stroke="currentColor" 
+        strokeWidth="5" 
+        strokeLinejoin="round"
+      />
+      {/* Filled central square */}
+      <path 
+        d="M 35 35 L 65 35 L 65 65 L 35 65 Z" 
+        fill="currentColor"
       />
     </svg>
   );
