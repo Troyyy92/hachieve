@@ -7,7 +7,6 @@ import { MobileCalendarView } from "@/components/MobileCalendarView";
 import { TimelineView } from "@/components/TimelineView";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
 import { LogOut, Menu, ChevronDown } from "lucide-react"; 
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
@@ -27,22 +26,18 @@ import { useAuth } from '@/contexts/AuthContext'; // Import useAuth
 const Index = () => {
   const { t } = useTranslation();
   const { mainGoal, goalCompletedForModal, setGoalCompletedForModal, completeAndResetProject } = useData();
-  const { session } = useAuth(); // Get session from AuthContext
+  const { logout } = useAuth(); // Get logout function from AuthContext
   const [activeTab, setActiveTab] = useState("dashboard");
   const isMobile = useIsMobile();
 
   const handleLogout = async () => {
     console.log("Logout button clicked from Index page!");
-    if (!session) {
-      console.warn("No active session found in AuthContext. User might already be logged out.");
-      // If no session, we don't need to call signOut, just let AuthContext handle redirection
-      return;
-    }
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      console.error("Error during logout:", error);
-    } else {
-      console.log("Logout successful from Index page!");
+    try {
+      await logout(); // Use the logout function from AuthContext
+      console.log("Logout process initiated from Index page.");
+    } catch (error) {
+      console.error("Failed to logout from Index page:", error);
+      // Optionally show a toast here if logout fails
     }
   };
 

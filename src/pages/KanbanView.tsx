@@ -45,7 +45,6 @@ import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { supabase } from "@/integrations/supabase/client";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -84,7 +83,7 @@ const KanbanView = () => {
   const domain = domains.find(d => d.id === domainId);
   const { theme } = useTheme();
   const isMobile = useIsMobile();
-  const { session } = useAuth(); // Get session from AuthContext
+  const { logout } = useAuth(); // Get logout function from AuthContext
 
   const [searchTerm, setSearchTerm] = useState("");
   const [showPriorityOnly, setShowPriorityOnly] = useState(false);
@@ -177,15 +176,12 @@ const KanbanView = () => {
 
   const handleLogout = async () => {
     console.log("Logout button clicked from KanbanView page!");
-    if (!session) {
-      console.warn("No active session found in AuthContext. User might already be logged out.");
-      return;
-    }
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      console.error("Error during logout:", error);
-    } else {
-      console.log("Logout successful from KanbanView page!");
+    try {
+      await logout(); // Use the logout function from AuthContext
+      console.log("Logout process initiated from KanbanView page.");
+    } catch (error) {
+      console.error("Failed to logout from KanbanView page:", error);
+      // Optionally show a toast here if logout fails
     }
   };
 
