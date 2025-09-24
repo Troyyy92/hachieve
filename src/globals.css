@@ -1,0 +1,232 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 98%;
+    --foreground: 240 10% 3.9%;
+
+    --card: 0 0% 100% / 0.85;
+    --card-foreground: 240 10% 3.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+
+    --primary: 207 90% 54%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 240 4.8% 95.9% / 0.85;
+    --secondary-foreground: 240 5.9% 10%;
+
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+
+    --accent: 240 4.8% 92%; /* Ajusté pour un gris très clair au survol en mode clair */
+    --accent-foreground: 240 5.9% 10%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 207 90% 54%;
+
+    --radius: 0.5rem;
+
+    --brand-title-color: 229 70% 47%; /* #4A5FE8 */
+  }
+
+  .dark {
+    --background: 240 3% 10%; /* #1b1b1d */
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 27%; /* Default card background, will be overridden for specific cards */
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 6%; /* #101010 */
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 217 91% 60%;
+
+    /* Custom colors for dark mode */
+    --domain-card-bg-dark: 0 0% 27%; /* #464646 */
+    --domain-priority-bg-dark: 338 69% 36%; /* #9a1e46 */
+    --kanban-column-bg-dark: 0 0% 15%; /* #252525 */
+    --task-card-bg-dark: 225 1% 32%; /* #525253 */
+    --task-priority-bg-dark: 338 69% 36%; /* #9a1e46 */
+    --add-domain-card-bg-dark: 0 0% 17%; /* #2b2b2b */
+    --calendar-bg-dark: 0 0% 14.1%; /* Mise à jour: fond du calendrier en mode sombre à #242424 */
+
+    --brand-title-color: 0 0% 98%; /* White in dark mode */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply text-foreground font-sans antialiased;
+    background-image: linear-gradient(to bottom right, #FFDDC1, #FFD4B2);
+    background-attachment: fixed;
+  }
+
+  body.logged-in {
+    background-image: none;
+    @apply bg-background;
+  }
+}
+
+@layer components {
+  .card {
+    @apply transition-all duration-300 ease-in-out;
+  }
+  
+  .day-with-task {
+    position: relative;
+  }
+  .day-with-task::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: hsl(var(--primary));
+  }
+
+  /* Custom React Big Calendar Styles */
+  .calendar-container {
+    @apply h-full;
+    background-color: #fbf7ea4a; /* Light mode default */
+  }
+
+  .dark .calendar-container {
+    background-color: hsl(var(--calendar-bg-dark)); /* Dark mode */
+  }
+
+  .calendar-container .rbc-calendar {
+    @apply h-full;
+  }
+
+  .calendar-container .rbc-toolbar {
+    @apply hidden; /* On cache la barre d'outils par défaut */
+  }
+
+  .calendar-container .rbc-header {
+    @apply text-center p-2 border-b text-sm font-medium text-muted-foreground;
+    border-color: #bbbbbb;
+  }
+
+  .calendar-container .rbc-month-view,
+  .calendar-container .rbc-time-view {
+    @apply border-none;
+  }
+
+  .calendar-container .rbc-day-bg {
+    border-left-color: #bbbbbb;
+  }
+  .calendar-container .rbc-day-bg:first-child {
+    @apply border-l-0;
+  }
+
+  .calendar-container .rbc-month-row {
+    border-bottom-color: #bbbbbb;
+  }
+  
+  .calendar-container .rbc-month-row:last-child {
+    @apply border-b-0;
+  }
+
+  .calendar-container .rbc-off-range-bg {
+    @apply bg-secondary/50;
+  }
+
+  .calendar-container .rbc-today {
+    background-color: #ffd86252;
+  }
+
+  .calendar-container .rbc-event {
+    @apply p-0 bg-transparent cursor-pointer;
+  }
+
+  .calendar-container .rbc-event-content {
+    @apply h-full;
+  }
+
+  .calendar-container .rbc-show-more {
+    @apply text-primary text-xs hover:underline;
+  }
+
+  .calendar-container .rbc-time-content {
+    @apply border-t-0;
+  }
+
+  .calendar-container .rbc-time-header-content {
+    @apply border-l-0;
+  }
+
+  .calendar-container .rbc-time-slot {
+    @apply border-t-0;
+  }
+
+  .calendar-container .rbc-current-time-indicator {
+    @apply bg-destructive;
+  }
+
+  /* Styles pour forcer le mode clair sur la page de connexion */
+  html.dark body:not(.logged-in) {
+    background-image: linear-gradient(to bottom right, #FFDDC1, #FFD4B2);
+  }
+
+  body:not(.logged-in) .login-language-button {
+    background-color: transparent;
+    border-color: transparent;
+  }
+
+  body:not(.logged-in) .login-language-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  /* Custom scrollbar for timeline view */
+  .custom-scrollbar::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: hsl(var(--secondary));
+    border-radius: 10px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground));
+    border-radius: 10px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--foreground));
+  }
+}
