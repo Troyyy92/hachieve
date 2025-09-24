@@ -139,8 +139,8 @@ const Index = () => {
             <Dashboard />
           </TabsContent>
           <TabsContent value="calendar" className="mt-4">
-            {isMobile ? <MobileCalendarView /> : <AdvancedCalendarView />}
             <TimelineView /> {/* New prioritized tasks list */}
+            {isMobile ? <MobileCalendarView /> : <AdvancedCalendarView />}
           </TabsContent>
           <TabsContent value="accomplishments" className="mt-4">
             <AccomplishmentsView />
