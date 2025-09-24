@@ -64,11 +64,10 @@ const Index = () => {
     <div className="min-h-screen text-foreground p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
         <header className="flex justify-between items-center mb-8">
-          <Link to="/" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2 cursor-pointer"> {/* Added cursor-pointer */}
             <Logo size={30} className="text-brand-title-color" />
             <span className="text-xl font-bold text-brand-title-color hidden sm:block">{t('login.hachieveTitle')}</span>
           </Link>
-          {/* Le bloc central avec le titre et le sous-titre est supprimé ici */}
           <div className="flex items-center gap-2">
             <div className="hidden md:flex">
               <ThemeToggle />
