@@ -22,6 +22,8 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { AccomplishmentsView } from "@/components/AccomplishmentsView";
 import { CompletionModal } from "@/components/CompletionModal";
 import { useAuth } from '@/contexts/AuthContext'; // Import useAuth
+import { Logo } from '@/components/Logo'; // Import the Logo component
+import { Link } from "react-router-dom"; // Import Link for navigation
 
 const Index = () => {
   const { t } = useTranslation();
@@ -61,9 +63,12 @@ const Index = () => {
   return (
     <div className="min-h-screen text-foreground p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
-        <header className="flex justify-between items-center">
-          <div className="flex-1" />
-          <div className="text-center">
+        <header className="flex justify-between items-center mb-8">
+          <Link to="/" className="flex items-center gap-2">
+            <Logo size={30} className="text-brand-title-color" />
+            <span className="text-xl font-bold text-brand-title-color hidden sm:block">{t('login.hachieveTitle')}</span>
+          </Link>
+          <div className="flex-1 text-center hidden sm:block">
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground">
               {t('login.hachieveTitle')}
             </h1>
@@ -71,7 +76,7 @@ const Index = () => {
               {t('login.hachieveSubtitle')}
             </p>
           </div>
-          <div className="flex-1 flex justify-end items-center gap-2">
+          <div className="flex items-center gap-2">
             <div className="hidden md:flex">
               <ThemeToggle />
             </div>

@@ -60,6 +60,7 @@ import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { TaskDetailsModal } from "@/components/TaskDetailsModal";
 import { useAuth } from '@/contexts/AuthContext'; // Import useAuth
+import { Logo } from '@/components/Logo'; // Import the Logo component
 
 const initialColumnsConfig: { id: ColumnId; defaultTitleKey: string }[] = [
   { id: "todo", defaultTitleKey: "todoColumn" },
@@ -79,7 +80,7 @@ const initialNewTaskData = {
 const KanbanView = () => {
   const { t, i18n } = useTranslation();
   const { domainId } = useParams();
-  const { domains, tasks, setTasks, addTask, updateTask, deleteTask, updateDomain, duplicateTask } = useData();
+  const { domains, tasks, setTasks, addTask, updateTask, deleteTask, duplicateTask } = useData();
   const domain = domains.find(d => d.id === domainId);
   const { theme } = useTheme();
   const isMobile = useIsMobile();
@@ -171,7 +172,7 @@ const KanbanView = () => {
     calculateMaxWidth();
 
     window.addEventListener('resize', calculateMaxWidth);
-    return () => window.removeEventListener('resize', calculateMaxWidth);
+    return () => window.removeEventListener('change', calculateMaxWidth);
   }, [domain?.title, isMobile]);
 
   const handleLogout = async () => {
@@ -309,10 +310,11 @@ const KanbanView = () => {
     <div className="min-h-screen p-4 md:p-8">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center text-sm text-muted-foreground">
-          <Link to="/" className="hover:text-primary">
-            {t('common.overview')}
+          <Link to="/" className="flex items-center gap-2 hover:text-primary">
+            <Logo size={20} className="text-brand-title-color" />
+            <span className="font-bold text-brand-title-color hidden sm:block">{t('login.hachieveTitle')}</span>
+            <ChevronRight className="w-4 h-4 mx-1 text-muted-foreground" />
           </Link>
-          <ChevronRight className="w-4 h-4 mx-1" />
           <span className="font-medium text-primary capitalize max-w-[150px] truncate">{domain?.title}</span>
         </div>
         <div className="flex items-center gap-2">

@@ -7,6 +7,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AuthError } from '@supabase/supabase-js';
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { Logo } from '@/components/Logo'; // Import the Logo component
 
 const Login = () => {
   const { t } = useTranslation();
@@ -70,6 +71,9 @@ const Login = () => {
           <LanguageSwitcher />
         </div>
         <div className="mb-16">
+          <div className="flex justify-center mb-4">
+            <Logo size={80} className="text-brand-title-color" /> {/* Added Logo */}
+          </div>
           <h1 className="text-6xl md:text-7xl font-bold text-brand-title-color tracking-tighter">{t('login.hachieveTitle')}</h1>
           <p className="text-2xl md:text-3xl text-brand-title-color font-light tracking-tight animate-mask-reveal login-subtitle-reveal">{t('login.hachieveSubtitle')}</p>
         </div>
