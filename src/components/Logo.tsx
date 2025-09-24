@@ -17,7 +17,7 @@ export const Logo = ({ className, size = 40 }: LogoProps) => {
     >
       {/* Octogone extérieur avec coins arrondis */}
       <g>
-        {/* Fond bleu de l'octogone avec coins arrondis */}
+        {/* Fond de l'octogone avec coins arrondis, utilise currentColor */}
         <path d="M 160 60
                  L 290 60
                  Q 300 60 307 67
@@ -36,9 +36,9 @@ export const Logo = ({ className, size = 40 }: LogoProps) => {
                  L 143 67
                  Q 150 60 160 60
                  Z" 
-              fill="#2443cc"/>
+              fill="currentColor"/>
         
-        {/* Trou intérieur */}
+        {/* Trou intérieur, utilise la couleur de fond du thème */}
         <path d="M 165 90
                  L 285 90
                  L 360 165
@@ -48,16 +48,16 @@ export const Logo = ({ className, size = 40 }: LogoProps) => {
                  L 90 285
                  L 90 165
                  Z" 
-              fill="white"/>
+              fill="hsl(var(--background))"/>
       </g>
       
-      {/* Carré central aligné avec les segments de l'octogone */}
+      {/* Carré central aligné avec les segments de l'octogone, utilise currentColor */}
       <rect x="165" y="165" 
             width="120" 
             height="120" 
             rx="15"
             ry="15"
-            fill="#2443cc"/>
+            fill="currentColor"/>
     </svg>
   );
 };
