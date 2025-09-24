@@ -8,6 +8,7 @@ import { Calendar, Star, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from './ui/badge';
 import { useNavigate } from 'react-router-dom';
+import { Task } from '@/types';
 
 export const PrioritizedTasksList = () => {
   const { t, i18n, } = useTranslation();
@@ -15,31 +16,52 @@ export const PrioritizedTasksList = () => {
   const navigate = useNavigate();
   const currentLocale = i18n.language === 'fr' ? fr : enUS;
 
+  // Helper function to determine the priority level of a task
+  const getTaskPriorityLevel = (task: Task): number => {
+    const hasEndDate = !!task.endDate;
+    const hasStartDate = !!task.startDate;
+    const isPriority = !!task.isPriority;
+
+    if (isPriority && hasEndDate) return 1;
+    if (isPriority && hasStartDate && !hasEndDate) return 2;
+    if (isPriority && !hasStartDate && !hasEndDate) return 3;
+    if (!isPriority && hasEndDate) return 4;
+    if (!isPriority && hasStartDate && !hasEndDate) return 5;
+    if (!isPriority && !hasStartDate && !hasEndDate) return 6;
+    return 6; // Fallback, though all cases should be covered
+  };
+
   const prioritizedTasks = useMemo(() => {
     return tasks
       .filter(task => task.columnId !== 'done') // Only active tasks
       .sort((a, b) => {
-        // 1. Sort by endDate (closest first)
-        const endDateA = a.endDate ? parseISO(a.endDate).getTime() : Infinity;
-        const endDateB = b.endDate ? parseISO(b.endDate).getTime() : Infinity;
+        const priorityA = getTaskPriorityLevel(a);
+        const priorityB = getTaskPriorityLevel(b);
 
-        if (endDateA !== endDateB) {
-          return endDateA - endDateB;
+        // Primary sort: by defined priority level
+        if (priorityA !== priorityB) {
+          return priorityA - priorityB;
         }
 
-        // 2. If endDate is the same (or both are null/Infinity), sort by priority (priority first)
-        if (a.isPriority && !b.isPriority) return -1;
-        if (!a.isPriority && b.isPriority) return 1;
-
-        // 3. Fallback to startDate (earliest first)
-        const startDateA = a.startDate ? parseISO(a.startDate).getTime() : Infinity;
-        const startDateB = b.startDate ? parseISO(b.startDate).getTime() : Infinity;
-
-        if (startDateA !== startDateB) {
-          return startDateA - startDateB;
+        // Secondary sort: within the same priority level
+        // For levels 1 and 4 (has endDate): sort by endDate (closest first)
+        if (priorityA === 1 || priorityA === 4) {
+          const endDateA = a.endDate ? parseISO(a.endDate).getTime() : Infinity;
+          const endDateB = b.endDate ? parseISO(b.endDate).getTime() : Infinity;
+          if (endDateA !== endDateB) {
+            return endDateA - endDateB;
+          }
+        }
+        // For levels 2 and 5 (has startDate but no endDate): sort by startDate (earliest first)
+        else if (priorityA === 2 || priorityA === 5) {
+          const startDateA = a.startDate ? parseISO(a.startDate).getTime() : Infinity;
+          const startDateB = b.startDate ? parseISO(b.startDate).getTime() : Infinity;
+          if (startDateA !== startDateB) {
+            return startDateA - startDateB;
+          }
         }
 
-        // 4. Finally, sort alphabetically by content
+        // Tertiary sort: alphabetical by content if all else is equal
         return a.content.localeCompare(b.content, i18n.language);
       });
   }, [tasks, i18n.language]);
