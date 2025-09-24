@@ -71,7 +71,7 @@ const Login = () => {
         </div>
         <div className="mb-16">
           <h1 className="text-6xl md:text-7xl font-bold text-brand-title-color tracking-tighter">{t('login.hachieveTitle')}</h1>
-          <p className="text-2xl md:text-3xl text-brand-title-color font-light tracking-tight animate-slide-in-left">{t('login.hachieveSubtitle')}</p>
+          <p className="text-2xl md:text-3xl text-brand-title-color font-light tracking-tight animate-mask-reveal login-subtitle-reveal">{t('login.hachieveSubtitle')}</p>
         </div>
 
         <form className="flex flex-col gap-5" onSubmit={handleAuthAction}>
