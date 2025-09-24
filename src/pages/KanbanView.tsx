@@ -544,11 +544,11 @@ const KanbanView = () => {
                   .filter((task) => task.columnId === col.id)
                   .sort((a, b) => (b.isPriority ? 1 : 0) - (a.isPriority ? 1 : 0))
                 }
-                onViewTask={handleOpenTaskDetails} // Use the new handler
-                onEditTask={handleOpenTaskDetails} // Use the new handler
-                onDeleteTask={() => {}} // Handled by TaskDetailsModal
-                onDuplicateTask={() => {}} // Handled by TaskDetailsModal
-                onTogglePriorityTask={() => {}} // Handled by TaskDetailsModal
+                onViewTask={handleOpenTaskDetails}
+                onEditTask={handleOpenTaskDetails}
+                onDeleteTask={deleteTask} {/* Corrected: Pass deleteTask directly */}
+                onDuplicateTask={duplicateTask} {/* Corrected: Pass duplicateTask directly */}
+                onTogglePriorityTask={(task) => updateTask(task.id, { isPriority: !task.isPriority })} {/* Corrected: Pass updateTask for priority */}
               />
             ))}
           </SortableContext>
