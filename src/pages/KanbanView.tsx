@@ -60,6 +60,7 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { TaskDetailsModal } from "@/components/TaskDetailsModal";
+import { useAuth } from '@/contexts/AuthContext'; // Import useAuth
 
 const initialColumnsConfig: { id: ColumnId; defaultTitleKey: string }[] = [
   { id: "todo", defaultTitleKey: "todoColumn" },
@@ -83,6 +84,7 @@ const KanbanView = () => {
   const domain = domains.find(d => d.id === domainId);
   const { theme } = useTheme();
   const isMobile = useIsMobile();
+  const { session } = useAuth(); // Get session from AuthContext
 
   const [searchTerm, setSearchTerm] = useState("");
   const [showPriorityOnly, setShowPriorityOnly] = useState(false);
@@ -175,6 +177,10 @@ const KanbanView = () => {
 
   const handleLogout = async () => {
     console.log("Logout button clicked from KanbanView page!");
+    if (!session) {
+      console.warn("No active session found in AuthContext. User might already be logged out.");
+      return;
+    }
     const { error } = await supabase.auth.signOut();
     if (error) {
       console.error("Error during logout:", error);
