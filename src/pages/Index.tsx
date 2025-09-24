@@ -68,14 +68,7 @@ const Index = () => {
             <Logo size={30} className="text-brand-title-color" />
             <span className="text-xl font-bold text-brand-title-color hidden sm:block">{t('login.hachieveTitle')}</span>
           </Link>
-          <div className="flex-1 text-center hidden sm:block">
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground">
-              {t('login.hachieveTitle')}
-            </h1>
-            <p className="text-foreground mt-4 text-lg">
-              {t('login.hachieveSubtitle')}
-            </p>
-          </div>
+          {/* Le bloc central avec le titre et le sous-titre est supprimé ici */}
           <div className="flex items-center gap-2">
             <div className="hidden md:flex">
               <ThemeToggle />
