@@ -199,7 +199,8 @@
 
   /* Styles pour forcer le mode clair sur la page de connexion */
   html.dark body:not(.logged-in) {
-    background-image: linear-gradient(to bottom right, #FFDDC1, #FFD4B2);
+    background-image: none; /* Remove the gradient */
+    background-color: #1e1e1e; /* Set the desired dark background color */
   }
 
   body:not(.logged-in) .login-language-button {
