@@ -231,7 +231,7 @@
   }
 
   .login-subtitle-reveal {
-    mask-image: linear-gradient(to right, black, black); /* Solid black mask */
+    mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"><rect fill="black" width="1" height="1"/></svg>');
     mask-repeat: no-repeat;
     mask-position: left center; /* Start mask from the left */
   }
