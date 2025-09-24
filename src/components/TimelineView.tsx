@@ -4,17 +4,14 @@ import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from './ui/card';
 import { format, isPast, parseISO } from 'date-fns';
 import { fr, enUS } from 'date-fns/locale';
-import { Calendar, Star, AlertCircle } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { Badge } from './ui/badge';
+import { Star } from 'lucide-react';
 import { KanbanTaskCard } from './KanbanTaskCard';
 import { TaskDetailsModal } from './TaskDetailsModal';
-import { ColumnId, Column } from '@/types';
+import { ColumnId, Column, Task } from '@/types';
 
 export const TimelineView = () => {
   const { t, i18n } = useTranslation();
   const { tasks, domains } = useData();
-  const currentLocale = i18n.language === 'fr' ? fr : enUS;
 
   const [taskToEditOrView, setTaskToEditOrView] = useState<Task | null>(null);
 
@@ -81,26 +78,10 @@ export const TimelineView = () => {
                   onDelete={() => {}} // Handled by TaskDetailsModal
                   onDuplicate={() => {}} // Handled by TaskDetailsModal
                   onTogglePriority={() => {}} // Handled by TaskDetailsModal
+                  taskEndDate={taskEndDate}
+                  isOverdue={isOverdue}
+                  domainTitle={domain?.title}
                 />
-                {taskEndDate && (
-                  <div className={cn(
-                    "flex items-center text-xs mt-2 px-1",
-                    isOverdue ? "text-destructive" : "text-muted-foreground"
-                  )}>
-                    <Calendar className="w-3 h-3 mr-1" />
-                    <span>{format(taskEndDate, 'PPP', { locale: currentLocale })}</span>
-                    {isOverdue && (
-                      <Badge variant="destructive" className="ml-1 px-1 py-0.5 text-[0.6rem]">
-                        <AlertCircle className="w-2.5 h-2.5 mr-0.5" /> {t('common.overdue')}
-                      </Badge>
-                    )}
-                  </div>
-                )}
-                {domain && (
-                  <Badge variant="outline" className="mt-1 ml-1 font-normal text-[0.6rem] px-1 py-0.5">
-                    {domain.title}
-                  </Badge>
-                )}
               </div>
             );
           })}
