@@ -231,7 +231,7 @@
   }
 
   .login-subtitle-reveal {
-    mask-image: linear-gradient(to right, black, transparent);
+    mask-image: linear-gradient(to right, transparent, black 20%); /* Adjusted gradient */
     mask-repeat: no-repeat;
     mask-position: left center;
   }
