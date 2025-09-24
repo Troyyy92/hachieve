@@ -129,6 +129,7 @@ const KanbanView = () => {
   const [newTaskData, setNewTaskData] = useState(initialNewTaskData);
 
   const [taskToEditOrView, setTaskToEditOrView] = useState<Task | null>(null);
+  const [taskToDeleteId, setTaskToDeleteId] = useState<string | null>(null); // New state for delete confirmation
 
   const [isEditingDomainDesc, setIsEditingDomainDesc] = useState(false);
   const [editedDomainDesc, setEditedDomainDesc] = useState(domain?.description || "");
@@ -168,7 +169,7 @@ const KanbanView = () => {
     calculateMaxWidth();
 
     window.addEventListener('resize', calculateMaxWidth);
-    return () => window.removeEventListener('resize', calculateMaxWidth); // Corrected event listener
+    return () => window.removeEventListener('resize', calculateMaxWidth);
   }, [domain?.title, isMobile]);
 
   const handleLogout = async () => {
@@ -277,6 +278,17 @@ const KanbanView = () => {
 
   const handleOpenTaskDetails = (task: Task) => {
     setTaskToEditOrView(task);
+  };
+
+  const handleDeleteTaskConfirmation = (taskId: string) => {
+    setTaskToDeleteId(taskId);
+  };
+
+  const handleConfirmDelete = () => {
+    if (taskToDeleteId) {
+      deleteTask(taskToDeleteId);
+      setTaskToDeleteId(null);
+    }
   };
 
   const getColumnTitle = (columnId: ColumnId) => {
@@ -546,7 +558,7 @@ const KanbanView = () => {
                 }
                 onViewTask={handleOpenTaskDetails}
                 onEditTask={handleOpenTaskDetails}
-                onDeleteTask={deleteTask}
+                onDeleteTask={handleDeleteTaskConfirmation} {/* Changed to trigger confirmation */}
                 onDuplicateTask={duplicateTask}
                 onTogglePriorityTask={(task) => updateTask(task.id, { isPriority: !task.isPriority })}
               />
@@ -558,7 +570,7 @@ const KanbanView = () => {
             task={activeTask} 
             onView={handleOpenTaskDetails}
             onEdit={handleOpenTaskDetails}
-            onDelete={deleteTask}
+            onDelete={handleDeleteTaskConfirmation} {/* Changed to trigger confirmation */}
             onDuplicate={duplicateTask}
             onTogglePriority={(task) => updateTask(task.id, { isPriority: !task.isPriority })}
           />}
@@ -572,6 +584,20 @@ const KanbanView = () => {
         columns={columns}
         getColumnTitle={getColumnTitle}
       />
+
+      {/* AlertDialog for task deletion confirmation */}
+      <AlertDialog open={!!taskToDeleteId} onOpenChange={() => setTaskToDeleteId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('kanban.taskDeleteConfirmTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>{t('kanban.taskDeleteConfirmDescription')}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmDelete}>{t('common.delete')}</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
