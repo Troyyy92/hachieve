@@ -102,9 +102,9 @@ export default {
           },
         },
         "mask-reveal": {
-          "0%": { "mask-size": "0% 100%", opacity: "0" },
-          "1%": { opacity: "1" },
-          "100%": { "mask-size": "100% 100%", opacity: "1" },
+          "0%": { "mask-position": "100% 0", opacity: "0" }, // Start mask off-screen right
+          "1%": { opacity: "1" }, // Make text visible almost immediately
+          "100%": { "mask-position": "0% 0", opacity: "1" }, // End mask at its natural position
         },
       },
       animation: {
