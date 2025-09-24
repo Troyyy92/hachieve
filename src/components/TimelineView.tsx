@@ -11,8 +11,7 @@ import { ColumnId, Column, Task } from '@/types';
 
 export const TimelineView = () => {
   const { t, i18n } = useTranslation();
-  const { tasks, domains } = useData();
-
+  const { tasks, domains, updateTask } = useData(); // Import updateTask
   const [taskToEditOrView, setTaskToEditOrView] = useState<Task | null>(null);
 
   const columns: Column[] = useMemo(() => [
@@ -59,6 +58,10 @@ export const TimelineView = () => {
     setTaskToEditOrView(task);
   };
 
+  const handleTogglePriority = (task: Task) => {
+    updateTask(task.id, { isPriority: !task.isPriority });
+  };
+
   return (
     <div className="mt-8">
       <h2 className="text-2xl font-bold text-center mb-6">{t('calendar.prioritizedTasksTitle')}</h2>
@@ -77,7 +80,7 @@ export const TimelineView = () => {
                   onEdit={handleOpenTaskDetails}
                   onDelete={() => {}} // Handled by TaskDetailsModal
                   onDuplicate={() => {}} // Handled by TaskDetailsModal
-                  onTogglePriority={() => {}} // Handled by TaskDetailsModal
+                  onTogglePriority={handleTogglePriority} // Pass the new handler
                   taskEndDate={taskEndDate}
                   isOverdue={isOverdue}
                   domainTitle={domain?.title}
