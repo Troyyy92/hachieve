@@ -106,22 +106,13 @@ export const KanbanTaskCard = ({ task, onView, onEdit, onDelete, onDuplicate, on
         </CardContent>
         
         <div className="flex flex-col items-start justify-end pt-1">
-          {taskEndDate && (
-            <div className={cn(
-              "flex items-center text-xs w-full overflow-hidden",
-              isOverdue ? "text-gray-800 dark:text-gray-200" : "text-muted-foreground"
-            )}>
-              <Calendar className="w-3 h-3 mr-1 flex-shrink-0" />
-              <span className="line-clamp-1 flex-grow min-w-0">{format(taskEndDate, 'PPP', { locale: currentLocale })}</span>
-              {isOverdue && (
-                <Badge className="ml-1 px-1 py-0.5 text-[0.6rem] flex-shrink-0 bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600">
-                  <AlertCircle className="w-2.5 h-2.5 mr-0.5" /> {t('common.overdue')}
-                </Badge>
-              )}
-            </div>
+          {isOverdue && (
+            <Badge className="ml-1 px-1 py-0.5 text-[0.6rem] flex-shrink-0 bg-transparent text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600">
+              <AlertCircle className="w-2.5 h-2.5 mr-0.5" /> {t('common.overdue')}
+            </Badge>
           )}
           {domainTitle && (
-            <Badge variant="outline" className="mt-1 font-normal text-[0.6rem] px-1 py-0.5 line-clamp-1 w-full overflow-hidden border-gray-300 dark:border-gray-600">
+            <Badge variant="outline" className="mt-1 font-normal text-[0.6rem] px-1 py-0.5 line-clamp-1 w-full overflow-hidden border-white dark:border-white">
               {domainTitle}
             </Badge>
           )}
