@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { ChevronRight, Plus, Pencil, Calendar as CalendarIcon, LogOut, Menu, Trash2, Star, Copy } from "lucide-react";
+import { ChevronRight, Plus, Pencil, Calendar as CalendarIcon, LogOut, Menu } from "lucide-react";
 import { useMemo, useState, useRef, useEffect } from "react";
 import {
   DndContext,
@@ -58,7 +58,7 @@ import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { TaskDetailsModal } from "@/components/TaskDetailsModal"; // Import the new modal
+import { TaskDetailsModal } from "@/components/TaskDetailsModal";
 
 const initialColumnsConfig: { id: ColumnId; defaultTitleKey: string }[] = [
   { id: "todo", defaultTitleKey: "todoColumn" },
@@ -80,7 +80,7 @@ const KanbanView = () => {
   const { domainId } = useParams();
   const { domains, tasks, setTasks, addTask, updateTask, deleteTask, updateDomain, duplicateTask } = useData();
   const domain = domains.find(d => d.id === domainId);
-  const { theme, setTheme } = useTheme();
+  const { theme } = useTheme();
   const isMobile = useIsMobile();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -128,7 +128,7 @@ const KanbanView = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [newTaskData, setNewTaskData] = useState(initialNewTaskData);
 
-  const [taskToEditOrView, setTaskToEditOrView] = useState<Task | null>(null); // State for the new reusable modal
+  const [taskToEditOrView, setTaskToEditOrView] = useState<Task | null>(null);
 
   const [isEditingDomainDesc, setIsEditingDomainDesc] = useState(false);
   const [editedDomainDesc, setEditedDomainDesc] = useState(domain?.description || "");
@@ -168,7 +168,7 @@ const KanbanView = () => {
     calculateMaxWidth();
 
     window.addEventListener('resize', calculateMaxWidth);
-    return () => window.removeEventListener('change', calculateMaxWidth);
+    return () => window.removeEventListener('resize', calculateMaxWidth); // Corrected event listener
   }, [domain?.title, isMobile]);
 
   const handleLogout = async () => {
@@ -546,9 +546,9 @@ const KanbanView = () => {
                 }
                 onViewTask={handleOpenTaskDetails}
                 onEditTask={handleOpenTaskDetails}
-                onDeleteTask={deleteTask} {/* Corrected: Pass deleteTask directly */}
-                onDuplicateTask={duplicateTask} {/* Corrected: Pass duplicateTask directly */}
-                onTogglePriorityTask={(task) => updateTask(task.id, { isPriority: !task.isPriority })} {/* Corrected: Pass updateTask for priority */}
+                onDeleteTask={deleteTask}
+                onDuplicateTask={duplicateTask}
+                onTogglePriorityTask={(task) => updateTask(task.id, { isPriority: !task.isPriority })}
               />
             ))}
           </SortableContext>
@@ -556,11 +556,11 @@ const KanbanView = () => {
         <DragOverlay>
           {activeTask && <KanbanTaskCard 
             task={activeTask} 
-            onView={() => {}}
-            onEdit={() => {}}
-            onDelete={() => {}}
-            onDuplicate={() => {}}
-            onTogglePriority={() => {}}
+            onView={handleOpenTaskDetails}
+            onEdit={handleOpenTaskDetails}
+            onDelete={deleteTask}
+            onDuplicate={duplicateTask}
+            onTogglePriority={(task) => updateTask(task.id, { isPriority: !task.isPriority })}
           />}
         </DragOverlay>
       </DndContext>
