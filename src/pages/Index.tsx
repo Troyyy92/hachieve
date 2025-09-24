@@ -59,7 +59,7 @@ const Index = () => {
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground">
               {t('login.hachieveTitle')}
             </h1>
-            <p className="text-foreground mt-4 text-lg">
+            <p className="text-foreground mt-4 text-lg subtitle-fade-in">
               {t('login.hachieveSubtitle')}
             </p>
           </div>

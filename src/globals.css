@@ -229,4 +229,11 @@
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: hsl(var(--foreground));
   }
+
+  /* Animation for subtitle */
+  .subtitle-fade-in {
+    animation: slide-in-left 0.8s ease-out forwards;
+    animation-delay: 0.5s; /* 500ms delay */
+    opacity: 0; /* Start invisible */
+  }
 }
