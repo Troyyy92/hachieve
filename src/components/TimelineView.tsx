@@ -8,11 +8,22 @@ import { Star } from 'lucide-react';
 import { KanbanTaskCard } from './KanbanTaskCard';
 import { TaskDetailsModal } from './TaskDetailsModal';
 import { ColumnId, Column, Task } from '@/types';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export const TimelineView = () => {
   const { t, i18n } = useTranslation();
-  const { tasks, domains, updateTask } = useData(); // Import updateTask
+  const { tasks, domains, updateTask, deleteTask, duplicateTask } = useData();
   const [taskToEditOrView, setTaskToEditOrView] = useState<Task | null>(null);
+  const [taskToDeleteId, setTaskToDeleteId] = useState<string | null>(null); // New state for delete confirmation
 
   const columns: Column[] = useMemo(() => [
     { id: "todo", title: t('kanban.todoColumn') },
@@ -62,6 +73,21 @@ export const TimelineView = () => {
     updateTask(task.id, { isPriority: !task.isPriority });
   };
 
+  const handleDeleteTask = (taskId: string) => {
+    setTaskToDeleteId(taskId); // Open confirmation dialog
+  };
+
+  const handleConfirmDelete = () => {
+    if (taskToDeleteId) {
+      deleteTask(taskToDeleteId);
+      setTaskToDeleteId(null);
+    }
+  };
+
+  const handleDuplicateTask = (taskId: string) => {
+    duplicateTask(taskId);
+  };
+
   return (
     <div className="mt-8">
       <h2 className="text-2xl font-bold text-center mb-6">{t('calendar.prioritizedTasksTitle')}</h2>
@@ -78,9 +104,9 @@ export const TimelineView = () => {
                   task={task}
                   onView={handleOpenTaskDetails}
                   onEdit={handleOpenTaskDetails}
-                  onDelete={() => {}} // Handled by TaskDetailsModal
-                  onDuplicate={() => {}} // Handled by TaskDetailsModal
-                  onTogglePriority={handleTogglePriority} // Pass the new handler
+                  onDelete={handleDeleteTask}
+                  onDuplicate={handleDuplicateTask}
+                  onTogglePriority={handleTogglePriority}
                   taskEndDate={taskEndDate}
                   isOverdue={isOverdue}
                   domainTitle={domain?.title}
@@ -106,6 +132,19 @@ export const TimelineView = () => {
         columns={columns}
         getColumnTitle={getColumnTitle}
       />
+
+      <AlertDialog open={!!taskToDeleteId} onOpenChange={() => setTaskToDeleteId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('kanban.taskDeleteConfirmTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>{t('kanban.taskDeleteConfirmDescription')}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmDelete}>{t('common.delete')}</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
