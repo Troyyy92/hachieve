@@ -60,7 +60,7 @@ export const GoalCard = ({ goal, progress }: GoalCardProps) => {
                 <div className="text-right text-xs xs:text-xs sm:text-sm text-[#2f2f2fcc]/80 mb-1">
                   {progress}%
                 </div>
-                <Progress value={progress} className="[&>*]:bg-[#2f2f2fcc]" />
+                <Progress value={progress} className="[&>*]:bg-green-500" />
               </div>
             </div>
           </Card>
