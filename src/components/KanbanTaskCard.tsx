@@ -107,7 +107,7 @@ export const KanbanTaskCard = ({ task, onView, onEdit, onDelete, onDuplicate, on
         
         <div className="flex flex-col items-start justify-end pt-1">
           {isOverdue && (
-            <Badge className="ml-1 px-1 py-0.5 text-[0.6rem] flex-shrink-0 bg-transparent text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600">
+            <Badge className="ml-1 px-1 py-0.5 text-[0.6rem] flex-shrink-0 bg-transparent text-gray-800 dark:text-gray-200">
               <AlertCircle className="w-2.5 h-2.5 mr-0.5" /> {t('common.overdue')}
             </Badge>
           )}
