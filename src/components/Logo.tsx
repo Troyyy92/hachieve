@@ -15,43 +15,30 @@ export const Logo = ({ className, size = 40 }: LogoProps) => {
       xmlns="http://www.w3.org/2000/svg" 
       className={cn(className)}
     >
-      {/* Octogone extérieur avec coins arrondis */}
-      <g>
-        {/* Fond de l'octogone avec coins arrondis, utilise currentColor */}
-        <path d="M 160 60
-                 L 290 60
-                 Q 300 60 307 67
-                 L 383 143
-                 Q 390 150 390 160
-                 L 390 290
-                 Q 390 300 383 307
-                 L 307 383
-                 Q 300 390 290 390
-                 L 160 390
-                 Q 150 390 143 383
-                 L 67 307
-                 Q 60 300 60 290
-                 L 60 160
-                 Q 60 150 67 143
-                 L 143 67
-                 Q 150 60 160 60
-                 Z" 
-              fill="currentColor"/>
-        
-        {/* Trou intérieur, utilise la couleur de fond du thème */}
-        <path d="M 165 90
-                 L 285 90
-                 L 360 165
-                 L 360 285
-                 L 285 360
-                 L 165 360
-                 L 90 285
-                 L 90 165
-                 Z" 
-              fill="hsl(var(--background))"/>
-      </g>
+      {/* Octogone extérieur en contour */}
+      <path d="M 160 60
+               L 290 60
+               Q 300 60 307 67
+               L 383 143
+               Q 390 150 390 160
+               L 390 290
+               Q 390 300 383 307
+               L 307 383
+               Q 300 390 290 390
+               L 160 390
+               Q 150 390 143 383
+               L 67 307
+               Q 60 300 60 290
+               L 60 160
+               Q 60 150 67 143
+               L 143 67
+               Q 150 60 160 60
+               Z" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="30" /> {/* strokeWidth ajusté pour une épaisseur visible */}
       
-      {/* Carré central aligné avec les segments de l'octogone, utilise currentColor */}
+      {/* Carré central rempli */}
       <rect x="165" y="165" 
             width="120" 
             height="120" 
