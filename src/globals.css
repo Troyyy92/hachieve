@@ -231,10 +231,8 @@
   }
 
   .login-subtitle-reveal {
-    mask-image: linear-gradient(to right, black 0%, black 10%, transparent 20%, transparent 100%);
+    mask-image: linear-gradient(to right, black, black); /* Solid black mask */
     mask-repeat: no-repeat;
-    mask-position: 100% 0; /* Start the mask completely to the right */
-    mask-size: 200% 100%; /* Make the mask twice as wide as the element */
-    /* The animation is applied via Tailwind class */
+    mask-position: left center; /* Start mask from the left */
   }
 }
