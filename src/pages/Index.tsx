@@ -4,7 +4,7 @@ import { GoalWizard } from "@/components/GoalWizard";
 import { Dashboard } from "@/components/Dashboard";
 import { AdvancedCalendarView } from "@/components/AdvancedCalendarView";
 import { MobileCalendarView } from "@/components/MobileCalendarView";
-import { TimelineView } from "@/components/TimelineView"; // Import the new component
+import { TimelineView } from "@/components/TimelineView";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -30,6 +30,7 @@ const Index = () => {
   const isMobile = useIsMobile();
 
   const handleLogout = async () => {
+    console.log("Logout button clicked from Index page!"); // Debug log
     await supabase.auth.signOut();
   };
 
@@ -139,7 +140,7 @@ const Index = () => {
             <Dashboard />
           </TabsContent>
           <TabsContent value="calendar" className="mt-4">
-            <TimelineView /> {/* New prioritized tasks list */}
+            <TimelineView />
             {isMobile ? <MobileCalendarView /> : <AdvancedCalendarView />}
           </TabsContent>
           <TabsContent value="accomplishments" className="mt-4">

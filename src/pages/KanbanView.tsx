@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useRef, useEffect } from "react"; // Added React import
+import React, { useMemo, useState, useRef, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ChevronRight, Plus, Pencil, Calendar as CalendarIcon, LogOut, Menu } from "lucide-react";
 import {
@@ -173,6 +173,7 @@ const KanbanView = () => {
   }, [domain?.title, isMobile]);
 
   const handleLogout = async () => {
+    console.log("Logout button clicked from KanbanView page!"); // Debug log
     await supabase.auth.signOut();
   };
 

@@ -29,8 +29,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     getSession();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange( // Correction ici
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
+        console.log('Auth state changed:', _event, session); // Debug log
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
@@ -38,7 +39,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     );
 
     return () => {
-      subscription?.unsubscribe(); // Correction ici
+      subscription?.unsubscribe();
     };
   }, []);
 
