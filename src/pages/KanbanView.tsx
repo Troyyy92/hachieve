@@ -1,6 +1,6 @@
+import React, { useMemo, useState, useRef, useEffect } from "react"; // Added React import
 import { Link, useParams } from "react-router-dom";
 import { ChevronRight, Plus, Pencil, Calendar as CalendarIcon, LogOut, Menu } from "lucide-react";
-import { useMemo, useState, useRef, useEffect } from "react";
 import {
   DndContext,
   DragEndEvent,
@@ -129,7 +129,7 @@ const KanbanView = () => {
   const [newTaskData, setNewTaskData] = useState(initialNewTaskData);
 
   const [taskToEditOrView, setTaskToEditOrView] = useState<Task | null>(null);
-  const [taskToDeleteId, setTaskToDeleteId] = useState<string | null>(null); // New state for delete confirmation
+  const [taskToDeleteId, setTaskToDeleteId] = useState<string | null>(null); // State for delete confirmation
 
   const [isEditingDomainDesc, setIsEditingDomainDesc] = useState(false);
   const [editedDomainDesc, setEditedDomainDesc] = useState(domain?.description || "");
@@ -558,7 +558,7 @@ const KanbanView = () => {
                 }
                 onViewTask={handleOpenTaskDetails}
                 onEditTask={handleOpenTaskDetails}
-                onDeleteTask={handleDeleteTaskConfirmation} {/* Changed to trigger confirmation */}
+                onDeleteTask={handleDeleteTaskConfirmation}
                 onDuplicateTask={duplicateTask}
                 onTogglePriorityTask={(task) => updateTask(task.id, { isPriority: !task.isPriority })}
               />
@@ -570,7 +570,7 @@ const KanbanView = () => {
             task={activeTask} 
             onView={handleOpenTaskDetails}
             onEdit={handleOpenTaskDetails}
-            onDelete={handleDeleteTaskConfirmation} {/* Changed to trigger confirmation */}
+            onDelete={handleDeleteTaskConfirmation}
             onDuplicate={duplicateTask}
             onTogglePriority={(task) => updateTask(task.id, { isPriority: !task.isPriority })}
           />}
