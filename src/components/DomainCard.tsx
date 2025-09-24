@@ -72,12 +72,12 @@ export const DomainCard = ({ domain }: DomainCardProps) => {
           <div className="flex flex-col h-full">
             <CardHeader className="flex-shrink-0 p-3 xs:p-2 sm:p-6">
               <CardTitle className="flex items-center text-xs xs:text-xs sm:text-sm">
-                <domain.icon className="w-4 h-4 xs:w-4 xs:h-4 sm:w-5 sm:h-5 mr-2 text-muted-foreground flex-shrink-0" />
+                <domain.icon className="w-4 h-4 xs:w-4 xs:h-4 sm:w-5 sm:h-5 mr-2 text-muted-foreground dark:text-white flex-shrink-0" />
                 <span className="flex-1 line-clamp-2">{domain.title}</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="flex-grow flex flex-col justify-end p-3 xs:p-2 sm:px-6 sm:pb-6 pt-0">
-              <div className="text-right text-xs xs:text-xs sm:text-sm text-muted-foreground mb-1">
+              <div className="text-right text-xs xs:text-xs sm:text-sm text-muted-foreground dark:text-white mb-1">
                 {domain.progress}%
               </div>
               <Progress value={domain.progress} />
@@ -141,14 +141,14 @@ export const DomainCard = ({ domain }: DomainCardProps) => {
             onClick={handleTogglePriority}
             aria-label="Toggle priority"
           >
-            <Star className={cn("h-5 w-5", domain.isPriority ? "text-yellow-500 fill-yellow-400" : "text-muted-foreground")} />
+            <Star className={cn("h-5 w-5", domain.isPriority ? "text-yellow-500 fill-yellow-400" : "text-muted-foreground dark:text-white")} />
           </Button>
           <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
             <AlertDialogTrigger asChild>
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                className="h-8 w-8 text-muted-foreground hover:text-foreground dark:text-white dark:hover:text-white"
                 onClick={handleDeleteClick}
                 aria-label="Delete domain"
               >
