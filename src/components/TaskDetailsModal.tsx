@@ -28,7 +28,7 @@ import { Calendar } from './ui/calendar';
 import { format } from 'date-fns';
 import { fr, enUS } from 'date-fns/locale';
 import { useTranslation } from 'react-i18next';
-import { Task, Column, ColumnId } from '@/types';
+import { Task, Column, ColumnId, Domain } from '@/types';
 import { useData } from '@/contexts/DataContext';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { cn } from '@/lib/utils';
@@ -38,6 +38,7 @@ interface TaskDetailsModalProps {
   onOpenChange: (open: boolean) => void;
   task: Task | null;
   columns: Column[];
+  domains: Domain[]; // Added domains prop
   getColumnTitle: (columnId: ColumnId) => string;
 }
 
@@ -49,9 +50,10 @@ const initialTaskData = {
   isAllDay: false,
   isPriority: false,
   columnId: "todo" as ColumnId,
+  domainId: "" as string, // Added domainId
 };
 
-export const TaskDetailsModal = ({ isOpen, onOpenChange, task, columns, getColumnTitle }: TaskDetailsModalProps) => {
+export const TaskDetailsModal = ({ isOpen, onOpenChange, task, columns, domains, getColumnTitle }: TaskDetailsModalProps) => {
   const { t, i18n } = useTranslation();
   const { updateTask, deleteTask, duplicateTask } = useData();
   const currentLocale = i18n.language === 'fr' ? fr : enUS;
@@ -69,6 +71,7 @@ export const TaskDetailsModal = ({ isOpen, onOpenChange, task, columns, getColum
         isAllDay: task.isAllDay ?? false,
         isPriority: task.isPriority ?? false,
         columnId: task.columnId,
+        domainId: task.domainId, // Set initial domainId
       });
     } else {
       setEditedTaskData(initialTaskData);
@@ -85,6 +88,7 @@ export const TaskDetailsModal = ({ isOpen, onOpenChange, task, columns, getColum
         isAllDay: editedTaskData.isAllDay,
         isPriority: editedTaskData.isPriority,
         columnId: editedTaskData.columnId,
+        domainId: editedTaskData.domainId, // Pass updated domainId
       });
       onOpenChange(false);
     }
@@ -223,6 +227,21 @@ export const TaskDetailsModal = ({ isOpen, onOpenChange, task, columns, getColum
                     />
                 )}
               </div>
+            </div>
+            <div>
+              <Label htmlFor="task-domain">{t('common.domain')}</Label>
+              <Select value={editedTaskData.domainId} onValueChange={(value: string) => setEditedTaskData(d => ({...d, domainId: value}))}>
+                <SelectTrigger className="w-full mt-1">
+                  <SelectValue placeholder={t('common.selectDomain')} />
+                </SelectTrigger>
+                <SelectContent>
+                  {domains.map(dom => (
+                    <SelectItem key={dom.id} value={dom.id}>
+                      {dom.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label htmlFor="task-status">{t('common.status')}</Label>

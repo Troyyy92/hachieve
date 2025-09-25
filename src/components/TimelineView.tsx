@@ -140,6 +140,7 @@ export const TimelineView = () => {
         onOpenChange={(open) => !open && setTaskToEditOrView(null)}
         task={taskToEditOrView}
         columns={columns}
+        domains={domains} {/* Pass domains here */}
         getColumnTitle={getColumnTitle}
       />
 

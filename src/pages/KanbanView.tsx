@@ -200,16 +200,16 @@ const KanbanView = () => {
     setIsAddDialogOpen(false);
   };
 
-  const handleUpdateDomainDesc = async () => { // Made async
+  const handleUpdateDomainDesc = async () => {
     if (domain) {
-        await updateDomain(domain.id, { description: editedDomainDesc }); // Await the update
+        await updateDomain(domain.id, { description: editedDomainDesc });
         setIsEditingDomainDesc(false);
     }
   }
 
-  const handleUpdateDomainTitle = async () => { // Made async
+  const handleUpdateDomainTitle = async () => {
     if (domain && editedDomainTitle.trim()) {
-      await updateDomain(domain.id, { title: editedDomainTitle.trim() }); // Await the update
+      await updateDomain(domain.id, { title: editedDomainTitle.trim() });
       setIsEditingDomainTitle(false);
     }
   };
@@ -593,6 +593,7 @@ const KanbanView = () => {
         onOpenChange={(open) => !open && setTaskToEditOrView(null)}
         task={taskToEditOrView}
         columns={columns}
+        domains={domains} {/* Pass domains here */}
         getColumnTitle={getColumnTitle}
       />
 
