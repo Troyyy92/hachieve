@@ -194,7 +194,7 @@ const KanbanView = () => {
         startDate: newTaskData.startDate?.toISOString(),
         endDate: newTaskData.endDate?.toISOString(),
         isAllDay: newTaskData.isAllDay,
-        isPriority: newTaskData.isPriority,
+        isPriority: newTaskData.isPriority, // Passage de la priorité ici
     });
     setNewTaskData(initialNewTaskData);
     setIsAddDialogOpen(false);

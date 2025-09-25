@@ -23,7 +23,7 @@ interface DataContextType {
   mainGoal: MainGoal | null;
   accomplishments: MainGoal[];
   loading: boolean;
-  addTask: (domainId: string, data: { content: string; description?: string; startDate?: string; endDate?: string; isAllDay?: boolean; }) => Promise<void>;
+  addTask: (domainId: string, data: { content: string; description?: string; startDate?: string; endDate?: string; isAllDay?: boolean; isPriority?: boolean; }) => Promise<void>;
   updateTask: (id: string, updates: Partial<Omit<Task, 'id'>>) => Promise<void>;
   deleteTask: (id: string) => Promise<void>;
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
@@ -261,7 +261,7 @@ export const DataProvider = ({ children }: { ReactNode }) => {
     }
   };
 
-  const addTask = async (domainId: string, taskData: { content: string; description?: string; startDate?: string; endDate?: string; isAllDay?: boolean; }) => {
+  const addTask = async (domainId: string, taskData: { content: string; description?: string; startDate?: string; endDate?: string; isAllDay?: boolean; isPriority?: boolean; }) => {
     if (!user) return;
     const { data, error } = await supabase.from('tasks').insert({
       user_id: user.id,
@@ -272,6 +272,7 @@ export const DataProvider = ({ children }: { ReactNode }) => {
       start_date: taskData.startDate,
       end_date: taskData.endDate,
       is_all_day: taskData.isAllDay,
+      is_priority: taskData.isPriority, // Ajout de la priorité ici
     }).select().single();
     if (error) {
       showError("kanban.taskAddError");
