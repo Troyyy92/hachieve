@@ -80,7 +80,7 @@ const initialNewTaskData = {
 const KanbanView = () => {
   const { t, i18n } = useTranslation();
   const { domainId } = useParams();
-  const { domains, tasks, setTasks, addTask, updateTask, deleteTask, duplicateTask } = useData();
+  const { domains, tasks, setTasks, addTask, updateTask, deleteTask, duplicateTask, updateDomain } = useData();
   const domain = domains.find(d => d.id === domainId);
   const { theme } = useTheme();
   const isMobile = useIsMobile();
@@ -194,22 +194,22 @@ const KanbanView = () => {
         startDate: newTaskData.startDate?.toISOString(),
         endDate: newTaskData.endDate?.toISOString(),
         isAllDay: newTaskData.isAllDay,
-        isPriority: newTaskData.isPriority, // Passage de la priorité ici
+        isPriority: newTaskData.isPriority,
     });
     setNewTaskData(initialNewTaskData);
     setIsAddDialogOpen(false);
   };
 
-  const handleUpdateDomainDesc = () => {
+  const handleUpdateDomainDesc = async () => { // Made async
     if (domain) {
-        updateDomain(domain.id, { description: editedDomainDesc });
+        await updateDomain(domain.id, { description: editedDomainDesc }); // Await the update
         setIsEditingDomainDesc(false);
     }
   }
 
-  const handleUpdateDomainTitle = () => {
+  const handleUpdateDomainTitle = async () => { // Made async
     if (domain && editedDomainTitle.trim()) {
-      updateDomain(domain.id, { title: editedDomainTitle.trim() });
+      await updateDomain(domain.id, { title: editedDomainTitle.trim() }); // Await the update
       setIsEditingDomainTitle(false);
     }
   };
@@ -310,7 +310,7 @@ const KanbanView = () => {
     <div className="min-h-screen p-4 md:p-8">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center text-sm text-muted-foreground">
-          <Link to="/" className="flex items-center gap-2 hover:text-primary cursor-pointer"> {/* Added cursor-pointer */}
+          <Link to="/" className="flex items-center gap-2 hover:text-primary cursor-pointer">
             <Logo size={20} className="text-brand-title-color" />
             <span className="font-bold text-brand-title-color hidden sm:block">{t('login.hachieveTitle')}</span>
             <ChevronRight className="w-4 h-4 mx-1 text-muted-foreground" />
